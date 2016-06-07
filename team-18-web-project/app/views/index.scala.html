@@ -10,35 +10,28 @@
  * argument is an `Html` object containing the body of the page.
  *@
 @main("Welcome") {
-
-<div class="container">
-    <div class="header clearfix">
-        <nav>
-            <ul class="nav nav-pills pull-right">
-                <li role="presentation" class="active"><a href="#">Home</a></li>
-            </ul>
-        </nav>
-        <h3 class="text-muted">Team 18</h3>
+<div class="container content">
+    <img class="front-image" src="http://placehold.it/1000x200" />
+    <div class="col-sm-6">
+        <h1>The Ultimate Yard Sale Helper.</h1>
+        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
     </div>
-    <div class="jumbotron">
-        <h1>Bienvenu!</h1>
-        <div class="col-sm-6">
-            <img class="jumbotron-image" src="https://placeimg.com/300/200/tech" />
-        </div>
-        <div class="col-sm-6">
-            <form>
-                <div class="form-group">
-                    <input type="email" class="form-control" id="registerUsername" placeholder="Username">
-                </div>
-                <div class="form-group">
-                    <input type="password" class="form-control" id="registerPassword" placeholder="Password">
-                </div>
-                <button type="submit" class="btn btn-success">Sign up!</button>
-            </form>
-        </div>
-        Some text here
+    <div class="col-sm-6">
+        <form>
+            <div class="form-group">
+                <input type="text" class="form-control" id="registerName" placeholder="Name">
+            </div>
+            <div class="form-group">
+                <input type="email" class="form-control" id="registerEmail" placeholder="Email">
+            </div>
+            <div class="form-group">
+                <input type="text" class="form-control" id="registerUsername" placeholder="Username">
+            </div>
+            <div class="form-group">
+                <input type="password" class="form-control" id="registerPassword" placeholder="Password">
+            </div>
+            <button type="submit" class="btn btn-info">Sign up for free</button>
+        </form>
     </div>
 </div>
-
-
 }

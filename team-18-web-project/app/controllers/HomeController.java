@@ -20,4 +20,8 @@ public class HomeController extends Controller {
         return ok(index.render("Welcome"));
     }
 
+    public Result about() { return ok(about.render()); }
+
+    public Result login() { return ok(login.render()); }
+
 }
