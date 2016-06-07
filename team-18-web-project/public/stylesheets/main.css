@@ -35,11 +35,6 @@ body{
   border-bottom: 1px solid #e5e5e5;
 }
 
-.jumbotron .btn {
-  padding: 14px 24px;
-  font-size: 21px;
-}
-
 @media screen and (min-width: 768px) {
   /* Remove the padding we set earlier */
   .header,
@@ -55,4 +50,9 @@ body{
   .jumbotron {
     border-bottom: 0;
   }
+}
+
+.jumbotron-image {
+    width: 100%;
+    height: auto;
 }
