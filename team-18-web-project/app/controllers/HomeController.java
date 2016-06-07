@@ -24,4 +24,5 @@ public class HomeController extends Controller {
 
     public Result login() { return ok(login.render()); }
 
+    public Result notFound404(String path) { return notFound(notFound.render()); }
 }
