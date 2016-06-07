@@ -33,9 +33,9 @@
                         <li class="@if(request.path() == "/") {active}"><a href="/">HOME</a></li>
                         <li class="@if(request.path() == "/about") {active}"><a href="/about">ABOUT</a></li>
                     </ul>
-                    <form class="navbar-form navbar-right" action="/login">
-                        <button type="submit" class="btn btn-success">LOG IN</button>
-                    </form>
+                    <div class="navbar-form navbar-right">
+                        <a href="/login" class="btn btn-success">LOG IN</a>
+                    </div>
                 </div><!--/.nav-collapse -->
             </div>
         </nav>
