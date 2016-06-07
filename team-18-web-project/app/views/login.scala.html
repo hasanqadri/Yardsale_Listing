@@ -5,19 +5,44 @@
  *@
 @main("Log In") {
 <div class="container content">
-    <form class="form-signin">
-        <h2 class="form-signin-heading">Please sign in</h2>
-        <label for="inputUsername" class="sr-only">Username</label>
-        <input type="text" id="inputUsername" class="form-control" placeholder="Username" required autofocus>
-        <label for="inputPassword" class="sr-only">Password</label>
-        <input type="password" id="inputPassword" class="form-control" placeholder="Password" required>
-        <div class="checkbox">
-            <label>
-                <input type="checkbox" value="remember-me"> Remember me
-            </label>
+    <form class="form-signin" id="sign-in">
+        <div class="form-signin-heading">
+            <div class="form-signin-major pull-left">Sign in</div>
+            <div class="form-signin-minor pull-right">or <a href="#" onclick="changeToSignUp();">sign up</a></div>
         </div>
+        <label for="inputUsername" class="sr-only">Username</label>
+        <input type="text" id="inputUsername" class="form-control input-top" placeholder="Username" required autofocus>
+        <label for="inputPassword" class="sr-only">Password</label>
+        <input type="password" id="inputPassword" class="form-control input-bottom" placeholder="Password" required>
         <button class="btn btn-lg btn-primary btn-block" type="submit">Sign in</button>
         <a href="/"><h4>&#8592; Go home</h4></a>
     </form>
+    <form class="form-signin" id="sign-up">
+        <div class="form-signin-heading">
+            <div class="form-signin-major pull-left">Sign up</div>
+            <div class="form-signin-minor pull-right">or <a href="#" onclick="changeToSignIn();">sign in</a></div>
+        </div>
+        <label for="inputName" class="sr-only">Name</label>
+        <input type="text" id="inputName" class="form-control input-top" placeholder="Name" required autofocus>
+        <label for="inputEmail" class="sr-only">Email</label>
+        <input type="email" id="inputEmail" class="form-control input-middle" placeholder="Email" required>
+        <label for="inputUsername" class="sr-only">Username</label>
+        <input type="text" id="inputUsername" class="form-control input-middle" placeholder="Username" required>
+        <label for="inputPassword" class="sr-only">Password</label>
+        <input type="password" id="inputPassword" class="form-control input-bottom" placeholder="Password" required>
+        <button class="btn btn-lg btn-primary btn-block" type="submit">Sign up</button>
+        <a href="/"><h4>&#8592; Go home</h4></a>
+    </form>
 </div> <!-- /container -->
+<script>
+    var changeToSignUp = function() {
+        $("#sign-in").css("display", "none");
+        $("#sign-up").css("display", "block");
+    }
+    var changeToSignIn = function() {
+        $("#sign-up").css("display", "none");
+        $("#sign-in").css("display", "block");
+    }
+
+</script>
 }
