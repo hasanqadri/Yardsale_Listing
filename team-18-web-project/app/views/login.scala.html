@@ -3,19 +3,27 @@
  * argument is a `String` with the title of the page, the second
  * argument is an `Html` object containing the body of the page.
  *@
+@(form: Form[ApplicationController.Login]
 @main("Log In") {
 <div class="container content">
     <form class="form-signin" id="sign-in">
+        @helper.form(routes.ApplicationController.authenticate) {
         <div class="form-signin-heading">
+            @if(form.hasGlobalErrors) {
+            <p class="error">
+                @form.globalError.message
+            </p>
+            }
             <div class="form-signin-major pull-left">Sign in</div>
             <div class="form-signin-minor pull-right">or <a href="#" onclick="changeToSignUp();">sign up</a></div>
         </div>
         <label for="inputUsername" class="sr-only">Username</label>
-        <input type="text" id="inputUsername" class="form-control input-top" placeholder="Username" required autofocus>
+        <input type="text" id="inputUsername" class="form-control input-top" placeholder="Username" required autofocusvalue="@form("email").value">
         <label for="inputPassword" class="sr-only">Password</label>
         <input type="password" id="inputPassword" class="form-control input-bottom" placeholder="Password" required>
         <button class="btn btn-lg btn-primary btn-block" type="submit">Sign in</button>
         <a href="/"><h4>&#8592; Go home</h4></a>
+        }
     </form>
     <form class="form-signin" id="sign-up">
         <div class="form-signin-heading">

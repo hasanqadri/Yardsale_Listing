@@ -1,7 +1,7 @@
 package controllers;
 
 import play.mvc.*;
-
+import play.data.*;
 import views.html.*;
 
 /**
@@ -20,7 +20,34 @@ public class ApplicationController extends Controller {
 
     public Result about() { return ok(about.render()); }
 
-    public Result login() { return ok(login.render()); }
+    public Result login() { return ok(login.render(form(Login.class))); }
 
     public Result notFound404(String path) { return notFound(notFound.render()); }
+
+    public static class Login {
+
+        public String email;
+        public String password;
+
+        public String validate() {
+            if (User.authenticate(email, password) == null) {
+                return "Invalid user or password";
+            }
+            return null;
+        }
+    }
+    public static Result authenticate() {
+        Form<Login> loginForm = form(Login.class).bindFromRequest();
+        if (loginForm.hasErrors()) {
+            return badRequest(login.render(loginForm));
+        } else {
+            session().clear();
+            session("email", loginForm.get().email);
+            return redirect(
+                    routes.Application.index()
+            );
+        }
+    }
+
+
 }
