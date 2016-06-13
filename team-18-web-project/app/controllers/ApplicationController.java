@@ -4,7 +4,14 @@ import play.mvc.*;
 import play.data.DynamicForm;
 import play.data.Form;
 
+import java.util.List;
+import static play.libs.Json.toJson;
+
 import views.html.*;
+
+import models.User;
+
+import com.avaje.ebean.*;
 
 /**
  * This controller contains an action to handle HTTP requests
@@ -54,4 +61,11 @@ public class ApplicationController extends Controller {
     }
 
     public Result notFound404(String path) { return notFound(notFound.render()); }
+
+    public Result listUsers() {
+        //User user = new User("bla@bla.bla", "Test", "1234pass", "mynameis");
+        List<User> users = User.find.all();
+        return ok(toJson(users));
+
+    }
 }
