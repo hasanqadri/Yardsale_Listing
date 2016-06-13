@@ -7,16 +7,20 @@ import play.data.validation.*;
 import java.util.*;
 
 @Entity
-//@Table(name="users")
+@Table(name="users")
 public class User extends Model {
     @Id
+    public int id;
+    @Constraints.Required
     public String email;
     @Constraints.Required
     public String name;
+    @Constraints.Required
     public String password;
+    @Constraints.Required
     public String username;
-    /*public int account_locked;
-    public int login_attempts;*/
+    public int account_locked;
+    public int login_attempts;
 
     /*public User(String email, String name, String password, String username) {
         this.email = email;
