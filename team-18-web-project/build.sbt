@@ -10,6 +10,7 @@ libraryDependencies ++= Seq(
   javaJdbc,
   cache,
   javaWs,
+  evolutions,
   "org.mongodb" % "mongodb-driver-reactivestreams" % "1.2.0",
   "mysql" % "mysql-connector-java" % "5.1.28",
   "org.avaje.ebeanorm" % "avaje-ebeanorm" % "4.6.2"

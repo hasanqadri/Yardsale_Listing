@@ -3,12 +3,15 @@
 
 # --- !Ups
 
-create table user (
-  email                     varchar(255) not null,
+create table users (
+  id                        integer auto_increment not null,
+  email                     varchar(255),
   name                      varchar(255),
   password                  varchar(255),
   username                  varchar(255),
-  constraint pk_user primary key (email))
+  account_locked            integer,
+  login_attempts            integer,
+  constraint pk_users primary key (id))
 ;
 
 
@@ -18,7 +21,7 @@ create table user (
 
 SET FOREIGN_KEY_CHECKS=0;
 
-drop table user;
+drop table users;
 
 SET FOREIGN_KEY_CHECKS=1;
 
