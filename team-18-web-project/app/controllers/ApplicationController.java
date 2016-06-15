@@ -1,7 +1,9 @@
 package controllers;
 
 import play.mvc.*;
-import play.data.*;
+import play.data.DynamicForm;
+import play.data.Form;
+
 import views.html.*;
 
 /**
@@ -20,34 +22,36 @@ public class ApplicationController extends Controller {
 
     public Result about() { return ok(about.render()); }
 
-    public Result login() { return ok(login.render(form(Login.class))); }
+    public Result login() {
+        if (request().method() == "POST") {
+            DynamicForm dynamicForm = Form.form().bindFromRequest();
+            if (dynamicForm.get("username").equals("user") && dynamicForm.get("password").equals("pass")) {
+                /* Set cookie and redirect to /loggedin */
+                response().setCookie("login", "1");
+                return redirect("/loggedin");
+            } else {
+                return ok(login.render("Login failed"));
+            }
+        } else {
+            return ok(login.render(""));
+        }
+    }
+
+    public Result loggedin() {
+        /*
+        Code here to check if cookie is set, otherwise send to /login
+         */
+        if (request().cookies().get("login") != null && request().cookies().get("login").value().equals("1")) {
+            return ok(loggedin.render());
+        } else {
+            return redirect("/login");
+        }
+    }
+
+    public Result logout() {
+        response().discardCookie("login");
+        return redirect("/");
+    }
 
     public Result notFound404(String path) { return notFound(notFound.render()); }
-
-    public static class Login {
-
-        public String email;
-        public String password;
-
-        public String validate() {
-            if (User.authenticate(email, password) == null) {
-                return "Invalid user or password";
-            }
-            return null;
-        }
-    }
-    public static Result authenticate() {
-        Form<Login> loginForm = form(Login.class).bindFromRequest();
-        if (loginForm.hasErrors()) {
-            return badRequest(login.render(loginForm));
-        } else {
-            session().clear();
-            session("email", loginForm.get().email);
-            return redirect(
-                    routes.Application.index()
-            );
-        }
-    }
-
-
 }
