@@ -35,7 +35,7 @@ public class ApplicationController extends Controller {
             User user = User.find.where().eq("username", dynamicForm.get("username")).findUnique();
             if (user != null && user.getPassword().equals(dynamicForm.get("password"))) {
                 //Create session
-                response().setCookie("username", dynamicForm.get("username"));
+                session("connected", dynamicForm.get("username"));
                 return redirect("/loggedin");
             } else {
                 return ok(login.render("Login failed"));
@@ -49,8 +49,9 @@ public class ApplicationController extends Controller {
         /*
         Code here to check if cookie is set, otherwise send to /login
          */
-        if (request().cookies().get("username") != null) {
-            return ok(loggedin.render(request().cookies().get("username").value()));
+        String username = session("connected");
+        if (username != null) {
+            return ok(loggedin.render(username));
         } else {
             return redirect("/login");
         }
@@ -58,6 +59,7 @@ public class ApplicationController extends Controller {
 
     public Result logout() {
         response().discardCookie("username");
+        session().clear();
         return redirect("/");
     }
 
