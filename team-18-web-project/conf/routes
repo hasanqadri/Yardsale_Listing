@@ -8,6 +8,7 @@ GET     /login                      controllers.ApplicationController.login
 POST    /login                      controllers.ApplicationController.login
 GET     /loggedin                   controllers.ApplicationController.loggedin
 GET     /logout                     controllers.ApplicationController.logout
+GET     /profile                    controllers.ApplicationController.profile
 
 GET     /users                      controllers.ApplicationController.listUsers
 

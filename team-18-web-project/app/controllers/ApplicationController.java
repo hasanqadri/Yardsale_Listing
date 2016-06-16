@@ -55,6 +55,11 @@ public class ApplicationController extends Controller {
         }
     }
 
+    public Result profile() {
+
+      return ok(profile.render());
+    }
+
     public Result logout() {
         response().discardCookie("login");
         return redirect("/");
