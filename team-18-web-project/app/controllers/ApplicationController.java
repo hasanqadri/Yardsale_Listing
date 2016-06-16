@@ -32,9 +32,10 @@ public class ApplicationController extends Controller {
     public Result login() {
         if (request().method() == "POST") {
             DynamicForm dynamicForm = Form.form().bindFromRequest();
-            if (dynamicForm.get("username").equals("user") && dynamicForm.get("password").equals("pass")) {
-                /* Set cookie and redirect to /loggedin */
-                response().setCookie("login", "1");
+            User user = User.find.where().eq("username", dynamicForm.get("username")).findUnique();
+            if (user != null && user.getPassword().equals(dynamicForm.get("password"))) {
+                //Create session
+                response().setCookie("username", dynamicForm.get("username"));
                 return redirect("/loggedin");
             } else {
                 return ok(login.render("Login failed"));
@@ -48,15 +49,15 @@ public class ApplicationController extends Controller {
         /*
         Code here to check if cookie is set, otherwise send to /login
          */
-        if (request().cookies().get("login") != null && request().cookies().get("login").value().equals("1")) {
-            return ok(loggedin.render());
+        if (request().cookies().get("username") != null) {
+            return ok(loggedin.render(request().cookies().get("username").value()));
         } else {
             return redirect("/login");
         }
     }
 
     public Result logout() {
-        response().discardCookie("login");
+        response().discardCookie("username");
         return redirect("/");
     }
 
