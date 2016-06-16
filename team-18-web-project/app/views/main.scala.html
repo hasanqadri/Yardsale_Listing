@@ -32,12 +32,19 @@
                     <ul class="nav navbar-nav">
                         <li class="@if(request.path() == "/") {active}"><a href="/">HOME</a></li>
                         <li class="@if(request.path() == "/about") {active}"><a href="/about">ABOUT</a></li>
-                        <li class="@if(request.path() == "/profile") {active}"><a href="/profile">PROFILE</a></li>
+
                     </ul>
                     <div class="navbar-form navbar-right">
-
                         <a href="/login" class="btn btn-success">SIGN IN</a>
-
+                    </div>
+                    <div class="navbar-form navbar-right">
+                        <a href="/NewContact" class="btn btn-success">REGISTER</a>
+                    </div>
+                    <div class="navbar-form navbar-right">
+                        <a href="/postContact" class="btn btn-success">PROFILE</a>
+                    </div>
+                    <div class="navbar-form navbar-right">
+                        <a href="/getUsers" class="btn btn-success">User List</a>
                     </div>
                 </div><!--/.nav-collapse -->
             </div>
