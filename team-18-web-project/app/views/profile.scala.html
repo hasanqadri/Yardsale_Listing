@@ -3,14 +3,15 @@
 * argument is a `String` with the title of the page, the second
 * argument is an `Html` object containing the body of the page.
 *@
+@(username:String, password:String, name:String, email:String)
 @loggedinmain("Profile") {
 <div class="container content">
     <div class="view profile" id="view-profile">
         <div class="col-sm-6">
             <img class="profile-image" src="http://placehold.it/200x200" />
-            <h1>Profile Name</h1>
-            <p class="lead">User Email</p>
-            <p class="lead">User Location</p>
+            <h1>@name </h1>
+            <p class="lead">@username</p>
+            <p class="lead">@email</p>
 
         </div>
         <div class="col-sm-6">

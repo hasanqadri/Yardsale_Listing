@@ -105,8 +105,10 @@ public class ApplicationController extends Controller {
         Code here to check if cookie is set, otherwise send to /login
          */
         String username = session("connected");
+        User user = User.find.where().eq("username", username).findUnique();
+
         if (username != null) {
-            return ok(profile.render());
+            return ok(profile.render(username, user.getPassword(), user.getName(), user.getEmail()));
         } else {
             return redirect("/login");
         }
