@@ -17,27 +17,28 @@ import static play.libs.Json.toJson;
 
 
 /**
+ * @author Nathan Cheek, Pablo Ortega, Hasan Qadri, Nick Yokley
+ * @version 0.4
  * This controller contains an action to handle HTTP requests
- * to the application's home page.
+ * to the application.
  */
 public class ApplicationController extends Controller {
 
     /**
      * An action that renders an HTML page with a welcome message.
-     * The configuration in the <code>routes</code> file means that
-     * this method will be called when the application receives a
-     * <code>GET</code> request with a path of <code>/</code>.
+     * @return HTTP response to home page request
      */
     public Result home() {
         String username = session("connected");
         if (username != null) { //Temporarily redirect all logged in users to /profile
             return redirect("/profile");
         }
-        return ok(home.render("Welcome"));
+        return ok(home.render());
     }
 
     /**
      * Registration page that takes in the form info and then send the user to postContact
+     * @return HTTP response to newContact request
      */
     public Result newContact() {
         Form<userdata> formdata = Form.form(userdata.class);
@@ -46,6 +47,7 @@ public class ApplicationController extends Controller {
 
     /**
      * Page after registering, adds form data to user json
+     * @return HTTP response after successful user registration
      */
     public Result postContact() {
         Form<userdata> formdata = Form.form(userdata.class).bindFromRequest();
@@ -56,11 +58,19 @@ public class ApplicationController extends Controller {
 
     }
 
+    /**
+     * Lists complete json data of all users
+     * @return JSON response of all user data stored in database
+     */
     public Result getUsers() {
         List<User> users = new Model.Finder<>(String.class, User.class).all();
         return ok(toJson(users));
     }
 
+    /**
+     * Renders about page
+     * @return HTTP response to about page request
+     */
     public Result about() {
         String username = session("connected");
         if (username != null) { //Temporarily redirect all logged in users to /profile
@@ -69,6 +79,10 @@ public class ApplicationController extends Controller {
         return ok(about.render());
     }
 
+    /**
+     * Display login page and handle login requests
+     * @return Login page or response to login request
+     */
     public Result login() {
         if (request().method() == "POST") {
             DynamicForm dynamicForm = Form.form().bindFromRequest();
@@ -89,6 +103,10 @@ public class ApplicationController extends Controller {
         }
     }
 
+    /**
+     * Display registration page and handle registration requests
+     * @return HTTP response to registration page request or registration request
+     */
     public Result register() {
         String username = session("connected");
         if (username != null) { //Temporarily redirect all logged in users to /profile
@@ -112,7 +130,10 @@ public class ApplicationController extends Controller {
         return ok(register.render(""));
     }
 
-
+    /**
+     * Display profile page for user
+     * @return HTTP response to profile page request
+     */
     public Result profile() {
         /*
         Code here to check if cookie is set, otherwise send to /login
@@ -126,11 +147,20 @@ public class ApplicationController extends Controller {
 
     }
 
+    /**
+     * Log out the user by deleting session cookies
+     * @return HTTP redirection response to home page
+     */
     public Result logout() {
         session().clear();
         return redirect("/");
     }
 
+    /**
+     * Displays a 404 error page
+     * @param path URI of the page that doesn't exist
+     * @return HTTP response to a nonexistant page
+     */
     public Result notFound404(String path) { return notFound(notFound.render()); }
 
     public Result userList() {
@@ -143,6 +173,10 @@ public class ApplicationController extends Controller {
         }
     }
 
+    /**
+     * Displays a list of all users
+     * @return HTTP response to users list request
+     */
     public Result users() {
         String username = session("connected");
         if (username != null) {
