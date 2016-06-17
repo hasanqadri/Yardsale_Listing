@@ -1,17 +1,21 @@
 package controllers;
 
-import play.mvc.*;
+import com.avaje.ebean.Model;
+import models.User;
 import play.data.DynamicForm;
 import play.data.Form;
-
-import java.util.List;
-import static play.libs.Json.toJson;
-
-import views.html.*;
 
 import models.User;
 
 import com.avaje.ebean.*;
+import play.mvc.Controller;
+import play.mvc.Result;
+import views.formdata.userdata;
+import views.html.*;
+
+import java.util.List;
+
+import static play.libs.Json.toJson;
 
 /**
  * This controller contains an action to handle HTTP requests
@@ -27,10 +31,37 @@ public class ApplicationController extends Controller {
      */
     public Result home() { return ok(home.render("Welcome")); }
 
+    /**
+     * Registration page that takes in the form info and then send the user to postContact
+     */
+    public Result newContact() {
+        Form<userdata> formdata = Form.form(userdata.class);
+        return ok(NewContact.render(formdata));
+    }
+
+    /**
+     * Page after registering, adds form data to user json
+     */
+    public Result postContact() {
+        Form<userdata> formdata = Form.form(userdata.class).bindFromRequest();
+        userdata data = formdata.get();
+        User user = new User(data.name, data.email, data.username, data.password);
+        user.save();
+        return ok(postContact.render());
+
+    }
+
+    public Result getUsers() {
+        List<User> users = new Model.Finder<>(String.class, User.class).all();
+        return ok(toJson(users));
+    }
+
     public Result about() { return ok(about.render()); }
 
     public Result login() {
         if (request().method() == "POST") {
+            List<User> users = new Model.Finder<>(String.class, User.class).all();
+
             DynamicForm dynamicForm = Form.form().bindFromRequest();
             User user = User.find.where().eq("username", dynamicForm.get("username")).findUnique();
             if (user != null && user.getPassword().equals(dynamicForm.get("password"))) {
@@ -40,21 +71,24 @@ public class ApplicationController extends Controller {
             } else {
                 return ok(login.render("Login failed"));
             }
+            return ok(login.render("Login failed"));
         } else {
             return ok(login.render(""));
         }
     }
 
-    public Result loggedin() {
+
+    public Result profile() {
         /*
         Code here to check if cookie is set, otherwise send to /login
          */
         String username = session("connected");
         if (username != null) {
-            return ok(loggedin.render(username));
+            return ok(profile.render());
         } else {
             return redirect("/login");
         }
+
     }
 
     public Result logout() {
@@ -67,6 +101,5 @@ public class ApplicationController extends Controller {
     public Result listUsers() {
         List<User> users = User.find.all();
         return ok(toJson(users));
-
     }
 }
