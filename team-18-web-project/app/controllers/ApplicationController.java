@@ -41,10 +41,10 @@ public class ApplicationController extends Controller {
      * Page after registering, adds form data to user json
      */
     public Result postContact() {
-        Form<userdata> formdata = Form.form(userdata.class).bindFromRequest();
+        /*Form<userdata> formdata = Form.form(userdata.class).bindFromRequest();
         userdata data = formdata.get();
         User user = new User(data.name, data.email, data.username, data.password);
-        user.save();
+        user.save();*/
         return ok(postContact.render());
 
     }
@@ -58,21 +58,25 @@ public class ApplicationController extends Controller {
 
     public Result login() {
         if (request().method() == "POST") {
-            List<User> users = new Model.Finder<>(String.class, User.class).all();
-
             DynamicForm dynamicForm = Form.form().bindFromRequest();
             User user = User.find.where().eq("username", dynamicForm.get("username")).findUnique();
             if (user != null && user.getPassword().equals(dynamicForm.get("password"))) {
                 //Create session
                 session("connected", dynamicForm.get("username"));
-                return redirect("/loggedin");
+                return redirect("/profile");
             } else {
                 return ok(login.render("Login failed"));
             }
-            return ok(login.render("Login failed"));
         } else {
             return ok(login.render(""));
         }
+    }
+
+    public Result register() {
+        if (request().method() == "POST") {
+            return ok();
+        }
+        return redirect("/");
     }
 
 

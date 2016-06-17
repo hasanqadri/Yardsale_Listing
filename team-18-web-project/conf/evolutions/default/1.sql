@@ -11,7 +11,6 @@ create table users (
   username                  varchar(255),
   account_locked            integer,
   login_attempts            integer,
-  loggedin                  tinyint(1) default 0,
   constraint pk_users primary key (id))
 ;
 
