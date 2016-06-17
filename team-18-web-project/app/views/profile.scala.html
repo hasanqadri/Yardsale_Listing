@@ -1,12 +1,14 @@
 @* Displays profile page *@
+@(username:String, password:String, name:String, email:String, error:String)
+
 @loggedinmain("Profile") {
 <div class="container content">
     <div class="view profile" id="view-profile">
         <div class="col-sm-6">
             <img class="profile-image" src="http://placehold.it/200x200" />
-            <h1>Profile Name</h1>
-            <p class="lead">User Email</p>
-            <p class="lead">User Location</p>
+            <h1>@name </h1>
+            <p class="lead">@username</p>
+            <p class="lead">@email</p>
 
         </div>
         <div class="col-sm-6">
@@ -18,31 +20,32 @@
     <div class="edit profile" id="edit-profile">
         <div class="col-sm-4">
             <img class="profile-image" src="http://placehold.it/200x200" />
-            <h1>Edit Profile</h1>
-            <p class="lead">User Email</p>
-            <p class="lead">User Location</p>
+            <<h1>@name </h1>
+            <p class="lead">@username</p>
+            <p class="lead">@email</p>
 
         </div>
         <div class="col-sm-4">
-            <form class="form-editprofile" id="edit-form">
+            @if(error) {<h3 class="text-center">@error</h3>}
+            <form class="form-editprofile" id="edit-form" action="/profile" method="post">
                 <label for="inputName" class="sr-only">Name</label>
-                <input type="text" id="inputName" class="form-control input-top" placeholder="Name" required autofocus>
+                <input type="text" id="inputName" name="name" class="form-control input-top" value=@name required autofocus>
                 <label for="inputEmail" class="sr-only">Email</label>
-                <input type="email" id="inputEmail" class="form-control input-middle" placeholder="Email" required>
+                <input type="email" id="inputEmail" name="email" class="form-control input-middle" value=@email required>
                 <label for="inputUsername" class="sr-only">Username</label>
-                <input type="text" id="inputUsername" class="form-control input-middle" placeholder="Username" required>
+                <input type="text" id="inputUsername" name="username" class="form-control input-middle" value=@username required>
                 <label for="inputPassword" class="sr-only">Password</label>
-                <input type="password" id="inputPassword" class="form-control input-bottom" placeholder="Password" required>
+                <input type="password" id="inputPassword" name="password" class="form-control input-bottom" value=@password required>
+                <div class="col-sm-4">
+                    <div class="btn-toolbar pull-right">
+                        <a href="#" class="btn btn-success" onclick="changeToView();">cancel</a>
+                        <button class="btn btn-success" type="submit">Save Changes</button>
+                    </div>
+                </div>
             </form>
         </div>
 
-        <div class="col-sm-4">
-            <div class="btn-toolbar pull-right">
-                <a href="#" class="btn btn-success" onclick="changeToView();">cancel</a>
-                <a href="#" class="btn btn-success" onclick="changeToView();">Save Changes</a>
 
-            </div>
-        </div>
     </div>
 </div>
 <script>

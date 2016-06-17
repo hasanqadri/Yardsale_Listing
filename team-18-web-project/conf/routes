@@ -12,6 +12,7 @@ POST    /NewContact                 controllers.ApplicationController.postContac
 GET     /users                      controllers.ApplicationController.users
 GET     /userList                   controllers.ApplicationController.userList
 GET     /profile                    controllers.ApplicationController.profile
+POST    /profile                    controllers.ApplicationController.profile
 GET     /getUsers                   controllers.ApplicationController.getUsers
 GET     /register                   controllers.ApplicationController.register
 POST    /register                   controllers.ApplicationController.register

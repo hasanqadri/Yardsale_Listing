@@ -139,11 +139,37 @@ public class ApplicationController extends Controller {
         Code here to check if cookie is set, otherwise send to /login
          */
         String username = session("connected");
-        if (username != null) {
-            return ok(profile.render());
-        } else {
+        User user = User.find.where().eq("username", username).findUnique();
+
+
+        if (username == null) {
             return redirect("/login");
         }
+
+        if (request().method() == "POST") {
+            DynamicForm dynamicForm = Form.form().bindFromRequest();
+            User userCheckUsername = User.find.where().eq("username", dynamicForm.get("username")).findUnique();
+            if (userCheckUsername != null && !dynamicForm.get("username").equals(username)) {
+                return ok(profile.render(username, user.getPassword(), user.getName(), user.getEmail(),
+                        "Error: username already in use"));
+            }
+            User userCheckEmail = User.find.where().eq("email", dynamicForm.get("email")).findUnique();
+            if (userCheckEmail != null && !dynamicForm.get("email").equals(user.getEmail())) {
+                return ok(profile.render(username, user.getPassword(), user.getName(), user.getEmail(),
+                        "Error: email already in use"));
+
+            }
+            //If username or email not already in use, update user
+            user.setName(dynamicForm.get("name"));
+            user.setEmail(dynamicForm.get("email"));
+            user.setUsername(dynamicForm.get("username"));
+            user.setPassword(dynamicForm.get("password"));
+            user.save();
+            session("connected", dynamicForm.get("username"));
+
+        }
+        return ok(profile.render(username, user.getPassword(), user.getName(), user.getEmail(),
+                ""));
 
     }
 
