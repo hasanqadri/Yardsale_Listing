@@ -27,7 +27,13 @@ public class ApplicationController extends Controller {
      * this method will be called when the application receives a
      * <code>GET</code> request with a path of <code>/</code>.
      */
-    public Result home() { return ok(home.render("Welcome")); }
+    public Result home() {
+        String username = session("connected");
+        if (username != null) { //Temporarily redirect all logged in users to /profile
+            return redirect("/profile");
+        }
+        return ok(home.render("Welcome"));
+    }
 
     /**
      * Registration page that takes in the form info and then send the user to postContact
@@ -54,7 +60,13 @@ public class ApplicationController extends Controller {
         return ok(toJson(users));
     }
 
-    public Result about() { return ok(about.render()); }
+    public Result about() {
+        String username = session("connected");
+        if (username != null) { //Temporarily redirect all logged in users to /profile
+            return redirect("/profile");
+        }
+        return ok(about.render());
+    }
 
     public Result login() {
         if (request().method() == "POST") {
@@ -68,11 +80,19 @@ public class ApplicationController extends Controller {
                 return ok(login.render("Login failed"));
             }
         } else {
+            String username = session("connected");
+            if (username != null) { //Temporarily redirect all logged in users to /profile
+                return redirect("/profile");
+            }
             return ok(login.render(""));
         }
     }
 
     public Result register() {
+        String username = session("connected");
+        if (username != null) { //Temporarily redirect all logged in users to /profile
+            return redirect("/profile");
+        }
         if (request().method() == "POST") {
             return ok();
         }

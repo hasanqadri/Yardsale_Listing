@@ -1689,3 +1689,36 @@ play.api.db.evolutions.InvalidDatabaseRevision: Database 'default' needs evoluti
 2016-06-16 22:18:37,595 [INFO] from play.api.db.DefaultDBApi in ForkJoinPool-1-worker-3 - Database [default] connected at jdbc:mysql://db.cheek.us/team18
 2016-06-16 22:18:38,762 [INFO] from application in ForkJoinPool-1-worker-3 - ApplicationTimer demo: Starting application at 2016-06-17T03:18:38.762Z
 2016-06-16 22:18:38,829 [INFO] from play.api.Play in ForkJoinPool-1-worker-3 - Application started (Dev)
+2016-06-16 22:33:48,549 [INFO] from application in application-akka.actor.default-dispatcher-17 - ApplicationTimer demo: Stopping application at 2016-06-17T03:33:48.549Z after 910s.
+2016-06-16 22:33:48,551 [INFO] from application in application-akka.actor.default-dispatcher-17 - Shutting down connection pool.
+2016-06-16 22:33:49,011 [INFO] from application in application-akka.actor.default-dispatcher-17 - Creating Pool for datasource 'default'
+2016-06-16 22:33:55,364 [INFO] from play.api.db.DefaultDBApi in application-akka.actor.default-dispatcher-17 - Database [default] connected at jdbc:mysql://db.cheek.us/team18
+2016-06-16 22:34:01,395 [INFO] from application in application-akka.actor.default-dispatcher-17 - ApplicationTimer demo: Starting application at 2016-06-17T03:34:01.395Z
+2016-06-16 22:34:01,476 [INFO] from play.api.Play in application-akka.actor.default-dispatcher-17 - Application started (Dev)
+2016-06-16 22:35:07,391 [INFO] from application in application-akka.actor.default-dispatcher-9 - ApplicationTimer demo: Stopping application at 2016-06-17T03:35:07.391Z after 66s.
+2016-06-16 22:35:07,393 [INFO] from application in application-akka.actor.default-dispatcher-9 - Shutting down connection pool.
+2016-06-16 22:35:07,530 [INFO] from application in application-akka.actor.default-dispatcher-9 - Creating Pool for datasource 'default'
+2016-06-16 22:35:08,661 [INFO] from play.api.db.DefaultDBApi in application-akka.actor.default-dispatcher-9 - Database [default] connected at jdbc:mysql://db.cheek.us/team18
+2016-06-16 22:35:09,765 [INFO] from application in application-akka.actor.default-dispatcher-9 - ApplicationTimer demo: Starting application at 2016-06-17T03:35:09.765Z
+2016-06-16 22:35:09,835 [INFO] from play.api.Play in application-akka.actor.default-dispatcher-9 - Application started (Dev)
+2016-06-16 22:35:10,289 [WARN] from play.core.server.netty.NettyModelConversion in application-akka.actor.default-dispatcher-9 - Content-Type set both in header (image/png) and attached to entity (image/png), ignoring content type from entity. To remove this warning, use Result.as(...) to set the content type, rather than setting the header manually.
+2016-06-16 22:35:20,135 [WARN] from play.core.server.netty.NettyModelConversion in application-akka.actor.default-dispatcher-7 - Content-Type set both in header (image/png) and attached to entity (image/png), ignoring content type from entity. To remove this warning, use Result.as(...) to set the content type, rather than setting the header manually.
+2016-06-16 22:35:26,467 [INFO] from application in application-akka.actor.default-dispatcher-5 - ApplicationTimer demo: Stopping application at 2016-06-17T03:35:26.467Z after 17s.
+2016-06-16 22:35:26,468 [INFO] from application in application-akka.actor.default-dispatcher-5 - Shutting down connection pool.
+2016-06-16 22:35:26,602 [INFO] from application in application-akka.actor.default-dispatcher-5 - Creating Pool for datasource 'default'
+2016-06-16 22:35:27,586 [INFO] from play.api.db.DefaultDBApi in application-akka.actor.default-dispatcher-5 - Database [default] connected at jdbc:mysql://db.cheek.us/team18
+2016-06-16 22:35:28,598 [INFO] from application in application-akka.actor.default-dispatcher-5 - ApplicationTimer demo: Starting application at 2016-06-17T03:35:28.598Z
+2016-06-16 22:35:28,653 [INFO] from play.api.Play in application-akka.actor.default-dispatcher-5 - Application started (Dev)
+2016-06-16 22:35:28,865 [WARN] from play.core.server.netty.NettyModelConversion in application-akka.actor.default-dispatcher-4 - Content-Type set both in header (image/png) and attached to entity (image/png), ignoring content type from entity. To remove this warning, use Result.as(...) to set the content type, rather than setting the header manually.
+2016-06-16 22:39:28,753 [INFO] from application in application-akka.actor.default-dispatcher-14 - ApplicationTimer demo: Stopping application at 2016-06-17T03:39:28.753Z after 240s.
+2016-06-16 22:39:28,755 [INFO] from application in application-akka.actor.default-dispatcher-14 - Shutting down connection pool.
+2016-06-16 22:39:29,142 [INFO] from application in application-akka.actor.default-dispatcher-14 - Creating Pool for datasource 'default'
+2016-06-16 22:39:30,106 [INFO] from play.api.db.DefaultDBApi in application-akka.actor.default-dispatcher-14 - Database [default] connected at jdbc:mysql://db.cheek.us/team18
+2016-06-16 22:39:31,045 [INFO] from application in application-akka.actor.default-dispatcher-14 - ApplicationTimer demo: Starting application at 2016-06-17T03:39:31.045Z
+2016-06-16 22:39:31,108 [INFO] from play.api.Play in application-akka.actor.default-dispatcher-14 - Application started (Dev)
+2016-06-16 22:39:41,438 [INFO] from application in application-akka.actor.default-dispatcher-7 - ApplicationTimer demo: Stopping application at 2016-06-17T03:39:41.438Z after 10s.
+2016-06-16 22:39:41,438 [INFO] from application in application-akka.actor.default-dispatcher-7 - Shutting down connection pool.
+2016-06-16 22:39:41,552 [INFO] from application in application-akka.actor.default-dispatcher-7 - Creating Pool for datasource 'default'
+2016-06-16 22:39:42,549 [INFO] from play.api.db.DefaultDBApi in application-akka.actor.default-dispatcher-7 - Database [default] connected at jdbc:mysql://db.cheek.us/team18
+2016-06-16 22:39:44,021 [INFO] from application in application-akka.actor.default-dispatcher-7 - ApplicationTimer demo: Starting application at 2016-06-17T03:39:44.020Z
+2016-06-16 22:39:44,086 [INFO] from play.api.Play in application-akka.actor.default-dispatcher-7 - Application started (Dev)
