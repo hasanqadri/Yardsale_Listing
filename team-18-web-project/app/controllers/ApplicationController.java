@@ -15,6 +15,7 @@ import java.util.List;
 
 import static play.libs.Json.toJson;
 
+
 /**
  * This controller contains an action to handle HTTP requests
  * to the application's home page.
@@ -47,10 +48,10 @@ public class ApplicationController extends Controller {
      * Page after registering, adds form data to user json
      */
     public Result postContact() {
-        /*Form<userdata> formdata = Form.form(userdata.class).bindFromRequest();
+        Form<userdata> formdata = Form.form(userdata.class).bindFromRequest();
         userdata data = formdata.get();
         User user = new User(data.name, data.email, data.username, data.password);
-        user.save();*/
+        user.save();
         return ok(postContact.render());
 
     }
@@ -94,9 +95,21 @@ public class ApplicationController extends Controller {
             return redirect("/profile");
         }
         if (request().method() == "POST") {
-            return ok();
+            DynamicForm dynamicForm = Form.form().bindFromRequest();
+            User userCheckUsername = User.find.where().eq("username", dynamicForm.get("username")).findUnique();
+            if (userCheckUsername != null) {
+                return ok(register.render("Error: username already in use"));
+            }
+            User userCheckEmail = User.find.where().eq("email", dynamicForm.get("email")).findUnique();
+            if (userCheckEmail != null) {
+                return ok(register.render("Error: email already in use"));
+            }
+            //If username or email not already in use, create user
+            User user = new User(dynamicForm.get("name"), dynamicForm.get("email"), dynamicForm.get("username"), dynamicForm.get("password"));
+            user.save();
+            return ok(postContact.render());
         }
-        return redirect("/");
+        return ok(register.render(""));
     }
 
 
@@ -120,8 +133,22 @@ public class ApplicationController extends Controller {
 
     public Result notFound404(String path) { return notFound(notFound.render()); }
 
-    public Result listUsers() {
-        List<User> users = User.find.all();
-        return ok(toJson(users));
+    public Result userList() {
+        String username = session("connected");
+        if (username != null) {
+            List<User> users = User.find.all();
+            return ok(toJson(users));
+        } else {
+            return forbidden();
+        }
+    }
+
+    public Result users() {
+        String username = session("connected");
+        if (username != null) {
+            return ok(users.render());
+        } else {
+            return redirect("/login");
+        }
     }
 }

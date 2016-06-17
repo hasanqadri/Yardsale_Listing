@@ -27,12 +27,12 @@ public class User extends Model {
     public int login_attempts;
     //public boolean loggedin;
 
-    /*public User(String email, String name, String password, String username) { //This is probably wrong
-        this.email = email;
+    public User(String name, String email, String username, String password) {
         this.name = name;
-        this.password = password;
+        this.email = email;
         this.username = username;
-    }*/
+        this.password = password;
+    }
 
     public String getEmail() {
         return email;
@@ -78,10 +78,10 @@ public class User extends Model {
 
     public static Finder<String, User> find = new Finder<String,User>(User.class);
 
-    /*public String toString() {
+    public String toString() {
         return String.format("[Name: '%s' Email: '%s' Username: %s Password: %s]", name,
                 email, username, password);
-    }*/
+    }
 
 
     //private static List<User> allUsers = new ArrayList<>();
