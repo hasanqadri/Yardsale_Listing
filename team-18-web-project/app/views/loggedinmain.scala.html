@@ -30,13 +30,11 @@
                 </div>
                 <div id="navbar" class="collapse navbar-collapse">
                     <ul class="nav navbar-nav">
-                        <li class="@if(request.path() == "/") {active}"><a href="/">HOME</a></li>
-                        <li class="@if(request.path() == "/about") {active}"><a href="/about">ABOUT</a></li>
-
+                        <li class="@if(request.path() == "/profile") {active}"><a href="/">PROFILE</a></li>
+                        <li class="@if(request.path() == "/userList") {active}"><a href="/users">USERS</a></li>
                     </ul>
                     <div class="navbar-form navbar-right">
-                        <a href="/login" class="btn btn-success">SIGN IN</a>
-                        <a href="/NewContact" class="btn btn-success">REGISTER</a>
+                        <a href="/logout" class="btn btn-success">SIGN OUT</a>
                     </div>
                 </div><!--/.nav-collapse -->
             </div>
