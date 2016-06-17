@@ -1,9 +1,6 @@
-@*
-* Call the `main` template with two arguments. The first
-* argument is a `String` with the title of the page, the second
-* argument is an `Html` object containing the body of the page.
-*@
+@* Displays profile page *@
 @(username:String, password:String, name:String, email:String, error:String)
+
 @loggedinmain("Profile") {
 <div class="container content">
     <div class="view profile" id="view-profile">
