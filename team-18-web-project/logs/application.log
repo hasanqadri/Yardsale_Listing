@@ -2413,3 +2413,9 @@ play.sbt.PlayExceptions$CompilationException: Compilation error[not found: value
 2016-06-17 00:23:26,876 [INFO] from application in application-akka.actor.default-dispatcher-11 - ApplicationTimer demo: Starting application at 2016-06-17T05:23:26.876Z
 2016-06-17 00:23:27,109 [INFO] from play.api.Play in application-akka.actor.default-dispatcher-11 - Application started (Dev)
 2016-06-17 00:23:27,668 [WARN] from play.core.server.netty.NettyModelConversion in application-akka.actor.default-dispatcher-5 - Content-Type set both in header (text/css; charset=utf-8) and attached to entity (text/css; charset=utf-8), ignoring content type from entity. To remove this warning, use Result.as(...) to set the content type, rather than setting the header manually.
+2016-06-17 00:25:57,446 [INFO] from application in application-akka.actor.default-dispatcher-3 - ApplicationTimer demo: Stopping application at 2016-06-17T05:25:57.445Z after 151s.
+2016-06-17 00:25:57,451 [INFO] from application in application-akka.actor.default-dispatcher-3 - Shutting down connection pool.
+2016-06-17 00:25:58,131 [INFO] from application in application-akka.actor.default-dispatcher-3 - Creating Pool for datasource 'default'
+2016-06-17 00:26:07,433 [INFO] from play.api.db.DefaultDBApi in application-akka.actor.default-dispatcher-3 - Database [default] connected at jdbc:mysql://db.cheek.us/team18
+2016-06-17 00:26:20,624 [INFO] from application in application-akka.actor.default-dispatcher-3 - ApplicationTimer demo: Starting application at 2016-06-17T05:26:20.606Z
+2016-06-17 00:26:21,514 [INFO] from play.api.Play in application-akka.actor.default-dispatcher-3 - Application started (Dev)
