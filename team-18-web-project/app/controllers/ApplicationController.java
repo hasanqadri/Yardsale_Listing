@@ -4,6 +4,8 @@ import com.avaje.ebean.Model;
 import models.User;
 import play.data.DynamicForm;
 import play.data.Form;
+
+import com.avaje.ebean.*;
 import play.mvc.Controller;
 import play.mvc.Result;
 import views.formdata.userdata;
@@ -39,10 +41,10 @@ public class ApplicationController extends Controller {
      * Page after registering, adds form data to user json
      */
     public Result postContact() {
-        Form<userdata> formdata = Form.form(userdata.class).bindFromRequest();
+        /*Form<userdata> formdata = Form.form(userdata.class).bindFromRequest();
         userdata data = formdata.get();
         User user = new User(data.name, data.email, data.username, data.password);
-        user.save();
+        user.save();*/
         return ok(postContact.render());
 
     }
@@ -56,21 +58,25 @@ public class ApplicationController extends Controller {
 
     public Result login() {
         if (request().method() == "POST") {
-            List<User> users = new Model.Finder<>(String.class, User.class).all();
-
             DynamicForm dynamicForm = Form.form().bindFromRequest();
-            int x= 0;
-            for (User user: users) {
-                if (dynamicForm.get("username").equals(user.getUsername()) && dynamicForm.get("password").equals(user.getPassword())) {
-                /* Set cookie and redirect to /loggedin */
-                    response().setCookie("login", "1");
-                    return redirect("/profile");
-                }
+            User user = User.find.where().eq("username", dynamicForm.get("username")).findUnique();
+            if (user != null && user.getPassword().equals(dynamicForm.get("password"))) {
+                //Create session
+                session("connected", dynamicForm.get("username"));
+                return redirect("/profile");
+            } else {
+                return ok(login.render("Login failed"));
             }
-            return ok(login.render("Login failed"));
         } else {
             return ok(login.render(""));
         }
+    }
+
+    public Result register() {
+        if (request().method() == "POST") {
+            return ok();
+        }
+        return redirect("/");
     }
 
 
@@ -78,7 +84,8 @@ public class ApplicationController extends Controller {
         /*
         Code here to check if cookie is set, otherwise send to /login
          */
-        if (request().cookies().get("login") != null && request().cookies().get("login").value().equals("1")) {
+        String username = session("connected");
+        if (username != null) {
             return ok(profile.render());
         } else {
             return redirect("/login");
@@ -87,14 +94,13 @@ public class ApplicationController extends Controller {
     }
 
     public Result logout() {
-        response().discardCookie("login");
+        session().clear();
         return redirect("/");
     }
 
     public Result notFound404(String path) { return notFound(notFound.render()); }
 
     public Result listUsers() {
-        //User user = new User("bla@bla.bla", "Test", "1234pass", "mynameis");
         List<User> users = User.find.all();
         return ok(toJson(users));
     }
