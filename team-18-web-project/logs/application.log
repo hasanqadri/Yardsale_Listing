@@ -2419,3 +2419,123 @@ play.sbt.PlayExceptions$CompilationException: Compilation error[not found: value
 2016-06-17 00:26:07,433 [INFO] from play.api.db.DefaultDBApi in application-akka.actor.default-dispatcher-3 - Database [default] connected at jdbc:mysql://db.cheek.us/team18
 2016-06-17 00:26:20,624 [INFO] from application in application-akka.actor.default-dispatcher-3 - ApplicationTimer demo: Starting application at 2016-06-17T05:26:20.606Z
 2016-06-17 00:26:21,514 [INFO] from play.api.Play in application-akka.actor.default-dispatcher-3 - Application started (Dev)
+2016-06-17 01:44:29,970 [INFO] from application in application-akka.actor.default-dispatcher-3 - ApplicationTimer demo: Stopping application at 2016-06-17T05:44:29.970Z after 645s.
+2016-06-17 01:44:29,972 [INFO] from application in application-akka.actor.default-dispatcher-3 - Shutting down connection pool.
+2016-06-17 01:44:30,462 [INFO] from application in application-akka.actor.default-dispatcher-3 - Creating Pool for datasource 'default'
+2016-06-17 01:44:30,877 [INFO] from play.api.db.DefaultDBApi in application-akka.actor.default-dispatcher-3 - Database [default] connected at jdbc:mysql://db.cheek.us/team18
+2016-06-17 01:44:31,373 [INFO] from application in application-akka.actor.default-dispatcher-3 - ApplicationTimer demo: Starting application at 2016-06-17T05:44:31.373Z
+2016-06-17 01:44:31,455 [INFO] from play.api.Play in application-akka.actor.default-dispatcher-3 - Application started (Dev)
+2016-06-17 01:44:31,875 [WARN] from play.core.server.netty.NettyModelConversion in application-akka.actor.default-dispatcher-7 - Content-Type set both in header (text/css; charset=utf-8) and attached to entity (text/css; charset=utf-8), ignoring content type from entity. To remove this warning, use Result.as(...) to set the content type, rather than setting the header manually.
+2016-06-17 01:44:32,283 [WARN] from play.core.server.netty.NettyModelConversion in application-akka.actor.default-dispatcher-4 - Content-Type set both in header (image/png) and attached to entity (image/png), ignoring content type from entity. To remove this warning, use Result.as(...) to set the content type, rather than setting the header manually.
+2016-06-17 02:01:02,513 [INFO] from application in application-akka.actor.default-dispatcher-5 - ApplicationTimer demo: Stopping application at 2016-06-17T06:01:02.513Z after 991s.
+2016-06-17 02:01:02,514 [INFO] from application in application-akka.actor.default-dispatcher-5 - Shutting down connection pool.
+2016-06-17 02:01:02,864 [INFO] from application in application-akka.actor.default-dispatcher-5 - Creating Pool for datasource 'default'
+2016-06-17 02:01:03,264 [INFO] from play.api.db.DefaultDBApi in application-akka.actor.default-dispatcher-5 - Database [default] connected at jdbc:mysql://db.cheek.us/team18
+2016-06-17 02:01:03,737 [INFO] from application in application-akka.actor.default-dispatcher-5 - ApplicationTimer demo: Starting application at 2016-06-17T06:01:03.737Z
+2016-06-17 02:01:03,940 [INFO] from play.api.Play in application-akka.actor.default-dispatcher-5 - Application started (Dev)
+2016-06-17 02:01:05,052 [WARN] from play.core.server.netty.NettyModelConversion in application-akka.actor.default-dispatcher-8 - Content-Type set both in header (image/png) and attached to entity (image/png), ignoring content type from entity. To remove this warning, use Result.as(...) to set the content type, rather than setting the header manually.
+2016-06-17 02:17:48,970 [ERROR] from application in netty-event-loop-1 - 
+
+! @70e2dgg1d - Internal server error, for (GET) [/profile] ->
+ 
+play.sbt.PlayExceptions$CompilationException: Compilation error[not found: value message]
+	at play.sbt.PlayExceptions$CompilationException$.apply(PlayExceptions.scala:27)
+	at play.sbt.PlayExceptions$CompilationException$.apply(PlayExceptions.scala:27)
+	at scala.Option.map(Option.scala:145)
+	at play.sbt.run.PlayReload$$anonfun$taskFailureHandler$1.apply(PlayReload.scala:49)
+	at play.sbt.run.PlayReload$$anonfun$taskFailureHandler$1.apply(PlayReload.scala:44)
+	at scala.Option.map(Option.scala:145)
+	at play.sbt.run.PlayReload$.taskFailureHandler(PlayReload.scala:44)
+	at play.sbt.run.PlayReload$.compileFailure(PlayReload.scala:40)
+	at play.sbt.run.PlayReload$$anonfun$compile$1.apply(PlayReload.scala:17)
+	at play.sbt.run.PlayReload$$anonfun$compile$1.apply(PlayReload.scala:17)
+	at scala.util.Either$LeftProjection.map(Either.scala:377)
+	at play.sbt.run.PlayReload$.compile(PlayReload.scala:17)
+	at play.sbt.run.PlayRun$$anonfun$playRunTask$1$$anonfun$apply$2$$anonfun$apply$3$$anonfun$2.apply(PlayRun.scala:61)
+	at play.sbt.run.PlayRun$$anonfun$playRunTask$1$$anonfun$apply$2$$anonfun$apply$3$$anonfun$2.apply(PlayRun.scala:61)
+	at play.runsupport.Reloader$$anonfun$reload$1.apply(Reloader.scala:338)
+	at play.runsupport.Reloader$$anon$3.run(Reloader.scala:43)
+	at java.security.AccessController.doPrivileged(Native Method)
+	at play.runsupport.Reloader$.play$runsupport$Reloader$$withReloaderContextClassLoader(Reloader.scala:39)
+	at play.runsupport.Reloader.reload(Reloader.scala:336)
+	at play.core.server.DevServerStart$$anonfun$mainDev$1$$anon$1$$anonfun$get$1.apply(DevServerStart.scala:118)
+	at play.core.server.DevServerStart$$anonfun$mainDev$1$$anon$1$$anonfun$get$1.apply(DevServerStart.scala:116)
+	at scala.concurrent.impl.Future$PromiseCompletingRunnable.liftedTree1$1(Future.scala:24)
+	at scala.concurrent.impl.Future$PromiseCompletingRunnable.run(Future.scala:24)
+	at akka.dispatch.TaskInvocation.run(AbstractDispatcher.scala:39)
+	at akka.dispatch.ForkJoinExecutorConfigurator$AkkaForkJoinTask.exec(AbstractDispatcher.scala:405)
+	at scala.concurrent.forkjoin.ForkJoinTask.doExec(ForkJoinTask.java:260)
+	at scala.concurrent.forkjoin.ForkJoinPool$WorkQueue.runTask(ForkJoinPool.java:1339)
+	at scala.concurrent.forkjoin.ForkJoinPool.runWorker(ForkJoinPool.java:1979)
+	at scala.concurrent.forkjoin.ForkJoinWorkerThread.run(ForkJoinWorkerThread.java:107)
+2016-06-17 02:18:15,459 [ERROR] from application in netty-event-loop-1 - 
+
+! @70e2di41p - Internal server error, for (GET) [/profile] ->
+ 
+play.sbt.PlayExceptions$CompilationException: Compilation error[not found: value message]
+	at play.sbt.PlayExceptions$CompilationException$.apply(PlayExceptions.scala:27)
+	at play.sbt.PlayExceptions$CompilationException$.apply(PlayExceptions.scala:27)
+	at scala.Option.map(Option.scala:145)
+	at play.sbt.run.PlayReload$$anonfun$taskFailureHandler$1.apply(PlayReload.scala:49)
+	at play.sbt.run.PlayReload$$anonfun$taskFailureHandler$1.apply(PlayReload.scala:44)
+	at scala.Option.map(Option.scala:145)
+	at play.sbt.run.PlayReload$.taskFailureHandler(PlayReload.scala:44)
+	at play.sbt.run.PlayReload$.compileFailure(PlayReload.scala:40)
+	at play.sbt.run.PlayReload$$anonfun$compile$1.apply(PlayReload.scala:17)
+	at play.sbt.run.PlayReload$$anonfun$compile$1.apply(PlayReload.scala:17)
+	at scala.util.Either$LeftProjection.map(Either.scala:377)
+	at play.sbt.run.PlayReload$.compile(PlayReload.scala:17)
+	at play.sbt.run.PlayRun$$anonfun$playRunTask$1$$anonfun$apply$2$$anonfun$apply$3$$anonfun$2.apply(PlayRun.scala:61)
+	at play.sbt.run.PlayRun$$anonfun$playRunTask$1$$anonfun$apply$2$$anonfun$apply$3$$anonfun$2.apply(PlayRun.scala:61)
+	at play.runsupport.Reloader$$anonfun$reload$1.apply(Reloader.scala:338)
+	at play.runsupport.Reloader$$anon$3.run(Reloader.scala:43)
+	at java.security.AccessController.doPrivileged(Native Method)
+	at play.runsupport.Reloader$.play$runsupport$Reloader$$withReloaderContextClassLoader(Reloader.scala:39)
+	at play.runsupport.Reloader.reload(Reloader.scala:336)
+	at play.core.server.DevServerStart$$anonfun$mainDev$1$$anon$1$$anonfun$get$1.apply(DevServerStart.scala:118)
+	at play.core.server.DevServerStart$$anonfun$mainDev$1$$anon$1$$anonfun$get$1.apply(DevServerStart.scala:116)
+	at scala.concurrent.impl.Future$PromiseCompletingRunnable.liftedTree1$1(Future.scala:24)
+	at scala.concurrent.impl.Future$PromiseCompletingRunnable.run(Future.scala:24)
+	at akka.dispatch.TaskInvocation.run(AbstractDispatcher.scala:39)
+	at akka.dispatch.ForkJoinExecutorConfigurator$AkkaForkJoinTask.exec(AbstractDispatcher.scala:405)
+	at scala.concurrent.forkjoin.ForkJoinTask.doExec(ForkJoinTask.java:260)
+	at scala.concurrent.forkjoin.ForkJoinPool$WorkQueue.runTask(ForkJoinPool.java:1339)
+	at scala.concurrent.forkjoin.ForkJoinPool.runWorker(ForkJoinPool.java:1979)
+	at scala.concurrent.forkjoin.ForkJoinWorkerThread.run(ForkJoinWorkerThread.java:107)
+2016-06-17 02:19:52,714 [INFO] from application in application-akka.actor.default-dispatcher-7 - ApplicationTimer demo: Stopping application at 2016-06-17T06:19:52.714Z after 1129s.
+2016-06-17 02:19:52,795 [INFO] from application in application-akka.actor.default-dispatcher-7 - Shutting down connection pool.
+2016-06-17 02:19:53,122 [INFO] from application in application-akka.actor.default-dispatcher-7 - Creating Pool for datasource 'default'
+2016-06-17 02:19:53,568 [INFO] from play.api.db.DefaultDBApi in application-akka.actor.default-dispatcher-7 - Database [default] connected at jdbc:mysql://db.cheek.us/team18
+2016-06-17 02:19:54,003 [INFO] from application in application-akka.actor.default-dispatcher-7 - ApplicationTimer demo: Starting application at 2016-06-17T06:19:54.003Z
+2016-06-17 02:19:54,102 [INFO] from play.api.Play in application-akka.actor.default-dispatcher-7 - Application started (Dev)
+2016-06-17 02:19:58,852 [WARN] from play.core.server.netty.NettyModelConversion in application-akka.actor.default-dispatcher-7 - Content-Type set both in header (image/png) and attached to entity (image/png), ignoring content type from entity. To remove this warning, use Result.as(...) to set the content type, rather than setting the header manually.
+2016-06-17 02:20:32,060 [WARN] from play.core.server.netty.NettyModelConversion in application-akka.actor.default-dispatcher-13 - Content-Type set both in header (image/png) and attached to entity (image/png), ignoring content type from entity. To remove this warning, use Result.as(...) to set the content type, rather than setting the header manually.
+2016-06-17 02:20:42,881 [WARN] from play.core.server.netty.NettyModelConversion in application-akka.actor.default-dispatcher-15 - Content-Type set both in header (application/javascript; charset=utf-8) and attached to entity (application/javascript; charset=utf-8), ignoring content type from entity. To remove this warning, use Result.as(...) to set the content type, rather than setting the header manually.
+2016-06-17 02:20:42,917 [WARN] from play.core.server.netty.NettyModelConversion in application-akka.actor.default-dispatcher-2 - Content-Type set both in header (text/css; charset=utf-8) and attached to entity (text/css; charset=utf-8), ignoring content type from entity. To remove this warning, use Result.as(...) to set the content type, rather than setting the header manually.
+2016-06-17 02:20:42,921 [WARN] from play.core.server.netty.NettyModelConversion in application-akka.actor.default-dispatcher-2 - Content-Type set both in header (text/css; charset=utf-8) and attached to entity (text/css; charset=utf-8), ignoring content type from entity. To remove this warning, use Result.as(...) to set the content type, rather than setting the header manually.
+2016-06-17 02:20:43,098 [WARN] from play.core.server.netty.NettyModelConversion in application-akka.actor.default-dispatcher-22 - Content-Type set both in header (application/javascript; charset=utf-8) and attached to entity (application/javascript; charset=utf-8), ignoring content type from entity. To remove this warning, use Result.as(...) to set the content type, rather than setting the header manually.
+2016-06-17 02:20:43,269 [WARN] from play.core.server.netty.NettyModelConversion in application-akka.actor.default-dispatcher-22 - Content-Type set both in header (image/png) and attached to entity (image/png), ignoring content type from entity. To remove this warning, use Result.as(...) to set the content type, rather than setting the header manually.
+2016-06-17 02:25:05,110 [INFO] from application in application-akka.actor.default-dispatcher-15 - ApplicationTimer demo: Stopping application at 2016-06-17T06:25:05.110Z after 311s.
+2016-06-17 02:25:05,110 [INFO] from application in application-akka.actor.default-dispatcher-15 - Shutting down connection pool.
+2016-06-17 02:25:05,528 [INFO] from application in application-akka.actor.default-dispatcher-15 - Creating Pool for datasource 'default'
+2016-06-17 02:25:05,946 [INFO] from play.api.db.DefaultDBApi in application-akka.actor.default-dispatcher-15 - Database [default] connected at jdbc:mysql://db.cheek.us/team18
+2016-06-17 02:25:06,618 [INFO] from application in application-akka.actor.default-dispatcher-15 - ApplicationTimer demo: Starting application at 2016-06-17T06:25:06.618Z
+2016-06-17 02:25:06,836 [INFO] from play.api.Play in application-akka.actor.default-dispatcher-15 - Application started (Dev)
+2016-06-17 02:25:07,766 [WARN] from play.core.server.netty.NettyModelConversion in application-akka.actor.default-dispatcher-4 - Content-Type set both in header (image/png) and attached to entity (image/png), ignoring content type from entity. To remove this warning, use Result.as(...) to set the content type, rather than setting the header manually.
+2016-06-17 02:26:19,303 [INFO] from application in application-akka.actor.default-dispatcher-3 - ApplicationTimer demo: Stopping application at 2016-06-17T06:26:19.303Z after 73s.
+2016-06-17 02:26:19,304 [INFO] from application in application-akka.actor.default-dispatcher-3 - Shutting down connection pool.
+2016-06-17 02:26:19,578 [INFO] from application in application-akka.actor.default-dispatcher-3 - Creating Pool for datasource 'default'
+2016-06-17 02:26:20,431 [INFO] from play.api.db.DefaultDBApi in application-akka.actor.default-dispatcher-3 - Database [default] connected at jdbc:mysql://db.cheek.us/team18
+2016-06-17 02:26:20,820 [INFO] from application in application-akka.actor.default-dispatcher-3 - ApplicationTimer demo: Starting application at 2016-06-17T06:26:20.820Z
+2016-06-17 02:26:20,934 [INFO] from play.api.Play in application-akka.actor.default-dispatcher-3 - Application started (Dev)
+2016-06-17 02:26:21,557 [WARN] from play.core.server.netty.NettyModelConversion in application-akka.actor.default-dispatcher-8 - Content-Type set both in header (image/png) and attached to entity (image/png), ignoring content type from entity. To remove this warning, use Result.as(...) to set the content type, rather than setting the header manually.
+2016-06-17 02:26:44,530 [WARN] from play.core.server.netty.NettyModelConversion in application-akka.actor.default-dispatcher-4 - Content-Type set both in header (image/png) and attached to entity (image/png), ignoring content type from entity. To remove this warning, use Result.as(...) to set the content type, rather than setting the header manually.
+2016-06-17 02:30:40,895 [INFO] from application in application-akka.actor.default-dispatcher-16 - ApplicationTimer demo: Stopping application at 2016-06-17T06:30:40.895Z after 260s.
+2016-06-17 02:30:40,895 [INFO] from application in application-akka.actor.default-dispatcher-16 - Shutting down connection pool.
+2016-06-17 02:30:41,109 [INFO] from application in application-akka.actor.default-dispatcher-16 - Creating Pool for datasource 'default'
+2016-06-17 02:30:41,560 [INFO] from play.api.db.DefaultDBApi in application-akka.actor.default-dispatcher-16 - Database [default] connected at jdbc:mysql://db.cheek.us/team18
+2016-06-17 02:30:41,943 [INFO] from application in application-akka.actor.default-dispatcher-16 - ApplicationTimer demo: Starting application at 2016-06-17T06:30:41.942Z
+2016-06-17 02:30:42,018 [INFO] from play.api.Play in application-akka.actor.default-dispatcher-16 - Application started (Dev)
+2016-06-17 02:30:42,577 [WARN] from play.core.server.netty.NettyModelConversion in application-akka.actor.default-dispatcher-7 - Content-Type set both in header (image/png) and attached to entity (image/png), ignoring content type from entity. To remove this warning, use Result.as(...) to set the content type, rather than setting the header manually.
+2016-06-17 02:31:25,023 [WARN] from play.core.server.netty.NettyModelConversion in application-akka.actor.default-dispatcher-2 - Content-Type set both in header (image/png) and attached to entity (image/png), ignoring content type from entity. To remove this warning, use Result.as(...) to set the content type, rather than setting the header manually.
+2016-06-17 02:31:39,772 [WARN] from play.core.server.netty.NettyModelConversion in application-akka.actor.default-dispatcher-23 - Content-Type set both in header (image/png) and attached to entity (image/png), ignoring content type from entity. To remove this warning, use Result.as(...) to set the content type, rather than setting the header manually.
