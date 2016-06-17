@@ -32,9 +32,10 @@ public class ApplicationController extends Controller {
     public Result login() {
         if (request().method() == "POST") {
             DynamicForm dynamicForm = Form.form().bindFromRequest();
-            if (dynamicForm.get("username").equals("user") && dynamicForm.get("password").equals("pass")) {
-                /* Set cookie and redirect to /loggedin */
-                response().setCookie("login", "1");
+            User user = User.find.where().eq("username", dynamicForm.get("username")).findUnique();
+            if (user != null && user.getPassword().equals(dynamicForm.get("password"))) {
+                //Create session
+                session("connected", dynamicForm.get("username"));
                 return redirect("/loggedin");
             } else {
                 return ok(login.render("Login failed"));
@@ -48,22 +49,22 @@ public class ApplicationController extends Controller {
         /*
         Code here to check if cookie is set, otherwise send to /login
          */
-        if (request().cookies().get("login") != null && request().cookies().get("login").value().equals("1")) {
-            return ok(loggedin.render());
+        String username = session("connected");
+        if (username != null) {
+            return ok(loggedin.render(username));
         } else {
             return redirect("/login");
         }
     }
 
     public Result logout() {
-        response().discardCookie("login");
+        session().clear();
         return redirect("/");
     }
 
     public Result notFound404(String path) { return notFound(notFound.render()); }
 
     public Result listUsers() {
-        //User user = new User("bla@bla.bla", "Test", "1234pass", "mynameis");
         List<User> users = User.find.all();
         return ok(toJson(users));
 
