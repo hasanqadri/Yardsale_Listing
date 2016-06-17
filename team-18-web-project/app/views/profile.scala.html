@@ -1,14 +1,63 @@
-@main("Register") {
-  <div class="container content">
-    <img class="front-image" src="http://gamewires.com/Images/Posts/38156_banner.jpg" />
-    <div class="col-sm-6">
-      <h1>Profile page.</h1>
-      <ul>
-        <li></li>
-        <li></li>
-        <li></li>
-        <li></li>
-      </ul>
+@*
+* Call the `main` template with two arguments. The first
+* argument is a `String` with the title of the page, the second
+* argument is an `Html` object containing the body of the page.
+*@
+@main("Profile") {
+<div class="container content">
+    <div class="view profile" id="view-profile">
+        <div class="col-sm-6">
+            <img class="profile-image" src="http://placehold.it/200x200" />
+            <h1>Profile Name</h1>
+            <p class="lead">User Email</p>
+            <p class="lead">User Location</p>
+
+        </div>
+        <div class="col-sm-6">
+
+            <a href="#" class="btn btn-success pull-right" onclick="changeToEdit();">Edit profile</a>
+        </div>
+
     </div>
-  </div>
+    <div class="edit profile" id="edit-profile">
+        <div class="col-sm-4">
+            <img class="profile-image" src="http://placehold.it/200x200" />
+            <h1>Edit Profile</h1>
+            <p class="lead">User Email</p>
+            <p class="lead">User Location</p>
+
+        </div>
+        <div class="col-sm-4">
+            <form class="form-editprofile" id="edit-form">
+                <label for="inputName" class="sr-only">Name</label>
+                <input type="text" id="inputName" class="form-control input-top" placeholder="Name" required autofocus>
+                <label for="inputEmail" class="sr-only">Email</label>
+                <input type="email" id="inputEmail" class="form-control input-middle" placeholder="Email" required>
+                <label for="inputUsername" class="sr-only">Username</label>
+                <input type="text" id="inputUsername" class="form-control input-middle" placeholder="Username" required>
+                <label for="inputPassword" class="sr-only">Password</label>
+                <input type="password" id="inputPassword" class="form-control input-bottom" placeholder="Password" required>
+            </form>
+        </div>
+
+        <div class="col-sm-4">
+            <div class="btn-toolbar pull-right">
+                <a href="#" class="btn btn-success" onclick="changeToView();">cancel</a>
+                <a href="#" class="btn btn-success" onclick="changeToView();">Save Changes</a>
+
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+    var changeToEdit = function() {
+        $("#view-profile").css("display", "none");
+        $("#edit-profile").css("display", "block");
+    }
+    var changeToView = function() {
+        $("#edit-profile").css("display", "none");
+        $("#view-profile").css("display", "block");
+    }
+
+</script>
 }

@@ -106,4 +106,8 @@ body{
 #sign-up {
     display: none;
 }
+
+#edit-profile {
+    display: none;
+}
 /*End Login*/

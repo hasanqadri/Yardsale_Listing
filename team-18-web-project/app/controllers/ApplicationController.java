@@ -5,8 +5,6 @@ import models.User;
 import play.data.DynamicForm;
 import play.data.Form;
 
-import models.User;
-
 import com.avaje.ebean.*;
 import play.mvc.Controller;
 import play.mvc.Result;

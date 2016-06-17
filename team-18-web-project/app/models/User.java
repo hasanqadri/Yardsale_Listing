@@ -3,9 +3,6 @@ package models;
 import com.avaje.ebean.Model;
 import play.data.format.*;
 import play.data.validation.Constraints;
-import java.util.*;
-import com.avaje.ebean.Model;
-import play.data.validation.Constraints;
 
 import javax.persistence.Entity;
 import javax.persistence.Id;
@@ -17,7 +14,6 @@ import java.util.List;
 @Table(name="users")
 public class User extends Model {
     @Id
-<<<<<<< HEAD
     public int id;
     @Constraints.Required
     public String email;
