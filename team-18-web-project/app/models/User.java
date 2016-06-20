@@ -25,6 +25,8 @@ public class User extends Model {
     public String password;
     @Constraints.Required
     public String username;
+    //@OneToMany(mappedBy = "user")
+    public List<YardSale> yardSales = new ArrayList<>();
     public int account_locked;
     public int login_attempts;
     //public boolean loggedin;
