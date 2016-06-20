@@ -11,8 +11,9 @@ public class userdata {
     public userdata() {
 
     }
-    public userdata(String name, String email, String username, String password) {
-        this.name = name;
+    public userdata(String first_name,String last_name, String email, String username, String password) {
+        this.first_name = first_name;
+        this.last_name = last_name;
         this.email = email;
         this.username = username;
         this.password = password;
@@ -22,7 +23,9 @@ public class userdata {
     @Constraints.Required
     public String email = "";
     @Constraints.Required
-    public String name = "";
+    public String first_name = "";
+    @Constraints.Required
+    public String last_name = " ";
     @Constraints.Required
     public String password = "";
     @Constraints.Required
