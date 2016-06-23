@@ -18,17 +18,22 @@ public class User extends Model {
     @Constraints.Required
     public String email;
     @Constraints.Required
-    public String name;
+    public String first_name;
+    @Constraints.Required
+    public String last_name;
     @Constraints.Required
     public String password;
     @Constraints.Required
     public String username;
+    //@OneToMany(mappedBy = "user")
+    public List<YardSale> yardSales = new ArrayList<>();
     public int account_locked;
     public int login_attempts;
     //public boolean loggedin;
 
-    public User(String name, String email, String username, String password) {
-        this.name = name;
+    public User(String first_name,String last_name, String email, String username, String password) {
+        this.first_name = first_name;
+        this.last_name = last_name;
         this.email = email;
         this.username = username;
         this.password = password;
@@ -42,12 +47,18 @@ public class User extends Model {
         this.email = email;
     }
 
-    public String getName() {
-        return name;
+    public String getFirst_name() {
+        return first_name;
+    }
+    public String getLast_name(){
+        return last_name;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public void setFirst_name(String first_name) {
+        this.first_name = first_name;
+    }
+    public void setLast_name(String last_name){
+        this.last_name = last_name;
     }
 
     public String getPassword() {
@@ -79,7 +90,7 @@ public class User extends Model {
     public static Finder<String, User> find = new Finder<String,User>(User.class);
 
     public String toString() {
-        return String.format("[Name: '%s' Email: '%s' Username: %s Password: %s]", name,
+        return String.format("[Name: '%s' Email: '%s' Username: %s Password: %s]", first_name + " " + last_name,
                 email, username, password);
     }
 

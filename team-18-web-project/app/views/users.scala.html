@@ -6,6 +6,7 @@
         <thead>
             <tr>
                 <th>Name</th>
+                <th></th>
                 <th>Username</th>
                 <th>Email</th>
             </tr>
@@ -20,7 +21,7 @@
     $.getJSON("/userList", function(data) {
         for(var i in data) {
             var text = data[i].name;
-            var output = "<tr><td>"+data[i].name+"</td><td>"+data[i].username+"</td><td>"+data[i].email+"</td></tr>";
+            var output = "<tr><td>"+data[i].last_name +", "+data[i].first_name+"<td><td>" + data[i].username+"</td><td>"+data[i].email+"</td></tr>";
             $("#users").append(output)
         }
     });

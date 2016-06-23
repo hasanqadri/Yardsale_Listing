@@ -52,7 +52,7 @@ public class ApplicationController extends Controller {
     public Result postContact() {
         Form<userdata> formdata = Form.form(userdata.class).bindFromRequest();
         userdata data = formdata.get();
-        User user = new User(data.name, data.email, data.username, data.password);
+        User user = new User(data.first_name, data.last_name, data.email, data.username, data.password);
         user.save();
         return ok(postContact.render());
 
@@ -123,7 +123,7 @@ public class ApplicationController extends Controller {
                 return ok(register.render("Error: email already in use"));
             }
             //If username or email not already in use, create user
-            User user = new User(dynamicForm.get("name"), dynamicForm.get("email"), dynamicForm.get("username"), dynamicForm.get("password"));
+            User user = new User(dynamicForm.get("first_name"), dynamicForm.get("last_name"), dynamicForm.get("email"), dynamicForm.get("username"), dynamicForm.get("password"));
             user.save();
             return ok(postContact.render());
         }
@@ -150,17 +150,18 @@ public class ApplicationController extends Controller {
             DynamicForm dynamicForm = Form.form().bindFromRequest();
             User userCheckUsername = User.find.where().eq("username", dynamicForm.get("username")).findUnique();
             if (userCheckUsername != null && !dynamicForm.get("username").equals(username)) {
-                return ok(profile.render(username, user.getPassword(), user.getName(), user.getEmail(),
+                return ok(profile.render(username, user.getPassword(), user.getFirst_name(),user.getLast_name(), user.getEmail(),
                         "Error: username already in use"));
             }
             User userCheckEmail = User.find.where().eq("email", dynamicForm.get("email")).findUnique();
             if (userCheckEmail != null && !dynamicForm.get("email").equals(user.getEmail())) {
-                return ok(profile.render(username, user.getPassword(), user.getName(), user.getEmail(),
+                return ok(profile.render(username, user.getPassword(), user.getFirst_name(), user.getFirst_name(), user.getEmail(),
                         "Error: email already in use"));
 
             }
             //If username or email not already in use, update user
-            user.setName(dynamicForm.get("name"));
+            user.setFirst_name(dynamicForm.get("first_name"));
+            user.setLast_name(dynamicForm.get("last_name"));
             user.setEmail(dynamicForm.get("email"));
             user.setUsername(dynamicForm.get("username"));
             user.setPassword(dynamicForm.get("password"));
@@ -168,7 +169,7 @@ public class ApplicationController extends Controller {
             session("connected", dynamicForm.get("username"));
 
         }
-        return ok(profile.render(username, user.getPassword(), user.getName(), user.getEmail(),
+        return ok(profile.render(username, user.getPassword(), user.getFirst_name(),user.getLast_name(), user.getEmail(),
                 ""));
 
     }
