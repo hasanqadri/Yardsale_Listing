@@ -11,9 +11,8 @@ public class userdata {
     public userdata() {
 
     }
-    public userdata(String first_name,String last_name, String email, String username, String password) {
-        this.first_name = first_name;
-        this.last_name = last_name;
+    public userdata(String name, String email, String username, String password) {
+        this.name = name;
         this.email = email;
         this.username = username;
         this.password = password;
@@ -23,14 +22,11 @@ public class userdata {
     @Constraints.Required
     public String email = "";
     @Constraints.Required
-    public String first_name = "";
-    @Constraints.Required
-    public String last_name = " ";
+    public String name = "";
     @Constraints.Required
     public String password = "";
     @Constraints.Required
     public String username = "";
-    public boolean account_locked = false;
     public int login_attempts = 0;
 
 

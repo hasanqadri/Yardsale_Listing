@@ -7,33 +7,29 @@ import play.data.validation.Constraints;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Table;
+import javax.persistence.Column;
 import java.util.ArrayList;
 import java.util.List;
 
 @Entity
-@Table(name="users")
+@Table(name="usersNcheek3")
 public class User extends Model {
     @Id
     public int id;
     @Constraints.Required
     public String email;
     @Constraints.Required
-    public String first_name;
-    @Constraints.Required
-    public String last_name;
+    public String name;
     @Constraints.Required
     public String password;
     @Constraints.Required
     public String username;
-    //@OneToMany(mappedBy = "user")
-    public List<YardSale> yardSales = new ArrayList<>();
-    public int account_locked;
-    public int login_attempts;
-    //public boolean loggedin;
+    public int loginAttempts;
+    @Column(columnDefinition = "integer default 1")
+    public int
 
-    public User(String first_name,String last_name, String email, String username, String password) {
-        this.first_name = first_name;
-        this.last_name = last_name;
+    public User(String name, String email, String username, String password) {
+        this.name = name;
         this.email = email;
         this.username = username;
         this.password = password;
@@ -47,18 +43,12 @@ public class User extends Model {
         this.email = email;
     }
 
-    public String getFirst_name() {
-        return first_name;
-    }
-    public String getLast_name(){
-        return last_name;
+    public String getName() {
+        return name;
     }
 
-    public void setFirst_name(String first_name) {
-        this.first_name = first_name;
-    }
-    public void setLast_name(String last_name){
-        this.last_name = last_name;
+    public void setName(String name) {
+        this.name = name;
     }
 
     public String getPassword() {
@@ -77,20 +67,10 @@ public class User extends Model {
         this.username = username;
     }
 
-    /*public boolean getLoggedin() {
-        return loggedin;
-    }
-
-    public void setLoggedin(boolean b) {
-        this.loggedin = b;
-    }*/
-
-
-
     public static Finder<String, User> find = new Finder<String,User>(User.class);
 
     public String toString() {
-        return String.format("[Name: '%s' Email: '%s' Username: %s Password: %s]", first_name + " " + last_name,
+        return String.format("[Name: '%s' Email: '%s' Username: %s Password: %s]", name,
                 email, username, password);
     }
 
@@ -98,22 +78,4 @@ public class User extends Model {
     //private static List<User> allUsers = new ArrayList<>();
 
 
-/**
-    public static User makeInstance(userdata formData) {
-        val connection = DB.getConnection("team18");
-        User user = new User();
-        user.name = formData.name;
-        user.password = formData.password;
-        user.email = formData.email;
-        user.username = formData.username;
-        // create a Statement from the connection
-        try {
-            getConnection("users").executeUpdate("INSERT INTO team18.users " + "VALUES (, user.password, user.name, user.email, user.username, false, 0)");
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-
-        return user;
-    }
-*/
 }
