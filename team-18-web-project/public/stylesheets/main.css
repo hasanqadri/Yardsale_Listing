@@ -110,5 +110,21 @@ body{
 .saleNav {
 
     display: inline-block;
+
+}
+.saleNav a {
+
+    margin-left: 10px;
+    margin-right: 10px;
+    color: #000000;
+
+    font-size: 18px;
+}
+.saleList {
+    padding-top: 40px;
+}
+.searchButton {
+
+    max-width: 40px;
 }
 /*End Login*/

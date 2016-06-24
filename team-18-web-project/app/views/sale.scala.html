@@ -3,15 +3,33 @@
     <div class="view profile" id="view-profile">
 
         <div class="col-sm-4">
+
+
+            <a href="/createSale" class="btn btn-success">CREATE SALE</a>
         </div>
-        <div class="col-sm-4">
-            <ul class="saleNav">
-                <li><a href="/createSale">CREATE SALE</a></li>
-                <li><a href="/profile">VIEW SALES</a></li>
-            </ul>
+        <div class="col-sm-5">
+
         </div>
-        <div class="col-sm-4">
+        <div class="col-sm-3">
+            <div class="input-group">
+
+                <form class="form-search-field" action="/searchItems" method="post">
+                    
+                    <div class="input-group">
+                        <input type="text" class="form-control" placeholder="Search products...">
+                        <span class="input-group-btn">
+                            <button class="btn btn-default icon" type="button"><i class="glyphicon glyphicon-search"></i></button>
+                        </span>
+                    </div><!-- /input-group -->
+
+                </form>
+
+            </div>
+
         </div>
+        <ul class="saleList">
+            <h1 class = "text-center">Available Yard Sales</h1>
+        </ul>
     </div>
 </div>
 
