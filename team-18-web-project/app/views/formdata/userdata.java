@@ -27,7 +27,6 @@ public class userdata {
     public String password = "";
     @Constraints.Required
     public String username = "";
-    public boolean account_locked = false;
     public int login_attempts = 0;
 
 
