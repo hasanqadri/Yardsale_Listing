@@ -21,9 +21,10 @@ public class SaleItem extends Model {
     @Id
     public int id;
     @Constraints.Required
-    public int saleId; // References specific Sale
-    @Constraints.Required
     public String name;
-    @Column(columnDefinition = "integer default 0")
     public String description;
+    public float price;
+    public int pictureId; // References specific Picture
+    @Constraints.Required
+    public int saleId; // References specific Sale
 }

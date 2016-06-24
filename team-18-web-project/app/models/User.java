@@ -23,13 +23,13 @@ public class User extends Model {
     @Constraints.Required
     public String lastName;
     @Constraints.Required
-    public String password;
-    @Constraints.Required
     public String username;
+    @Constraints.Required
+    public String password;
     @Column(columnDefinition = "tinyint default 0") // 0 login attempts at creation
     public int loginAttempts;
     @Column(columnDefinition = "tinyint default 0") // Default not a superUser
-    public int superUser;
+    public int superAdmin;
     public int profilePictureId;
 
     public User (String firstName, String lastName, String email, String username, String password) {
@@ -72,13 +72,13 @@ public class User extends Model {
         }
     }
 
-    public String getPassword() { return password; }
-
-    public void setPassword(String password) { this.password = password; }
-
     public String getUsername() { return username; }
 
     public void setUsername(String username) { this.username = username; }
+
+    public String getPassword() { return password; }
+
+    public void setPassword(String password) { this.password = password; }
 
     public static Finder<String, User> find = new Finder<String,User>(User.class);
 

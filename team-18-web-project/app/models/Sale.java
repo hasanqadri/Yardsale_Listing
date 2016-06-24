@@ -20,13 +20,16 @@ public class Sale extends Model {
     @Id
     public int id;
     @Constraints.Required
+    public String name;
+    public String description;
+    public String street;
     public String city;
-    @Constraints.Required
     public String state;
+    public int zip;
+    public double startDate;
+    public double endDate;
     @Constraints.Required
     public int userCreatedId;
-    @Column(columnDefinition = "integer default 0") // New sales default to closed
-    public int isOpen; // Use int because boolean isn't a type in mysql
-    //public List<SaleItem> items = new ArrayList<>();
-
+    @Column(columnDefinition = "integer default 0") // New sales default to inactive
+    public int isActive; // Use int because boolean isn't a type in mysql
 }
