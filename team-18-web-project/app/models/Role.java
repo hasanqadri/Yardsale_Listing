@@ -11,19 +11,18 @@ import javax.persistence.Column;
 import java.util.ArrayList;
 import java.util.List;
 
-
 /**
- * Created by portega on 6/20/2016.
+ * Created by nathancheek on 6/24/16.
  */
-@Entity
-@Table(name="saleItems")
-public class SaleItem extends Model {
+public class Role extends Model {
+    //Stores roles relating a specific user to a specific sale
     @Id
     public int id;
     @Constraints.Required
     public int saleId; // References specific Sale
     @Constraints.Required
-    public String name;
-    @Column(columnDefinition = "integer default 0")
-    public String description;
+    public int userId; // References specific User
+    //@Constraints.Required
+
+
 }
