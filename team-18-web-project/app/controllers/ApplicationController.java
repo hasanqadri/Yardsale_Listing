@@ -38,6 +38,17 @@ public class ApplicationController extends Controller {
     }
 
     /**
+     * Renders about page
+     * @return HTTP response to about page request
+     */
+    public Result about() {
+        if (session("username") != null) { //Temporarily redirect all logged in users to /profile
+            return redirect("/profile");
+        }
+        return ok(about.render());
+    }
+
+    /**
      * Registration page that takes in the form info and then send the user to postContact
      * @return HTTP response to newContact request
      */
@@ -56,19 +67,6 @@ public class ApplicationController extends Controller {
         User user = new User(data.firstName, data.lastName, data.email, data.username, data.password);
         user.save();
         return ok(postContact.render(data.firstName + " " + data.lastName));
-
-    }
-
-    /**
-     * Renders about page
-     * @return HTTP response to about page request
-     */
-    public Result about() {
-        String username = session("username");
-        if (username != null) { //Temporarily redirect all logged in users to /profile
-            return redirect("/profile");
-        }
-        return ok(about.render());
     }
 
     /**
