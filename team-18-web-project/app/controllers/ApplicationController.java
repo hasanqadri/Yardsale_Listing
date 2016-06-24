@@ -128,14 +128,14 @@ public class ApplicationController extends Controller {
         if (request().method() == "POST") {
             DynamicForm dynamicForm = Form.form().bindFromRequest();
             User userCheckUsername = User.find.where().eq("username", dynamicForm.get("username")).findUnique();
-            if (userCheckUsername != null) {
+            if (!userCheckUsername.equals(username) && userCheckUsername != null) {
                 return ok(profile.render(username, user.getPassword(), user.getName(), user.getEmail(),
                         "Error: username already in use"));
             }
             User userCheckEmail = User.find.where().eq("email", dynamicForm.get("email")).findUnique();
-            if (userCheckEmail != null) {
+            if (!userCheckEmail.equals(user.getEmail()) && userCheckEmail != null) {
                 return ok(profile.render(username, user.getPassword(), user.getName(), user.getEmail(),
-                        "Error: username already in use"));
+                        "Error: Email already in use"));
 
             }
             //If username or email not already in use, update user
@@ -144,7 +144,7 @@ public class ApplicationController extends Controller {
             user.setUsername(dynamicForm.get("username"));
             user.setPassword(dynamicForm.get("password"));
             user.save();
-
+            session("connected",o do in por au prinncre dynamicForm.get("username"));
         }
         return ok(profile.render(username, user.getPassword(), user.getName(), user.getEmail(),
                 ""));

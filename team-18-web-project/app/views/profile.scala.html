@@ -32,17 +32,17 @@
             @if(error) {<h3 class="text-center">@error</h3>}
             <form class="form-editprofile" id="edit-form" action="/profile" method="post">
                 <label for="inputName" class="sr-only">Name</label>
-                <input type="text" id="inputName" class="form-control input-top" value=@name required autofocus>
+                <input type="text" id="inputName" name = "name" class="form-control input-top" value=@name required autofocus>
                 <label for="inputEmail" class="sr-only">Email</label>
-                <input type="email" id="inputEmail" class="form-control input-middle" value=@email required>
+                <input type="email" id="inputEmail" name = "email" class="form-control input-middle" value=@email required>
                 <label for="inputUsername" class="sr-only">Username</label>
-                <input type="text" id="inputUsername" class="form-control input-middle" value=@username required>
+                <input type="text" id="inputUsername" name = "username" class="form-control input-middle" value=@username required>
                 <label for="inputPassword" class="sr-only">Password</label>
-                <input type="password" id="inputPassword" class="form-control input-bottom" value=@password required>
+                <input type="password" id="inputPassword" name = "password" class="form-control input-bottom" value=@password required>
                 <div class="col-sm-4">
                     <div class="btn-toolbar pull-right">
                         <a href="#" class="btn btn-success" onclick="changeToView();">cancel</a>
-                        <a href="#" class="btn btn-success" onclick="changeToView();" type="submit">Save Changes</a>
+                        <button class="btn btn-success" type="submit">Save Changes</button>
 
                     </div>
                 </div>
