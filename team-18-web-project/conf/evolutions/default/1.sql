@@ -20,7 +20,7 @@ create table saleItems (
   constraint pk_saleItems primary key (id))
 ;
 
-create table usersNcheek3 (
+create table users (
   id                        integer auto_increment not null,
   email                     varchar(255),
   first_name                varchar(255),
@@ -30,7 +30,7 @@ create table usersNcheek3 (
   login_attempts            tinyint default 0,
   super_user                tinyint default 0,
   profile_picture_id        integer,
-  constraint pk_usersNcheek3 primary key (id))
+  constraint pk_users primary key (id))
 ;
 
 
@@ -44,7 +44,7 @@ drop table sales;
 
 drop table saleItems;
 
-drop table usersNcheek3;
+drop table users;
 
 SET FOREIGN_KEY_CHECKS=1;
 
