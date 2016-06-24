@@ -25,8 +25,8 @@ public class User extends Model {
     @Constraints.Required
     public String username;
     public int loginAttempts;
-    @Column(columnDefinition = "integer default 1")
-    public int
+
+
 
     public User(String name, String email, String username, String password) {
         this.name = name;
