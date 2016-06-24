@@ -16,10 +16,10 @@ import java.util.List;
  */
 public class Role extends Model {
     //Stores roles relating a specific user to a specific sale
-    @Id
-    public int id;
+    @Id // Primary key is made up of saleId and userId
     @Constraints.Required
     public int saleId; // References specific Sale
+    @Id
     @Constraints.Required
     public int userId; // References specific User
     @Constraints.Required

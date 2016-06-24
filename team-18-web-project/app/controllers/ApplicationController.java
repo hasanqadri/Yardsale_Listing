@@ -12,7 +12,6 @@ import play.mvc.Result;
 import play.mvc.Security.Authenticated;
 import views.formdata.userdata;
 import views.html.*;
-import views.html.formdata.sale;
 
 import java.util.List;
 
@@ -75,20 +74,30 @@ public class ApplicationController extends Controller {
      * @return Login page or response to login request
      */
     public Result login() {
-        if (request().method() == "POST") {
+        if (request().method() == "POST") { // login request
             DynamicForm dynamicForm = Form.form().bindFromRequest();
             User user = User.find.where().eq("username", dynamicForm.get("username")).findUnique();
-            if (user != null && user.getPassword().equals(dynamicForm.get("password"))) {
-                //Create session
-                session("username", dynamicForm.get("username"));
-                return redirect("/profile");
-            } else {
-                return ok(login.render("Login failed"));
+            if (user != null) { // User exists
+                if (user.getPassword().equals(dynamicForm.get("password"))) { // Correct password
+                    if (user.loginAttempts == 3) { // Notify that user is locked out
+                        return ok(login.render("Your account has been locked"));
+                    } else { // Create session
+                        if (user.loginAttempts != 0) { // Reset loginAttempts if != 0
+                            user.loginAttempts = 0;
+                            user.save();
+                        }
+                        session("username", dynamicForm.get("username"));
+                        return redirect("/profile");
+                    }
+                } else if (user.loginAttempts < 3) { // Incorrect password - increment lockout counter up to 3
+                    user.loginAttempts++;
+                    user.save();
+                }
             }
-        } else {
-            String username = session("username");
-            if (username != null) { //Temporarily redirect all logged in users to /profile
-                return redirect("/profile");
+            return ok(login.render("Login failed"));
+        } else { // load login page
+            if (session("username") != null) {
+                return redirect("/");
             }
             return ok(login.render(""));
         }
@@ -157,19 +166,8 @@ public class ApplicationController extends Controller {
 
     }
 
+    @Authenticated(Secured.class)
     public Result sale() {
-
-        /*
-        Code here to check if cookie is set, otherwise send to /login
-         */
-        String username = session("connected");
-        User user = User.find.where().eq("username", username).findUnique();
-
-
-        if (username == null) {
-            return redirect("/login");
-        }
-
         return ok(sale.render());
     }
     /**
@@ -206,6 +204,16 @@ public class ApplicationController extends Controller {
     @Authenticated(Secured.class)
     public Result users() {
         return ok(users.render());
+    }
+
+    @Authenticated(Secured.class)
+    public Result admin() {
+        User user = User.find.where().eq("username", session("username")).findUnique();
+        if (user.superAdmin == 1) {
+            return ok();
+        } else {
+            return notFound404("/admin");
+        }
     }
 
     @Authenticated(Secured.class)
