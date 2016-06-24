@@ -17,6 +17,7 @@ GET     /register                   controllers.ApplicationController.register
 POST    /register                   controllers.ApplicationController.register
 GET     /sale                       controllers.ApplicationController.sale
 
+# This better work
 # Map requests to /image
 GET     /image/*id                  controllers.ApplicationController.getImage(id)
 

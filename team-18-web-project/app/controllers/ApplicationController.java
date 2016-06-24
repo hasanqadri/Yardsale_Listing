@@ -12,6 +12,7 @@ import play.mvc.Result;
 import play.mvc.Security.Authenticated;
 import views.formdata.userdata;
 import views.html.*;
+import views.html.formdata.sale;
 
 import java.util.List;
 
@@ -156,6 +157,21 @@ public class ApplicationController extends Controller {
 
     }
 
+    public Result sale() {
+
+        /*
+        Code here to check if cookie is set, otherwise send to /login
+         */
+        String username = session("connected");
+        User user = User.find.where().eq("username", username).findUnique();
+
+
+        if (username == null) {
+            return redirect("/login");
+        }
+
+        return ok(sale.render());
+    }
     /**
      * Log out the user by deleting session cookies
      * @return HTTP redirection response to home page
