@@ -23,10 +23,12 @@ create table saleItems (
 create table usersNcheek3 (
   id                        integer auto_increment not null,
   email                     varchar(255),
-  name                      varchar(255),
+  first_name                varchar(255),
+  last_name                 varchar(255),
   password                  varchar(255),
   username                  varchar(255),
-  login_attempts            integer,
+  login_attempts            integer default 0,
+  profile_picture_id        integer,
   constraint pk_usersNcheek3 primary key (id))
 ;
 

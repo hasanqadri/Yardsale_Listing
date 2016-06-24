@@ -24,7 +24,6 @@ public class SaleItem extends Model {
     public int saleId; // References specific Sale
     @Constraints.Required
     public String name;
-    @Constraints.Required
+    @Column(columnDefinition = "integer default 0")
     public String description;
-    //public YardSale item_yardSale;
 }

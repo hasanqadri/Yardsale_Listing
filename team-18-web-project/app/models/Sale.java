@@ -1,4 +1,3 @@
-
 package models;
 
 import com.avaje.ebean.Model;
@@ -26,8 +25,8 @@ public class Sale extends Model {
     public String state;
     @Constraints.Required
     public int userCreatedId;
-    @Column(columnDefinition = "integer default 1")
-    public int isCurrent; // Use int because boolean isn't a type in mysql
-    public List<SaleItem> items = new ArrayList<>();
+    @Column(columnDefinition = "integer default 0") // New sales default to closed
+    public int isOpen; // Use int because boolean isn't a type in mysql
+    //public List<SaleItem> items = new ArrayList<>();
 
 }
