@@ -14,15 +14,9 @@ import java.util.List;
 /**
  * Created by nathancheek on 6/24/16.
  */
-public class Role extends Model {
-    //Stores roles relating a specific user to a specific sale
+public class Transaction extends Model {
     @Id
     public int id;
     @Constraints.Required
-    public int saleId; // References specific Sale
-    @Constraints.Required
-    public int userId; // References specific User
-    @Constraints.Required
-    public String userRole; // I'd rather use ENUM here but I'm not sure how
-
+    public int saleItemId; // Id of item in transaction
 }

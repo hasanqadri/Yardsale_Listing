@@ -32,8 +32,7 @@ public class ApplicationController extends Controller {
      * @return HTTP response to home page request
      */
     public Result home() {
-        String username = session("username");
-        if (username != null) { //Temporarily redirect all logged in users to /profile
+        if (session("username") != null) { //Temporarily redirect all logged in users to /profile
             return redirect("/profile");
         }
         return ok(home.render());
