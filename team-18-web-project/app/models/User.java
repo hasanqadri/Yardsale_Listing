@@ -26,8 +26,10 @@ public class User extends Model {
     public String password;
     @Constraints.Required
     public String username;
-    @Column(columnDefinition = "integer default 0")
+    @Column(columnDefinition = "tinyint default 0") // 0 login attempts at creation
     public int loginAttempts;
+    @Column(columnDefinition = "tinyint default 0") // Default not a superUser
+    public int superUser;
     public int profilePictureId;
 
     public User (String firstName, String lastName, String email, String username, String password) {

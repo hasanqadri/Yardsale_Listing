@@ -2,12 +2,14 @@ package controllers;
 
 import com.avaje.ebean.Model;
 import models.User;
+import models.Sale;
 import play.data.DynamicForm;
 import play.data.Form;
 
 import com.avaje.ebean.*;
 import play.mvc.Controller;
 import play.mvc.Result;
+import play.mvc.Security.Authenticated;
 import views.formdata.userdata;
 import views.html.*;
 
@@ -29,7 +31,7 @@ public class ApplicationController extends Controller {
      * @return HTTP response to home page request
      */
     public Result home() {
-        String username = session("connected");
+        String username = session("username");
         if (username != null) { //Temporarily redirect all logged in users to /profile
             return redirect("/profile");
         }
@@ -59,20 +61,11 @@ public class ApplicationController extends Controller {
     }
 
     /**
-     * Lists complete json data of all users
-     * @return JSON response of all user data stored in database
-     */
-    public Result getUsers() {
-        List<User> users = new Model.Finder<>(String.class, User.class).all();
-        return ok(toJson(users));
-    }
-
-    /**
      * Renders about page
      * @return HTTP response to about page request
      */
     public Result about() {
-        String username = session("connected");
+        String username = session("username");
         if (username != null) { //Temporarily redirect all logged in users to /profile
             return redirect("/profile");
         }
@@ -89,13 +82,13 @@ public class ApplicationController extends Controller {
             User user = User.find.where().eq("username", dynamicForm.get("username")).findUnique();
             if (user != null && user.getPassword().equals(dynamicForm.get("password"))) {
                 //Create session
-                session("connected", dynamicForm.get("username"));
+                session("username", dynamicForm.get("username"));
                 return redirect("/profile");
             } else {
                 return ok(login.render("Login failed"));
             }
         } else {
-            String username = session("connected");
+            String username = session("username");
             if (username != null) { //Temporarily redirect all logged in users to /profile
                 return redirect("/profile");
             }
@@ -108,7 +101,7 @@ public class ApplicationController extends Controller {
      * @return HTTP response to registration page request or registration request
      */
     public Result register() {
-        String username = session("connected");
+        String username = session("username");
         if (username != null) { //Temporarily redirect all logged in users to /profile
             return redirect("/profile");
         }
@@ -134,17 +127,10 @@ public class ApplicationController extends Controller {
      * Display profile page for user
      * @return HTTP response to profile page request
      */
+    @Authenticated(Secured.class)
     public Result profile() {
-        /*
-        Code here to check if cookie is set, otherwise send to /login
-         */
-        String username = session("connected");
+        String username = session("username");
         User user = User.find.where().eq("username", username).findUnique();
-
-
-        if (username == null) {
-            return redirect("/login");
-        }
 
         if (request().method() == "POST") {
             DynamicForm dynamicForm = Form.form().bindFromRequest();
@@ -166,7 +152,7 @@ public class ApplicationController extends Controller {
             user.setUsername(dynamicForm.get("username"));
             user.setPassword(dynamicForm.get("password"));
             user.save();
-            session("connected", dynamicForm.get("username"));
+            session("username", dynamicForm.get("username"));
 
         }
         return ok(profile.render(username, user.getPassword(), user.getFirstName(), user.getLastName(), user.getEmail(), ""));
@@ -189,26 +175,37 @@ public class ApplicationController extends Controller {
      */
     public Result notFound404(String path) { return notFound(notFound.render()); }
 
-    public Result userList() {
-        String username = session("connected");
-        if (username != null) {
-            List<User> users = User.find.all();
-            return ok(toJson(users));
-        } else {
-            return forbidden();
-        }
+    /**
+     * Lists complete json data of all users
+     * @return JSON response of all user data stored in database
+     */
+    @Authenticated(Secured.class)
+    public Result getUsers() {
+        //List<User> users = new Model.Finder<>(String.class, User.class).all(); // Alternative way of doing it
+        List<User> users = User.find.all();
+        return ok(toJson(users));
     }
 
     /**
      * Displays a list of all users
      * @return HTTP response to users list request
      */
+    @Authenticated(Secured.class)
     public Result users() {
-        String username = session("connected");
-        if (username != null) {
-            return ok(users.render());
-        } else {
-            return redirect("/login");
-        }
+        return ok(users.render());
+    }
+
+    @Authenticated(Secured.class)
+    public Result getImage(String id) {
+        //Picture picture = User.find.where().eq("id", dynamicForm.get("username")).findUnique();
+        Sale sale = new Sale();
+        sale.city = "Atlanta";
+        sale.state = "GA";
+        sale.userCreatedId = 123;
+        sale.save();
+        //Sale sale2 = Sale.find.where().eq("id", 1).findUnique();
+        return ok(id);
+
+        //return notFound(notFound.render());
     }
 }

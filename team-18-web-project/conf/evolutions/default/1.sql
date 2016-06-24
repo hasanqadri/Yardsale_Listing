@@ -8,7 +8,7 @@ create table sales (
   city                      varchar(255),
   state                     varchar(255),
   user_created_id           integer,
-  is_current                integer default 1,
+  is_open                   integer default 0,
   constraint pk_sales primary key (id))
 ;
 
@@ -16,7 +16,7 @@ create table saleItems (
   id                        integer auto_increment not null,
   sale_id                   integer,
   name                      varchar(255),
-  description               varchar(255),
+  description               integer default 0,
   constraint pk_saleItems primary key (id))
 ;
 
@@ -27,7 +27,8 @@ create table usersNcheek3 (
   last_name                 varchar(255),
   password                  varchar(255),
   username                  varchar(255),
-  login_attempts            integer default 0,
+  login_attempts            tinyint default 0,
+  super_user                tinyint default 0,
   profile_picture_id        integer,
   constraint pk_usersNcheek3 primary key (id))
 ;

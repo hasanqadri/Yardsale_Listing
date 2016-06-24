@@ -10,12 +10,14 @@ GET     /logout                     controllers.ApplicationController.logout
 GET     /NewContact                 controllers.ApplicationController.newContact
 POST    /NewContact                 controllers.ApplicationController.postContact
 GET     /users                      controllers.ApplicationController.users
-GET     /userList                   controllers.ApplicationController.userList
 GET     /profile                    controllers.ApplicationController.profile
 POST    /profile                    controllers.ApplicationController.profile
 GET     /getUsers                   controllers.ApplicationController.getUsers
 GET     /register                   controllers.ApplicationController.register
 POST    /register                   controllers.ApplicationController.register
+
+# Map requests to /image
+GET     /image/*id                  controllers.ApplicationController.getImage(id)
 
 # Map static resources from the /public folder to the /assets URL path
 GET     /assets/*file               controllers.Assets.versioned(path="/public", file: Asset)
