@@ -18,6 +18,7 @@ POST    /register                   controllers.ApplicationController.register
 GET     /sale                       controllers.ApplicationController.sale
 GET     /getSales                   controllers.ApplicationController.getSales
 GET     /createSale                 controllers.ApplicationController.createSale
+POST     /createSale                 controllers.ApplicationController.createSale
 GET     /admin                      controllers.ApplicationController.admin
 GET     /adminGetUsers              controllers.ApplicationController.adminGetUsers
 POST    /adminResetUser             controllers.ApplicationController.adminResetUser
