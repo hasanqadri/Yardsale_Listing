@@ -176,11 +176,24 @@ public class ApplicationController extends Controller {
     //creates the sale
     @Authenticated(Secured.class)
     public Result createSale() {
+
+        //enters sale into database
         if (request().method() == "POST") {
 
-
+            DynamicForm createSaleForm = Form.form().bindFromRequest();
+            Sale sale = new Sale();
+            sale.name = createSaleForm.get("name");
+            sale.street = createSaleForm.get("street");
+            sale.city = createSaleForm.get("city");
+            sale.state = createSaleForm.get("state");
+            sale.zip = Integer.parseInt(createSaleForm.get("zip"));
+            sale.startDate = Double.parseDouble(createSaleForm.get("startDate"));
+            sale.endDate = Double.parseDouble(createSaleForm.get("endDate"));
+            sale.save();
+            return ok(createSale.render("Sale Created! Create Another Sale?"));
+        } else {
+            return ok(createSale.render(""));
         }
-        return ok(createSale.render());
     }
     @Authenticated(Secured.class)
     public Result sale() {
