@@ -49,5 +49,5 @@ GET     /image/:id                  controllers.DataController.getImage(id: Int)
 GET     /assets/*file               controllers.Assets.versioned(path="/public", file: Asset)
 
 # Catch all other requests and show a 404
-GET     /$path<.*>                  controllers.PageController.notFound404(path)
-POST     /$path<.*>                  controllers.PageController.notFound404(path)
+GET     /*path                      controllers.PageController.notFound404(path: String)
+POST    /*path                      controllers.PageController.notFound404(path: String)
