@@ -14,6 +14,9 @@ import views.formdata.userdata;
 import views.html.*;
 
 import java.util.List;
+import org.json.JSONArray;
+import org.json.JSONObject;
+//import javax.json.JsonArray;
 
 import static play.libs.Json.toJson;
 
@@ -32,7 +35,7 @@ public class ApplicationController extends Controller {
      */
     public Result home() {
         if (session("username") != null) { //Temporarily redirect all logged in users to /profile
-            return redirect("/profile");
+            return redirect("/sales");
         }
         return ok(home.render());
     }
@@ -43,7 +46,7 @@ public class ApplicationController extends Controller {
      */
     public Result about() {
         if (session("username") != null) { //Temporarily redirect all logged in users to /profile
-            return redirect("/profile");
+            return redirect("/");
         }
         return ok(about.render());
     }
@@ -179,7 +182,7 @@ public class ApplicationController extends Controller {
 
         //enters sale into database
         if (request().method() == "POST") {
-
+            User user = User.find.where().eq("username", session("username")).findUnique();
             DynamicForm createSaleForm = Form.form().bindFromRequest();
             Sale sale = new Sale();
             sale.name = createSaleForm.get("name");
@@ -189,6 +192,7 @@ public class ApplicationController extends Controller {
             sale.zip = Integer.parseInt(createSaleForm.get("zip"));
             sale.startDate = Double.parseDouble(createSaleForm.get("startDate"));
             sale.endDate = Double.parseDouble(createSaleForm.get("endDate"));
+            sale.userCreatedId = user.id;
             sale.save();
             return ok(createSale.render("Sale Created! Create Another Sale?"));
         } else {
@@ -197,8 +201,19 @@ public class ApplicationController extends Controller {
     }
 
     @Authenticated(Secured.class)
-    public Result sale() {
-        return ok(sale.render());
+    public Result sales() {
+        return ok(sales.render());
+    }
+
+    @Authenticated(Secured.class)
+    public Result sale(String strId) {
+        int id = Integer.parseInt(strId);
+        if (request().method() == "POST") {
+            //todo check if user is authorized, then update
+            return ok();
+        }
+        //return ok(sale.render(id));
+        return ok();
     }
 
     @Authenticated(Secured.class)
@@ -254,10 +269,16 @@ public class ApplicationController extends Controller {
      */
     @Authenticated(Secured.class)
     public Result getUsers() {
-        //todo make this only return some data
-        //List<User> users = new Model.Finder<>(String.class, User.class).all(); // Alternative way of doing it
-        List<User> users = User.find.all();
-        return ok(toJson(users));
+        List<User> users = Ebean.find(User.class).findList();
+        JSONArray ja = new JSONArray();
+        for (User user : users) {
+            JSONObject jo = new JSONObject()
+                    .put("name", user.getName())
+                    .put("username", user.username)
+                    .put("email", user.email);
+            ja.put(jo);
+        }
+        return ok(ja.toString());
     }
 
     /**
@@ -318,16 +339,10 @@ public class ApplicationController extends Controller {
     }
 
     @Authenticated(Secured.class)
-    public Result getImage(String id) {
+    public Result getImage(String id) { // This method is currently being used for testing random stuff
         //Picture picture = User.find.where().eq("id", dynamicForm.get("username")).findUnique();
-        Sale sale = new Sale();
-        sale.city = "Atlanta";
-        sale.state = "GA";
-        sale.userCreatedId = 123;
-        sale.save();
         //Sale sale2 = Sale.find.where().eq("id", 1).findUnique();
-        List<Sale> sales = new Model.Finder<>(String.class, Sale.class).all();
-        return ok(toJson(sales));
+        return ok();
 
         //return notFound(notFound.render());
     }

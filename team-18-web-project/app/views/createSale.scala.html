@@ -2,6 +2,7 @@
 @loggedinmain("Create Sale") {
 //creates sale form
 <div class="container content">
+        @if(message) {<h3 class="text-center">@message</h3>}
         <div class="col-sm-4">
         <form class="form-createSale" id="createSale" action="/createSale" method="post">
             <label for="inputName" class="sr-only">Name</label>

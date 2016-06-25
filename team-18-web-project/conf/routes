@@ -15,16 +15,19 @@ POST    /profile                    controllers.ApplicationController.profile
 GET     /getUsers                   controllers.ApplicationController.getUsers
 GET     /register                   controllers.ApplicationController.register
 POST    /register                   controllers.ApplicationController.register
-GET     /sale                       controllers.ApplicationController.sale
+GET     /sales                      controllers.ApplicationController.sales
 GET     /getSales                   controllers.ApplicationController.getSales
 GET     /createSale                 controllers.ApplicationController.createSale
-POST     /createSale                 controllers.ApplicationController.createSale
+POST    /createSale                 controllers.ApplicationController.createSale
 GET     /admin                      controllers.ApplicationController.admin
 GET     /adminGetUsers              controllers.ApplicationController.adminGetUsers
 POST    /adminResetUser             controllers.ApplicationController.adminResetUser
 GET     /searchLocations            controllers.ApplicationController.searchLocations
 POST    /searchLocations            controllers.ApplicationController.searchLocations
 POST    /getSearchLocations         controllers.ApplicationController.getSearchLocations
+
+# Map requests to /sale
+GET     /sale/*id                   controllers.ApplicationController.sale(id)
 
 # Map requests to /image
 GET     /image/*id                  controllers.ApplicationController.getImage(id)
