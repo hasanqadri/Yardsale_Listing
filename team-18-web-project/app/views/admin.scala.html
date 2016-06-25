@@ -1,0 +1,47 @@
+@* Displays site admin settings *@
+@loggedinmain("Admin Console") {
+<div class="container content">
+    <h3>Admin Console</h3>
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>Name</th>
+                <th></th>
+                <th>Username</th>
+                <th>Email</th>
+                <th>Status</th>
+            </tr>
+        </thead>
+        <tbody id="users">
+
+        </tbody>
+    </table>
+</div>
+
+<script>
+    var displayUsers = function() {
+        $("#users").empty();
+        $.getJSON("/adminGetUsers", function(data) {
+            for(var i in data) {
+                var accountStatus = "unlocked";
+                if (data[i].loginAttempts == 3) {
+                    accountStatus = 'locked <button class="btn btn-sm btn-danger admin-reset" onclick="resetUser(\''
+                        + data[i].username + '\');">Unlock</button>';
+                }
+                var output = "<tr><td>" + data[i].name + "<td><td>" + data[i].username + "</td><td>" + data[i].email
+                    + "</td><td>" + accountStatus + "</td></tr>";
+                $("#users").append(output);
+            }
+        });
+    };
+    displayUsers();
+
+    var resetUser = function(username) {
+        console.log(username);
+        $.post("/adminResetUser", { "username" : username }).done(function( data ) {
+            // Wait till done until reloading users list
+            displayUsers();
+        });
+    }
+</script>
+}

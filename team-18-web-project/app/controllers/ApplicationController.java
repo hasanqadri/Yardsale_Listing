@@ -195,10 +195,37 @@ public class ApplicationController extends Controller {
             return ok(createSale.render(""));
         }
     }
+
     @Authenticated(Secured.class)
     public Result sale() {
         return ok(sale.render());
     }
+
+    @Authenticated(Secured.class)
+    public Result searchLocations() {
+        if (request().method() == "POST") {
+            DynamicForm dynamicForm = Form.form().bindFromRequest();
+            String query = dynamicForm.get("query");
+            if (query != null) {
+                return ok(searchLocations.render(query));
+            }
+        }
+        return redirect("/");
+    }
+
+    @Authenticated(Secured.class)
+    public Result getSearchLocations() {
+        if (request().method() == "POST") {
+            DynamicForm dynamicForm = Form.form().bindFromRequest();
+            String query = dynamicForm.get("query");
+            if (query != null) {
+                List<Sale> sales = new Model.Finder<>(String.class, Sale.class).where().like("city", query).findList();
+                return ok(toJson(sales));
+            }
+        }
+        return notFound404("/getSearchLocations");
+    }
+
     /**
      * Log out the user by deleting session cookies
      * @return HTTP redirection response to home page
@@ -213,7 +240,13 @@ public class ApplicationController extends Controller {
      * @param path URI of the page that doesn't exist
      * @return HTTP response to a nonexistant page
      */
-    public Result notFound404(String path) { return notFound(notFound.render()); }
+    public Result notFound404(String path) {
+        if (session("username") != null) {
+            return notFound(loggedinNotFound.render());
+        } else {
+            return notFound(notFound.render());
+        }
+    }
 
     /**
      * Lists complete json data of all users
@@ -221,6 +254,7 @@ public class ApplicationController extends Controller {
      */
     @Authenticated(Secured.class)
     public Result getUsers() {
+        //todo make this only return some data
         //List<User> users = new Model.Finder<>(String.class, User.class).all(); // Alternative way of doing it
         List<User> users = User.find.all();
         return ok(toJson(users));
@@ -235,14 +269,52 @@ public class ApplicationController extends Controller {
         return ok(users.render());
     }
 
+    /**
+     * Displays admin console
+     * @return HTTP response to admin console page request
+     */
     @Authenticated(Secured.class)
     public Result admin() {
         User user = User.find.where().eq("username", session("username")).findUnique();
-        if (user.superAdmin == 1) {
-            return ok();
-        } else {
+        if (user.superAdmin == 1) { // Show supersecret admin page
+            return ok(admin.render());
+        } else { // Return 404
             return notFound404("/admin");
         }
+    }
+
+    /**
+     * Lists complete json data of all users
+     * @return JSON response of all user data stored in database
+     */
+    @Authenticated(Secured.class)
+    public Result adminGetUsers() {
+        User user = User.find.where().eq("username", session("username")).findUnique();
+        if (user.superAdmin == 1) { // Show supersecret user data
+            List<User> users = new Model.Finder<>(String.class, User.class).all();
+            return ok(toJson(users));
+        } else { // Return 404
+            return notFound404("/adminGetUsers");
+        }
+    }
+
+    /**
+     * Unlocks a user account
+     * @return nothing
+     */
+    @Authenticated(Secured.class)
+    public Result adminResetUser() {
+        User user = User.find.where().eq("username", session("username")).findUnique();
+        if (user.superAdmin == 1 && request().method() == "POST") { // Requestor is super admin and is sending post req
+            DynamicForm dynamicForm = Form.form().bindFromRequest();
+            if (dynamicForm.get("username") != null) { // Username was sent in post request
+                User userReset = User.find.where().eq("username", dynamicForm.get("username")).findUnique();
+                userReset.loginAttempts = 0;
+                userReset.save();
+                return ok();
+            }
+        }
+        return notFound404("/adminResetUser");
     }
 
     @Authenticated(Secured.class)
@@ -254,7 +326,8 @@ public class ApplicationController extends Controller {
         sale.userCreatedId = 123;
         sale.save();
         //Sale sale2 = Sale.find.where().eq("id", 1).findUnique();
-        return ok(id);
+        List<Sale> sales = new Model.Finder<>(String.class, Sale.class).all();
+        return ok(toJson(sales));
 
         //return notFound(notFound.render());
     }
