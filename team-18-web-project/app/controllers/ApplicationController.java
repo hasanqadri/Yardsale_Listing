@@ -182,10 +182,37 @@ public class ApplicationController extends Controller {
         }
         return ok(createSale.render());
     }
+
     @Authenticated(Secured.class)
     public Result sale() {
         return ok(sale.render());
     }
+
+    @Authenticated(Secured.class)
+    public Result searchLocations() {
+        if (request().method() == "POST") {
+            DynamicForm dynamicForm = Form.form().bindFromRequest();
+            String query = dynamicForm.get("query");
+            if (query != null) {
+                return ok(searchLocations.render(query));
+            }
+        }
+        return redirect("/");
+    }
+
+    @Authenticated(Secured.class)
+    public Result getSearchLocations() {
+        if (request().method() == "POST") {
+            DynamicForm dynamicForm = Form.form().bindFromRequest();
+            String query = dynamicForm.get("query");
+            if (query != null) {
+                List<Sale> sales = new Model.Finder<>(String.class, Sale.class).where().like("city", query).findList();
+                return ok(toJson(sales));
+            }
+        }
+        return notFound404("/getSearchLocations");
+    }
+
     /**
      * Log out the user by deleting session cookies
      * @return HTTP redirection response to home page
@@ -229,6 +256,10 @@ public class ApplicationController extends Controller {
         return ok(users.render());
     }
 
+    /**
+     * Displays admin console
+     * @return HTTP response to admin console page request
+     */
     @Authenticated(Secured.class)
     public Result admin() {
         User user = User.find.where().eq("username", session("username")).findUnique();

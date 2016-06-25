@@ -21,7 +21,9 @@ GET     /createSale                 controllers.ApplicationController.createSale
 GET     /admin                      controllers.ApplicationController.admin
 GET     /adminGetUsers              controllers.ApplicationController.adminGetUsers
 POST    /adminResetUser             controllers.ApplicationController.adminResetUser
-
+GET     /searchLocations            controllers.ApplicationController.searchLocations
+POST    /searchLocations            controllers.ApplicationController.searchLocations
+POST    /getSearchLocations         controllers.ApplicationController.getSearchLocations
 
 # Map requests to /image
 GET     /image/*id                  controllers.ApplicationController.getImage(id)
