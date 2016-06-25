@@ -4,8 +4,8 @@
  * two arguments, a `String` for the title of the page and an `Html`
  * object to insert into the body of the page.
  *@
-@(title: String)(content: Html)
 
+@(title: String)(content: Html)
 <!DOCTYPE html>
 <html lang="en">
     <head>
@@ -33,11 +33,26 @@
                         <li class="@if(request.path() == "/") {active}"><a href="/">HOME</a></li>
                         <li class="@if(request.path() == "/about") {active}"><a href="/about">ABOUT</a></li>
                     </ul>
-                    <div class="navbar-form navbar-right">
+
+                        <div class="navbar-form navbar-right">
+                        <a href="/loggedin" class="btn btn-success">SIGN OUT</a>
+                        </div>
+                        <div class="navbar-form navbar-right">
+                        <a href="/postContact" class="btn btn-success">PROFILE</a>
+                    </div>
+                        <div class="navbar-form navbar-right">
                         <a href="/login" class="btn btn-success">SIGN IN</a>
+                        </div>
+                        <div class="navbar-form navbar-right">
+                        <a href="/NewContact" class="btn btn-success">REGISTER</a>
+                        </div>
+
+
+
+                    <div class="navbar-form navbar-right">
+                        <a href="/userList" class="btn btn-success">User List</a>
                     </div>
                 </div><!--/.nav-collapse -->
-            </div>
         </nav>
 
         @* And here's where we render the `Html` object containing

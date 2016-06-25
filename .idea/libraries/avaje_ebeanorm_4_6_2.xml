@@ -1,0 +1,9 @@
+<component name="libraryTable">
+  <library name="avaje-ebeanorm-4.6.2">
+    <CLASSES>
+      <root url="jar://$PROJECT_DIR$/team-18-web-project/lib/avaje-ebeanorm-4.6.2.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>

@@ -1,5 +1,13 @@
 @(message: String)
 
+<?php
+        session_start();
+          if(!isset($_SESSION['username'])) {
+            if(isset($_COOKIE['username'])) {
+              $_SESSION['username'] = $_COOKIE['username'];
+              }
+            }
+          ?>
 @*
  * Call the `main` template with two arguments. The first
  * argument is a `String` with the title of the page, the second
@@ -46,6 +54,5 @@
         $("#sign-up").css("display", "none");
         $("#sign-in").css("display", "block");
     }
-
 </script>
 }
