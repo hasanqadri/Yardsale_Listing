@@ -2,6 +2,7 @@ package controllers;
 
 import com.avaje.ebean.Ebean;
 import models.Sale;
+import models.SaleItem;
 import models.User;
 import play.data.DynamicForm;
 import play.data.Form;
@@ -15,6 +16,35 @@ import views.html.*;
  * Created by nathancheek on 6/25/16.
  */
 public class ActionController extends Controller {
+    /**
+     *
+     * @return
+     */
+    @Authenticated(Secured.class)
+    public Result addItem(int id) {
+        Sale s = Ebean.find(Sale.class).where().eq("id", id).findUnique();
+        if (s != null) { // Check if sale exists
+            DynamicForm f = Form.form().bindFromRequest();
+            if (f.get("name") == null || f.get("description") == null || f.get("price") == null) { // Improper request
+                return notFound404();
+            }
+            float price;
+            try {
+                price = Float.parseFloat(f.get("price"));
+            } catch (NumberFormatException e) {
+                return ok(addItem.render(id, "Error: bad price"));
+            }
+            SaleItem item = new SaleItem();
+            item.name = f.get("name");
+            item.description = f.get("description");
+            item.price = price;
+            item.saleId = id;
+            item.save();
+            return ok(addItem.render(id, "Item added! Add another item?"));
+        }
+        return notFound404();
+    }
+
     /**
      * Unlocks a user account
      * @return Response to user account request
@@ -31,7 +61,7 @@ public class ActionController extends Controller {
                 return noContent(); // Return HTTP code 204
             }
         }
-        return notFound404("/adminResetUser");
+        return notFound404();
     }
 
     /**
@@ -101,7 +131,7 @@ public class ActionController extends Controller {
      * @param path URI of the page that doesn't exist
      * @return HTTP response to a nonexistant page
      */
-    public Result notFound404(String path) {
+    public Result notFound404() {
         if (session("username") != null) {
             return notFound(loggedinNotFound.render());
         } else {
@@ -197,6 +227,6 @@ public class ActionController extends Controller {
         if (query != null) {
             return ok(searchLocations.render(query));
         }
-        return notFound404("/searchLocations");
+        return notFound404();
     }
 }

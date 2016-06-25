@@ -42,6 +42,19 @@ public class PageController extends Controller {
     }
 
     /**
+     * Displays addItem page
+     * @return HTTP response to addItem page request
+     */
+    @Authenticated(Secured.class)
+    public Result addItem(int id) {
+        Sale s = Ebean.find(Sale.class).where().eq("id", id).findUnique();
+        if (s != null) { // Check if sale exists
+            return ok(addItem.render(id, ""));
+        }
+        return notFound404();
+    }
+
+    /**
      * Displays admin console
      * @return HTTP response to admin console page request
      */
@@ -51,7 +64,7 @@ public class PageController extends Controller {
         if (user.superAdmin == 1) { // Show supersecret admin page
             return ok(admin.render());
         } else { // Return 404
-            return notFound404("/admin");
+            return notFound404();
         }
     }
 
@@ -98,7 +111,7 @@ public class PageController extends Controller {
      * @param path URI of the page that doesn't exist
      * @return HTTP response to a nonexistant page
      */
-    public Result notFound404(String path) {
+    public Result notFound404() {
         if (session("username") != null) {
             return notFound(loggedinNotFound.render());
         } else {
@@ -135,19 +148,12 @@ public class PageController extends Controller {
      * @return HTTP response to sale page request
      */
     @Authenticated(Secured.class)
-    public Result sale(String strId) {
-        int id;
-        try {
-            id = Integer.parseInt(strId);
-        } catch (NumberFormatException e) {
-            return notFound404("");
-        }
-        //Now check if the sale exists
+    public Result sale(int id) {
         Sale s = Ebean.find(Sale.class).where().eq("id", id).findUnique();
-        if (s != null) {
+        if (s != null) { // Check if sale exists
             return ok(sale.render(id));
         }
-        return notFound404("");
+        return notFound404();
     }
 
     /**

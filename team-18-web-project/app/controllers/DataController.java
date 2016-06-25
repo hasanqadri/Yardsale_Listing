@@ -26,12 +26,11 @@ public class DataController extends Controller {
      * @return Image with given Id
      */
     @Security.Authenticated(Secured.class)
-    public Result getImage(String id) { // This method is currently being used for testing random stuff
+    public Result getImage(int id) { // This method is currently being used for testing random stuff
         //Picture picture = User.find.where().eq("id", dynamicForm.get("username")).findUnique();
         //Sale sale2 = Sale.find.where().eq("id", 1).findUnique();
         return ok();
 
-        //return notFound(notFound.render());
     }
 
     /**
@@ -45,7 +44,7 @@ public class DataController extends Controller {
         try {
             id = Integer.parseInt(dynamicForm.get("id"));
         } catch (NumberFormatException e) { // Null or non int string
-            return notFound404("");
+            return notFound404();
         }
         Sale sale = Ebean.find(Sale.class).where().eq("id", id).findUnique();
         return ok(toJson(sale));
@@ -75,7 +74,7 @@ public class DataController extends Controller {
                 return ok(toJson(sales));
             }
         }
-        return notFound404("/getSearchLocations");
+        return notFound404();
     }
 
     /**
@@ -107,7 +106,7 @@ public class DataController extends Controller {
             List<User> users = Ebean.find(User.class).findList();
             return ok(toJson(users));
         } else { // Return 404 if requesting user is not privileged
-            return notFound404("/adminGetUsers");
+            return notFound404();
         }
     }
 
@@ -116,7 +115,7 @@ public class DataController extends Controller {
      * @param path URI of the page that doesn't exist
      * @return HTTP response to a nonexistant page
      */
-    public Result notFound404(String path) {
+    public Result notFound404() {
         if (session("username") != null) {
             return notFound(loggedinNotFound.render());
         } else {
