@@ -7,6 +7,7 @@ import play.data.validation.Constraints;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Table;
+import javax.persistence.Column;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -18,102 +19,72 @@ public class User extends Model {
     @Constraints.Required
     public String email;
     @Constraints.Required
-    public String first_name;
+    public String firstName;
     @Constraints.Required
-    public String last_name;
-    @Constraints.Required
-    public String password;
+    public String lastName;
     @Constraints.Required
     public String username;
-    //@OneToMany(mappedBy = "user")
-    public List<YardSale> yardSales = new ArrayList<>();
-    public int account_locked;
-    public int login_attempts;
-    //public boolean loggedin;
+    @Constraints.Required
+    public String password;
+    @Column(columnDefinition = "tinyint default 0") // 0 login attempts at creation
+    public int loginAttempts;
+    @Column(columnDefinition = "tinyint default 0") // Default not a superUser
+    public int superAdmin;
+    public int profilePictureId;
 
-    public User(String first_name,String last_name, String email, String username, String password) {
-        this.first_name = first_name;
-        this.last_name = last_name;
+    public User (String firstName, String lastName, String email, String username, String password) {
+        this.firstName = firstName;
+        this.lastName = lastName;
         this.email = email;
         this.username = username;
         this.password = password;
     }
 
-    public String getEmail() {
-        return email;
-    }
-
-    public void setEmail(String email) {
+    //For backwards compatibility - this may be removed in future
+    public User (String name, String email, String username, String password) {
+        this.setName(name);
         this.email = email;
-    }
-
-    public String getFirst_name() {
-        return first_name;
-    }
-    public String getLast_name(){
-        return last_name;
-    }
-
-    public void setFirst_name(String first_name) {
-        this.first_name = first_name;
-    }
-    public void setLast_name(String last_name){
-        this.last_name = last_name;
-    }
-
-    public String getPassword() {
-        return password;
-    }
-
-    public void setPassword(String password) {
+        this.username = username;
         this.password = password;
     }
 
-    public String getUsername() {
-        return username;
+    public String getEmail() { return email; }
+
+    public void setEmail(String email) { this.email = email; }
+
+    public String getFirstName() { return firstName; }
+
+    public void setFirstName(String firstName) { this.firstName = firstName; }
+
+    public String getLastName() { return lastName; }
+
+    public void setLastName(String lastName) { this.lastName = lastName; }
+
+    public String getName() { return firstName + " " + lastName; }
+
+    public void setName(String name) {
+        int space = name.indexOf(" ");
+        if (space != -1) {
+            this.firstName = name.substring(0, space);
+            this.lastName = name.substring(space+1);
+        } else {
+            this.firstName = name;
+        }
     }
 
-    public void setUsername(String username) {
-        this.username = username;
-    }
+    public String getUsername() { return username; }
 
-    /*public boolean getLoggedin() {
-        return loggedin;
-    }
+    public void setUsername(String username) { this.username = username; }
 
-    public void setLoggedin(boolean b) {
-        this.loggedin = b;
-    }*/
+    public String getPassword() { return password; }
 
-
+    public void setPassword(String password) { this.password = password; }
 
     public static Finder<String, User> find = new Finder<String,User>(User.class);
 
     public String toString() {
-        return String.format("[Name: '%s' Email: '%s' Username: %s Password: %s]", first_name + " " + last_name,
+        return String.format("[Name: '%s' Email: '%s' Username: %s Password: %s]", firstName + " " + lastName,
                 email, username, password);
     }
 
-
-    //private static List<User> allUsers = new ArrayList<>();
-
-
-/**
-    public static User makeInstance(userdata formData) {
-        val connection = DB.getConnection("team18");
-        User user = new User();
-        user.name = formData.name;
-        user.password = formData.password;
-        user.email = formData.email;
-        user.username = formData.username;
-        // create a Statement from the connection
-        try {
-            getConnection("users").executeUpdate("INSERT INTO team18.users " + "VALUES (, user.password, user.name, user.email, user.username, false, 0)");
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-
-        return user;
-    }
-*/
 }

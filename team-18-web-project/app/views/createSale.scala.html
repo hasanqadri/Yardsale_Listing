@@ -1,0 +1,29 @@
+@(message: String)
+@loggedinmain("Create Sale") {
+//creates sale form
+<div class="container content">
+        <div class="col-sm-4">
+        <form class="form-createSale" id="createSale" action="/createSale" method="post">
+            <label for="inputName" class="sr-only">Name</label>
+            <input type="text" id="inputName" name="name" class="form-control input-top" placeholder="Bob's Yard Sale" required autofocus>
+            <label for="inputStreet" class="sr-only">Address</label>
+            <input type="text" id="inputStreet" name="street" class="form-control input-middle" placeholder="1234 4th Street" required>
+            <label for="inputCity" class="sr-only">City</label>
+            <input type="text" id="inputCity" name="city" class="form-control input-middle" placeholder="Atlanta" required>
+            <label for="inputUsername" class="sr-only">Username</label>
+            <input type="text" id="inputState" name="state" class="form-control input-middle" placeholder="GA" required>
+            <label for="inputZip" class="sr-only">Zip Code</label>
+            <input type="text" id="inputZip" name="zip" class="form-control input-bottom" placeholder="30332" required>
+            <label for="inputStartDate" class="sr-only">Start Date</label>
+            <input type="text" id="inputDate" name="startDate" class="form-control input-bottom" placeholder="6/24/2016" required>
+            <label for="inputStartDate" class="sr-only">End Date</label>
+            <input type="text" id="inputDate" name="endDate" class="form-control input-bottom" placeholder="6/26/2016" required>
+            <div class="col-sm-4">
+                <div class="btn-toolbar pull-right">
+                    <button class="btn btn-success" type="submit">Create Sale</button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+}

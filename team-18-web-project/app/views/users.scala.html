@@ -18,10 +18,9 @@
 </div>
 
 <script>
-    $.getJSON("/userList", function(data) {
+    $.getJSON("/getUsers", function(data) {
         for(var i in data) {
-            var text = data[i].name;
-            var output = "<tr><td>"+data[i].last_name +", "+data[i].first_name+"<td><td>" + data[i].username+"</td><td>"+data[i].email+"</td></tr>";
+            var output = "<tr><td>"+data[i].name+"<td><td>" + data[i].username+"</td><td>"+data[i].email+"</td></tr>";
             $("#users").append(output)
         }
     });
