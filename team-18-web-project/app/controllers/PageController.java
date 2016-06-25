@@ -108,7 +108,6 @@ public class PageController extends Controller {
 
     /**
      * Displays a 404 error page
-     * @param path URI of the page that doesn't exist
      * @return HTTP response to a nonexistant page
      */
     public Result notFound404() {
@@ -117,6 +116,15 @@ public class PageController extends Controller {
         } else {
             return notFound(notFound.render());
         }
+    }
+
+    /**
+     * Displays a 404 error page
+     * @param path URI of the page that doesn't exist
+     * @return HTTP response to a nonexistant page
+     */
+    public Result notFound404(String url) {
+        return notFound404();
     }
 
     /**
