@@ -1,17 +1,8 @@
-@*
- * This template takes a single argument, a String containing a
- * message to display.
- *@
-@(message: String)
+@* Displays home page *@
 
-@*
- * Call the `main` template with two arguments. The first
- * argument is a `String` with the title of the page, the second
- * argument is an `Html` object containing the body of the page.
- *@
 @main("Welcome") {
 <div class="container content">
-    <img class="front-image" src="http://placehold.it/1000x200" />
+    <img class="front-image" src="http://gamewires.com/Images/Posts/38156_banner.jpg" />
     <div class="col-sm-6">
         <h1>The Ultimate Yard Sale Helper.</h1>
         <ul>
@@ -22,18 +13,21 @@
         </ul>
     </div>
     <div class="col-sm-6">
-        <form>
+        <form action="/register" method="post">
             <div class="form-group">
-                <input type="text" class="form-control" id="registerName" placeholder="Name" required>
+                <input type="text" class="form-control" id="registerFirstName" name="firstName" placeholder="First Name*" required>
             </div>
             <div class="form-group">
-                <input type="email" class="form-control" id="registerEmail" placeholder="Email" required>
+                <input type="text" class="form-control" id="registerLastName" name="lastName" placeholder="Last Name">
             </div>
             <div class="form-group">
-                <input type="text" class="form-control" id="registerUsername" placeholder="Username" required>
+                <input type="email" class="form-control" id="registerEmail" name="email" placeholder="Email*" required>
             </div>
             <div class="form-group">
-                <input type="password" class="form-control" id="registerPassword" placeholder="Password" required>
+                <input type="text" class="form-control" id="registerUsername" name="username" placeholder="Username*" required>
+            </div>
+            <div class="form-group">
+                <input type="password" class="form-control" id="registerPassword" name="password" placeholder="Password*" required>
             </div>
             <button type="submit" class="btn btn-info">Sign up for free</button>
         </form>

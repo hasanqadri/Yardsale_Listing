@@ -1,8 +1,64 @@
-@main("Register") {
-  <div class="container content">
-    <img class="front-image" src="http://gamewires.com/Images/Posts/38156_banner.jpg" />
-    <div class="col-sm-6">
-      <h1>Profile page.</h1>
+@* Displays profile page *@
+@(username:String, password:String, firstName:String, lastName: String, email:String, error:String)
+
+@loggedinmain("Profile") {
+<div class="container content">
+    <div class="view profile" id="view-profile">
+        <div class="col-sm-6">
+            <img class="profile-image" src="http://placehold.it/200x200" />
+            <h1>@firstName @lastName</h1>
+            <p class="lead">@username</p>
+            <p class="lead">@email</p>
+
+        </div>
+        <div class="col-sm-6">
+
+            <a href="#" class="btn btn-success pull-right" onclick="changeToEdit();">Edit profile</a>
+        </div>
+
     </div>
-  </div>
+    <div class="edit profile" id="edit-profile">
+        <div class="col-sm-4">
+            <img class="profile-image" src="http://placehold.it/200x200" />
+            <<h1>@firstName @lastName </h1>
+            <p class="lead">@username</p>
+            <p class="lead">@email</p>
+
+        </div>
+        <div class="col-sm-4">
+            @if(error) {<h3 class="text-center">@error</h3>}
+            <form class="form-editprofile" id="edit-form" action="/profile" method="post">
+                <label for="inputName" class="sr-only">Name</label>
+                <input type="text" id="inputFirstName" name="firstName" class="form-control input-top" value="@firstName" required autofocus>
+                <label for="inputName" class="sr-only">Name</label>
+                <input type="text" id="inputLastName" name="lastName" class="form-control input-middle" value="@lastName" required>
+                <label for="inputEmail" class="sr-only">Email</label>
+                <input type="email" id="inputEmail" name="email" class="form-control input-middle" value="@email" required>
+                <label for="inputUsername" class="sr-only">Username</label>
+                <input type="text" id="inputUsername" name="username" class="form-control input-middle" value="@username" required>
+                <label for="inputPassword" class="sr-only">Password</label>
+                <input type="password" id="inputPassword" name="password" class="form-control input-bottom" value="@password" required>
+                <div class="col-sm-4">
+                    <div class="btn-toolbar pull-right">
+                        <a href="#" class="btn btn-success" onclick="changeToView();">cancel</a>
+                        <button class="btn btn-success" type="submit">Save Changes</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+
+
+    </div>
+</div>
+<script>
+    var changeToEdit = function() {
+        $("#view-profile").css("display", "none");
+        $("#edit-profile").css("display", "block");
+    }
+    var changeToView = function() {
+        $("#edit-profile").css("display", "none");
+        $("#view-profile").css("display", "block");
+    }
+
+</script>
 }
