@@ -1,6 +1,4 @@
-@* Displays location query results *@
-@(query: String)
-@loggedinmain("Search Locations") {
+@loggedinmain("Sales") {
 <div class="container content">
     <div class="view profile" id="view-profile">
 
@@ -18,7 +16,7 @@
                 <form class="form-search-field" action="/searchLocations" method="post">
 
                     <div class="input-group">
-                        <input type="text" class="form-control" name="query" placeholder="Search cities..." value="@query">
+                        <input type="text" class="form-control" name="query" placeholder="Search cities...">
                         <span class="input-group-btn">
                             <button class="btn btn-default icon" type="submit"><i class="glyphicon glyphicon-search"></i></button>
                         </span>
@@ -30,11 +28,11 @@
 
         </div>
         <ul class="saleList">
-            <h1 class = "text-center">Search Results</h1>
+            <h1 class = "text-center">Available Yard Sales</h1>
             <div class="col-sm-2">
 
             </div>
-            <div class="col-sm-8 results">
+            <div class="col-sm-8 sales">
 
 
             </div>
@@ -42,16 +40,16 @@
     </div>
 </div>
 
-<!-- script to load query results -->
+<!-- script to add sale info from database -->
 <script>
-    $.post("/getSearchLocations", { "query" : "@query" })
-        .done(function(data) {
-            for(var i in data) {
-                var output = "<div class=\"sale\"><h2>" + data[i].name + "</h2>" + "<h3>" + data[i].street + "</h3>" + "<h3>" + data[i].city + ", "
-                + data[i].state + " " + data[i].zip + "</h3>" + "<h3>" + data[i].startDate + " - " + data[i].endDate + "</h3></div>";
-                $(".results").append(output);
-            }
-        });
+    $.getJSON("/getSales", function(data) {
+        for(var i in data) {
+            var text = data[i].name;
+            var output = "<div class=\"col-sm-8 sale\"><h2><a href=\"/sale/" + data[i].id + "\">" + data[i].name + "</a></h2>" + "<h3>" + data[i].street + "</h3>" + "<h3>" + data[i].city + ", "
+            + data[i].state + " " + data[i].zip + "</h3>" + "<h3>" + data[i].startDate + " - " + data[i].endDate + "</h3></div>";
+            $(".sales").append(output)
+        }
+    });
 </script>
 
 }

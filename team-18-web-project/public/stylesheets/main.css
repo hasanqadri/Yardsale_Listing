@@ -69,12 +69,12 @@ body{
 .form-signin .form-control:focus {
   z-index: 2;
 }
-.form-signin .input-top {
+form .input-top {
     margin-bottom: -1px;
     border-bottom-left-radius: 0;
     border-bottom-right-radius: 0;
 }
-.form-signin .input-middle {
+form .input-middle {
     margin-bottom: -1px;
     border-bottom-left-radius: 0;
     border-bottom-right-radius: 0;
@@ -82,7 +82,7 @@ body{
     border-top-left-radius: 0;
     border-top-right-radius: 0;
 }
-.form-signin .input-bottom {
+form .input-bottom {
      margin-bottom: 10px;
      border-top-left-radius: 0;
      border-top-right-radius: 0;
@@ -102,6 +102,7 @@ body{
     right: 0;
     display: inline;
 }
+/*End Login*/
 
 #edit-profile {
     display: none;
@@ -112,6 +113,7 @@ body{
     display: inline-block;
 
 }
+
 .saleNav a {
 
     margin-left: 10px;
@@ -120,14 +122,15 @@ body{
 
     font-size: 18px;
 }
+
 .saleList {
     padding-top: 40px;
 }
+
 .searchButton {
 
     max-width: 40px;
 }
-/*End Login*/
 
 .admin-reset {
     margin-left: 15px;

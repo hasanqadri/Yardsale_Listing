@@ -21,7 +21,7 @@
 <script>
     var displayUsers = function() {
         $("#users").empty();
-        $.getJSON("/adminGetUsers", function(data) {
+        $.getJSON("/getUsersAdmin", function(data) {
             for(var i in data) {
                 var accountStatus = "unlocked";
                 if (data[i].loginAttempts == 3) {

@@ -1,11 +1,14 @@
-@loggedinmain("Profile") {
+@* Displays sale page *@
+@(id: Int)
+
+@loggedinmain("Sale") {
 <div class="container content">
     <div class="view profile" id="view-profile">
 
         <div class="col-sm-4">
 
 
-            <a href="/createSale" class="btn btn-success">CREATE SALE</a>
+            <a href="/sale/@id/addItem" class="btn btn-success">ADD ITEM</a>
         </div>
         <div class="col-sm-5">
 
@@ -13,10 +16,10 @@
         <div class="col-sm-3">
             <div class="input-group">
 
-                <form class="form-search-field" action="/searchLocations" method="post">
+                <form class="form-search-field" action="/searchSale" method="post">
 
                     <div class="input-group">
-                        <input type="text" class="form-control" name="query" placeholder="Search locations...">
+                        <input type="text" class="form-control" name="query" placeholder="Search this sale...">
                         <span class="input-group-btn">
                             <button class="btn btn-default icon" type="submit"><i class="glyphicon glyphicon-search"></i></button>
                         </span>
@@ -28,11 +31,11 @@
 
         </div>
         <ul class="saleList">
-            <h1 class = "text-center">Available Yard Sales</h1>
+            <h1 class = "text-center">Sale @id</h1>
             <div class="col-sm-2">
 
             </div>
-            <div class="col-sm-8 sales">
+            <div class="col-sm-8 sale">
 
 
             </div>
@@ -42,13 +45,10 @@
 
 <!-- script to add sale info from database -->
 <script>
-    $.getJSON("/getSales", function(data) {
-        for(var i in data) {
-            var text = data[i].name;
-            var output = "<div class=\"col-sm-8 sale\"><h2>" + data[i].name + "</h2>" + "<h3>" + data[i].street + "</h3>" + "<h3>" + data[i].city + ", "
-            + data[i].state + " " + data[i].zip + "</h3>" + "<h3>" + data[i].startDate + " - " + data[i].endDate + "</h3></div>";
-            $(".sales").append(output)
-        }
+    $.post("/getSale", { "id" : "@id" }).done(function( data ) {
+        var output = "<div class=\"col-sm-8 sale\"><h2>" + data.name + "</h2>" + "<h3>" + data.street + "</h3>" + "<h3>" + data.city + ", "
+            + data.state + " " + data.zip + "</h3>" + "<h3>" + data.startDate + " - " + data.endDate + "</h3></div>";
+            $(".sale").append(output)
     });
 </script>
 
