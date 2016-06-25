@@ -167,6 +167,22 @@ public class ApplicationController extends Controller {
     }
 
     @Authenticated(Secured.class)
+    public Result getSales() {
+        List<Sale> sales = new Model.Finder<>(String.class, Sale.class).all(); // Alternative way of doing it
+        //List<Sale> sales = Sale.find.all();
+        return ok(toJson(sales));
+    }
+
+    //creates the sale
+    @Authenticated(Secured.class)
+    public Result createSale() {
+        if (request().method() == "POST") {
+
+
+        }
+        return ok(createSale.render());
+    }
+    @Authenticated(Secured.class)
     public Result sale() {
         return ok(sale.render());
     }

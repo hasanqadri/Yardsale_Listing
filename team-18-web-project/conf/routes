@@ -16,6 +16,8 @@ GET     /getUsers                   controllers.ApplicationController.getUsers
 GET     /register                   controllers.ApplicationController.register
 POST    /register                   controllers.ApplicationController.register
 GET     /sale                       controllers.ApplicationController.sale
+GET     /getSales                   controllers.ApplicationController.getSales
+GET     /createSale                 controllers.ApplicationController.createSale
 GET     /admin                      controllers.ApplicationController.admin
 
 # Map requests to /image
