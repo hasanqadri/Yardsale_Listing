@@ -131,8 +131,13 @@ public class PageController extends Controller {
 
     @Authenticated(Secured.class)
     public Result sale(String strId) {
-        //return ok(sale.render(id));
-        return ok();
+        int id;
+        try {
+            id = Integer.parseInt(strId);
+        } catch (NumberFormatException e) {
+            return notFound404("");
+        }
+        return ok(sale.render(id));
     }
 
     @Authenticated(Secured.class)
