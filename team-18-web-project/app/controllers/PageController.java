@@ -129,6 +129,11 @@ public class PageController extends Controller {
         return ok(register.render(""));
     }
 
+    /**
+     * Display a sale page
+     * @param strId Id of sale to display
+     * @return HTTP response to sale page request
+     */
     @Authenticated(Secured.class)
     public Result sale(String strId) {
         int id;
@@ -137,9 +142,18 @@ public class PageController extends Controller {
         } catch (NumberFormatException e) {
             return notFound404("");
         }
-        return ok(sale.render(id));
+        //Now check if the sale exists
+        Sale s = Ebean.find(Sale.class).where().eq("id", id).findUnique();
+        if (s != null) {
+            return ok(sale.render(id));
+        }
+        return notFound404("");
     }
 
+    /**
+     * Display list of sales
+     * @return HTTP response to sales page request
+     */
     @Authenticated(Secured.class)
     public Result sales() {
         return ok(sales.render());

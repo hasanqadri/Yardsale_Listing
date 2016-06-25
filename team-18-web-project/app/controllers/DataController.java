@@ -35,6 +35,23 @@ public class DataController extends Controller {
     }
 
     /**
+     * Lists all data about a sale
+     * @return JSON response of sale data stored in database
+     */
+    @Security.Authenticated(Secured.class)
+    public Result getSale() {
+        DynamicForm dynamicForm = Form.form().bindFromRequest();
+        int id;
+        try {
+            id = Integer.parseInt(dynamicForm.get("id"));
+        } catch (NumberFormatException e) { // Null or non int string
+            return notFound404("");
+        }
+        Sale sale = Ebean.find(Sale.class).where().eq("id", id).findUnique();
+        return ok(toJson(sale));
+    }
+
+    /**
      * Lists all data about all sales
      * @return JSON response of all sale data stored in database
      */

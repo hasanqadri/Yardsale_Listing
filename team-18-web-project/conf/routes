@@ -20,6 +20,7 @@ GET     /users                      controllers.PageController.users
 # Action page requests
 POST    /adminResetUser             controllers.ActionController.adminResetUser
 POST    /createSale                 controllers.ActionController.createSale
+POST    /createSaleItem             controllers.ActionController.createSaleItem
 POST    /login                      controllers.ActionController.login
 POST    /NewContact                 controllers.ActionController.postContact
 POST    /profile                    controllers.ActionController.profile
@@ -28,6 +29,7 @@ POST    /searchLocations            controllers.ActionController.searchLocations
 
 
 # Background / JSON requests
+POST    /getSale                    controllers.DataController.getSale
 GET     /getSales                   controllers.DataController.getSales
 POST    /getSearchLocations         controllers.DataController.getSearchLocations
 GET     /getUsers                   controllers.DataController.getUsers

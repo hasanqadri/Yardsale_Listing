@@ -17,7 +17,7 @@ import views.html.*;
 public class ActionController extends Controller {
     /**
      * Unlocks a user account
-     * @return nothing
+     * @return Response to user account request
      */
     @Authenticated(Secured.class)
     public Result adminResetUser() {
@@ -28,7 +28,7 @@ public class ActionController extends Controller {
                 User userReset = User.find.where().eq("username", dynamicForm.get("username")).findUnique();
                 userReset.loginAttempts = 0;
                 userReset.save();
-                return ok();
+                return noContent(); // Return HTTP code 204
             }
         }
         return notFound404("/adminResetUser");
@@ -54,6 +54,16 @@ public class ActionController extends Controller {
         sale.userCreatedId = user.id;
         sale.save();
         return ok(createSale.render("Sale Created! Create Another Sale?"));
+    }
+
+    /**
+     * Creates a sale item
+     * @return HTTP response to create sale item request
+     */
+    @Authenticated(Secured.class)
+    public Result createSaleItem() {
+        //todo this should be much like createSale() above
+        return ok();
     }
 
     /**
