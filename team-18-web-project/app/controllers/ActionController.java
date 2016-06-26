@@ -7,6 +7,8 @@ import models.User;
 import play.data.DynamicForm;
 import play.data.Form;
 import play.mvc.Controller;
+import play.mvc.Http.MultipartFormData;
+import play.mvc.Http.MultipartFormData.FilePart;
 import play.mvc.Result;
 import play.mvc.Security.Authenticated;
 import views.formdata.userdata;
@@ -228,5 +230,19 @@ public class ActionController extends Controller {
             return ok(searchLocations.render(query));
         }
         return notFound404();
+    }
+
+    @Authenticated(Secured.class)
+    public Result uploadProfilePicture() {
+        MultipartFormData body = request().body().asMultipartFormData();
+        /*FilePart picture = body.getFile("picture");
+        if (picture != null) {
+            picture.getFile();
+            return ok("Picture uploaded");
+        } else {
+            redirect("/profile");
+        }*/
+        User user = User.find.where().eq("username", session("username")).findUnique();
+        return ok("in progress");
     }
 }

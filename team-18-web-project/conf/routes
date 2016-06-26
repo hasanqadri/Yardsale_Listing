@@ -26,6 +26,7 @@ POST    /NewContact                 controllers.ActionController.postContact
 POST    /profile                    controllers.ActionController.profile
 POST    /register                   controllers.ActionController.register
 POST    /searchLocations            controllers.ActionController.searchLocations
+POST    /uploadProfilePicture       controllers.ActionController.uploadProfilePicture
 
 
 # Background / JSON requests

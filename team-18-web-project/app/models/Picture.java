@@ -15,6 +15,8 @@ import java.util.List;
 /**
  * Created by nathancheek on 6/24/16.
  */
+//@Entity
+//@Table(name="pictures")
 public class Picture extends Model {
     @Id
     public int id;

@@ -13,7 +13,7 @@
         </div>
         <div class="col-sm-6">
 
-            <a href="#" class="btn btn-success pull-right" onclick="changeToEdit();">Edit profile</a>
+            <a href="#" class="btn btn-primary pull-right" onclick="changeToEdit();">Edit profile</a>
         </div>
 
     </div>
@@ -27,6 +27,7 @@
         </div>
         <div class="col-sm-4">
             @if(error) {<h3 class="text-center">@error</h3>}
+            <h3>Edit Profile</h3>
             <form class="form-editprofile" id="edit-form" action="/profile" method="post">
                 <label for="inputName" class="sr-only">Name</label>
                 <input type="text" id="inputFirstName" name="firstName" class="form-control input-top" value="@firstName" required autofocus>
@@ -38,11 +39,25 @@
                 <input type="text" id="inputUsername" name="username" class="form-control input-middle" value="@username" required>
                 <label for="inputPassword" class="sr-only">Password</label>
                 <input type="password" id="inputPassword" name="password" class="form-control input-bottom" value="@password" required>
-                <div class="col-sm-4">
-                    <div class="btn-toolbar pull-right">
-                        <a href="#" class="btn btn-success" onclick="changeToView();">cancel</a>
-                        <button class="btn btn-success" type="submit">Save Changes</button>
-                    </div>
+                <div class="btn-toolbar">
+                    <a href="#" class="btn btn-primary pull-left" onclick="changeToView();">CANCEL</a>
+                    <button class="btn btn-success pull-right" type="submit">SAVE CHANGES</button>
+                </div>
+            </form>
+            <h3>Upload Profile Picture</h3>
+            <form action="/uploadProfilePicture" method="post">
+                <div class="input-group">
+                    <label class="input-group-btn">
+                    <span class="btn btn-default">
+                        Select File <input type="file" name="picture" style="display: none;">
+                    </span>
+                    </label>
+                    <input type="text" class="form-control" id="filename" value="" readonly>
+                </div>
+                <br>
+                <div class="btn-toolbar">
+                    <a href="#" class="btn btn-primary pull-left" onclick="changeToView();">CANCEL</a>
+                    <button class="btn btn-success pull-right" type="submit">UPLOAD</button>
                 </div>
             </form>
         </div>
@@ -59,6 +74,13 @@
         $("#edit-profile").css("display", "none");
         $("#view-profile").css("display", "block");
     }
+
+    $(document).ready( function() {
+        $("input:file").change(function (){
+            var fileName = $(this).val().replace("C:\\fakepath\\", "");
+            $("#filename").val(fileName);
+        });
+    });
 
 </script>
 }
