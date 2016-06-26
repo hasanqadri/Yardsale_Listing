@@ -57,6 +57,10 @@ public class DataController extends Controller {
         } else { // Sale doesn't exist
             return notFound404();
         }
+        String createdBy = "";
+        if ( user != null) {
+           createdBy = user.getName();
+        }
         JSONObject jo = null;
         try {
             jo = new JSONObject()
@@ -66,7 +70,7 @@ public class DataController extends Controller {
                     .put("city", sale.city)
                     .put("state", sale.state)
                     .put("zip", sale.zip)
-                    .put("createdBy", user.getName());
+                    .put("createdBy", createdBy);
         } catch (JSONException e) {
             e.printStackTrace();
             return notFound404();
