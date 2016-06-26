@@ -35,7 +35,9 @@
 
             </div>
             <div class="col-sm-8 results">
-
+                <div id="noResults" style="display: none;">
+                    <h3 class="text-center">No Results Found</h3>
+                </div>
 
             </div>
         </ul>
@@ -46,6 +48,9 @@
 <script>
     $.post("/getSearchLocations", { "query" : "@query" })
         .done(function(data) {
+            if (jQuery.isEmptyObject(data)) {
+                $("#noResults").css("display", "block");
+            }
             for(var i in data) {
                 var output = "<div class=\"sale\"><h2>" + data[i].name + "</h2>" + "<h3>" + data[i].street + "</h3>" + "<h3>" + data[i].city + ", "
                 + data[i].state + " " + data[i].zip + "</h3>" + "<h3>" + data[i].startDate + " - " + data[i].endDate + "</h3></div>";

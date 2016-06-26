@@ -236,11 +236,11 @@ public class ActionController extends Controller {
     }
 
     @Authenticated(Secured.class)
-    public Result searchItems() {
+    public Result searchItems(int saleId) {
         DynamicForm dynamicForm = Form.form().bindFromRequest();
         String query = dynamicForm.get("query");
         if (query != null) {
-            return ok(searchItems.render(query));
+            return ok(searchItems.render(saleId, query));
         }
         return notFound404();
     }

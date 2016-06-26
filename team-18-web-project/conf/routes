@@ -25,7 +25,6 @@ POST    /login                      controllers.ActionController.login
 POST    /NewContact                 controllers.ActionController.postContact
 POST    /profile                    controllers.ActionController.profile
 POST    /register                   controllers.ActionController.register
-POST    /searchItems                controllers.ActionController.searchItems
 POST    /searchLocations            controllers.ActionController.searchLocations
 POST    /uploadProfilePicture       controllers.ActionController.uploadProfilePicture
 
@@ -45,6 +44,7 @@ GET     /getUsersAdmin              controllers.DataController.getUsersAdmin
 GET     /sale/:id/addItem           controllers.PageController.addItem(id: Int)
 GET     /sale/:id                   controllers.PageController.sale(id: Int)
 POST    /sale/:id/addItem           controllers.ActionController.addItem(id: Int)
+POST    /sale/:id/searchItems       controllers.ActionController.searchItems(id: Int)
 
 
 # Map requests to /image

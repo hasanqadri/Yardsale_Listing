@@ -95,13 +95,11 @@ public class DataController extends Controller {
      */
     @Security.Authenticated(Secured.class)
     public Result getSearchLocations() {
-        if (request().method() == "POST") {
-            DynamicForm dynamicForm = Form.form().bindFromRequest();
-            String query = dynamicForm.get("query");
-            if (query != null) {
-                List<Sale> sales = Ebean.find(Sale.class).where().like("city", query).findList();
-                return ok(toJson(sales));
-            }
+        DynamicForm dynamicForm = Form.form().bindFromRequest();
+        String query = dynamicForm.get("query");
+        if (query != null) {
+            List<Sale> sales = Ebean.find(Sale.class).where().like("city", query).findList();
+            return ok(toJson(sales));
         }
         return notFound404();
     }
@@ -149,13 +147,18 @@ public class DataController extends Controller {
      */
     @Security.Authenticated(Secured.class)
     public Result getSearchItems() {
-        if (request().method() == "POST") {
-            DynamicForm dynamicForm = Form.form().bindFromRequest();
-            String query = dynamicForm.get("query");
-            if (query != null) {
-                List<SaleItem> items = Ebean.find(SaleItem.class).where().like("name", query).findList();
-                return ok(toJson(items));
-            }
+        DynamicForm dynamicForm = Form.form().bindFromRequest();
+        int saleId;
+        try {
+            saleId = Integer.parseInt(dynamicForm.get("saleId"));
+        } catch (NumberFormatException e) { // Null or non int string
+            return notFound404();
+        }
+        String query = dynamicForm.get("query");
+        if (query != null) {
+            List<SaleItem> items = Ebean.find(SaleItem.class).where().eq("id", saleId).like("name", query).findList();
+            items.addAll(Ebean.find(SaleItem.class).where().eq("id", saleId).like("description", query).findList());
+            return ok(toJson(items));
         }
         return notFound404();
     }
