@@ -11,12 +11,15 @@ import javax.persistence.Column;
 import java.util.ArrayList;
 import java.util.List;
 
+import java.sql.Timestamp;
 /**
  * Created by portega on 6/20/2016.
  */
 @Entity
 @Table(name="sales")
 public class Sale extends Model {
+
+
     @Id
     public int id;
     @Constraints.Required
@@ -26,8 +29,8 @@ public class Sale extends Model {
     public String city;
     public String state;
     public int zip;
-    public double startDate;
-    public double endDate;
+    public Timestamp startDate;
+    public Timestamp endDate;
     @Constraints.Required
     public int userCreatedId;
     @Column(columnDefinition = "integer default 0") // New sales default to inactive

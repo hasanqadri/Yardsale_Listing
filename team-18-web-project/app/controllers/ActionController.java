@@ -1,6 +1,9 @@
 package controllers;
 
 import com.avaje.ebean.Ebean;
+import java.sql.Timestamp;
+import java.text.*;
+import java.util.Date;
 import models.Sale;
 import models.SaleItem;
 import models.User;
@@ -77,9 +80,20 @@ public class ActionController extends Controller {
         sale.city = createSaleForm.get("city");
         sale.state = createSaleForm.get("state");
         sale.zip = Integer.parseInt(createSaleForm.get("zip"));
-        sale.startDate = Double.parseDouble(createSaleForm.get("startDate"));
-        sale.endDate = Double.parseDouble(createSaleForm.get("endDate"));
         sale.userCreatedId = user.id;
+
+        try {
+            DateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
+            Date startingDate = dateFormat.parse(createSaleForm.get("startDate"));
+            long startTime = startingDate.getTime();
+            sale.startDate = new Timestamp(startTime);
+
+            Date endingDate = dateFormat.parse(createSaleForm.get("startDate"));
+            long endTime = endingDate.getTime();
+            sale.endDate = new Timestamp(endTime);
+        } catch(ParseException e) {
+            e.printStackTrace();
+        }
         sale.save();
         return ok(createSale.render("Sale Created! Create Another Sale?"));
     }
