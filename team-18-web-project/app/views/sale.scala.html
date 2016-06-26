@@ -31,13 +31,34 @@
 
         </div>
         <ul class="saleList">
-            <h1 class = "text-center">Sale @id</h1>
-            <div class="col-sm-2">
-
+            <h1 class="text-center" id="saleName"></h1>
+            <div class="row">
+                <div class="col-sm-1"></div>
+                <div class="col-sm-2" id="saleAddress">
+                    <h3 class="text-center">Address</h3>
+                    <h4 id="saleAddress1"></h4>
+                    <h4 id="saleAddress2"></h4>
+                </div>
+                <div class="col-sm-4">
+                    <h3 class="text-center">Description</h3>
+                    <h4 id="saleDescription"></h4>
+                </div>
+                <div class="col-sm-2">
+                    <h3 class="text-center">Created By</h3>
+                    <h4 id="saleCreatedBy" class="text-center"></h4>
+                </div>
+                <div class="col-sm-2">
+                    <h3 class="text-center">Dates</h3>
+                    <h4 id="saleDates"></h4>
+                </div>
+                <div class="col-sm-1"></div>
             </div>
-            <div class="col-sm-8 sale">
+            <h2 class="text-center">Items for Sale</h2>
+            <div class="row">
+                <div class="col-sm-2"></div>
+                <div class="col-sm-8 items">
 
-
+                </div>
             </div>
         </ul>
     </div>
@@ -45,9 +66,23 @@
 
 <!-- script to add item info from database -->
 <script>
-    $.post("/getItems", { "id" : "@id" }).done(function( data ) {
-        var output = "<div class=\"col-sm-8 sale\"><h2>" + data.name + "</h2>" + "<h3>" + data.description+ "</h3>" + "<h3>" + data.price + "</h3></div>";
-            $(".sale").append(output)
+    // Populate page with sale information
+    $.post("/getSale", { "id" : "@id" }).done(function( data ) {
+        $("#saleName").text(data.name);
+        $("#saleAddress1").text(data.street);
+        $("#saleAddress2").text(data.city + ", " + data.state + " " + data.zip);
+        $("#saleDescription").text(data.description);
+        $("#saleCreatedBy").text(data.createdBy);
+        $("#saleDates").text(data.startDate + " - " + data.endDate);
+    });
+
+    // Populate page with sale items
+    $.post("/getItems", { "saleId" : "@id" }).done(function( data ) {
+        for(var i in data) {
+            var output = "<h2>" + data[i].name + "</h2>" + "<h3>" + data[i].description+ "</h3>" + "<h3>"
+                + data[i].price + "</h3></div>";
+            $(".items").append(output)
+        }
     });
 </script>
 

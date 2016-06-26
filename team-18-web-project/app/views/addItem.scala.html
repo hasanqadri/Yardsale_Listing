@@ -1,7 +1,8 @@
 @(id: Int, message : String)
 @loggedinmain("Add Item to Sale") {
 <div class="container content">
-        <div class="col-sm-4">
+    <div class="col-sm-4">
+        <a href="/sale/@id"><h4>&#8592; Return to Sale</h4></a>
         @if(message) {<h3 class="text-center">@message</h3>}
         <form class="form-createSale" id="createSale" action="/sale/@id/addItem" method="post">
             <label for="inputName" class="sr-only">Name</label>

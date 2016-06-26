@@ -35,7 +35,7 @@ POST    /getSale                    controllers.DataController.getSale
 GET     /getSales                   controllers.DataController.getSales
 POST    /getSearchLocations         controllers.DataController.getSearchLocations
 POST    /getItem                    controllers.DataController.getItem
-GET     /getItems                   controllers.DataController.getItems
+POST    /getItems                   controllers.DataController.getItems
 POST    /getSearchItems             controllers.DataController.getSearchItems
 GET     /getUsers                   controllers.DataController.getUsers
 GET     /getUsersAdmin              controllers.DataController.getUsersAdmin
