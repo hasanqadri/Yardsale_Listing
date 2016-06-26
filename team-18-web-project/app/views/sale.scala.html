@@ -4,37 +4,29 @@
 @loggedinmain("Sale") {
 <div class="container content">
     <div class="view profile" id="view-profile">
-
-        <div class="col-sm-4">
-
-
-            <a href="/sale/@id/addItem" class="btn btn-success">ADD ITEM</a>
-        </div>
-        <div class="col-sm-5">
-
-        </div>
-        <div class="col-sm-3">
-            <div class="input-group">
-
-                <form class="form-search-field" action="/sale/@id/searchItems" method="post">
-
-                    <div class="input-group">
-                        <input type="text" class="form-control" name="query" placeholder="Search this sale...">
+        <div class="row">
+            <div class="col-sm-4">
+                <a href="/sale/@id/addItem" class="btn btn-success">ADD ITEM</a>
+            </div>
+            <div class="col-sm-5"></div>
+            <div class="col-sm-3">
+                <div class="input-group">
+                    <form class="form-search-field" action="/sale/@id/searchItems" method="post">
+                        <div class="input-group">
+                            <input type="text" class="form-control" name="query" placeholder="Search this sale...">
                         <span class="input-group-btn">
                             <button class="btn btn-default icon" type="submit"><i class="glyphicon glyphicon-search"></i></button>
                         </span>
-                    </div><!-- /input-group -->
-
-                </form>
-
+                        </div><!-- /input-group -->
+                    </form>
+                </div>
             </div>
-
         </div>
+
         <ul class="saleList">
             <h1 class="text-center" id="saleName"></h1>
             <div class="row">
-                <div class="col-sm-1"></div>
-                <div class="col-sm-2" id="saleAddress">
+                <div class="col-sm-3" id="saleAddress">
                     <h3 class="text-center">Address</h3>
                     <h4 id="saleAddress1"></h4>
                     <h4 id="saleAddress2"></h4>
@@ -47,18 +39,15 @@
                     <h3 class="text-center">Created By</h3>
                     <h4 id="saleCreatedBy" class="text-center"></h4>
                 </div>
-                <div class="col-sm-2">
+                <div class="col-sm-3">
                     <h3 class="text-center">Dates</h3>
                     <h4 id="saleDates"></h4>
                 </div>
-                <div class="col-sm-1"></div>
             </div>
             <h2 class="text-center">Items for Sale</h2>
             <div class="row">
                 <div class="col-sm-2"></div>
-                <div class="col-sm-8 items">
-
-                </div>
+                <div class="col-sm-8 items"></div>
             </div>
         </ul>
     </div>
