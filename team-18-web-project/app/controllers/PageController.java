@@ -1,10 +1,9 @@
 package controllers;
 
 import com.avaje.ebean.Ebean;
-import java.util.List;
 import models.Sale;
+import models.SaleItem;
 import models.User;
-import play.data.DynamicForm;
 import play.data.Form;
 import play.mvc.Controller;
 import play.mvc.Result;
@@ -77,6 +76,7 @@ public class PageController extends Controller {
         return ok(createSale.render(""));
     }
 
+
     /**
      * Display login page
      * @return Login page
@@ -123,7 +123,7 @@ public class PageController extends Controller {
      * @param path URI of the page that doesn't exist
      * @return HTTP response to a nonexistant page
      */
-    public Result notFound404(String url) {
+    public Result notFound404(String path) {
         return notFound404();
     }
 
@@ -136,6 +136,19 @@ public class PageController extends Controller {
         String username = session("username");
         User user = User.find.where().eq("username", username).findUnique();
         return ok(profile.render(username, user.getPassword(), user.getFirstName(), user.getLastName(), user.getEmail(), ""));
+    }
+
+    //TODO Method doesnt work as intended, also not in routes
+    /**
+     * Display Item page for item on a sale
+     * @param name the item we are rendering/viewing the page for
+     * @return HTTP response to profile page request
+     */
+    @Authenticated(Secured.class)
+    public Result item(String name) {
+        SaleItem item = SaleItem.find.where().eq("name", name).findUnique();
+        //return ok(item.render(item.getName(), item.getDescription(), Float.toString(item.getPrice()), ""));
+        return ok();
     }
 
     /**
@@ -152,7 +165,7 @@ public class PageController extends Controller {
 
     /**
      * Display a sale page
-     * @param strId Id of sale to display
+     * @param id Id of sale to display
      * @return HTTP response to sale page request
      */
     @Authenticated(Secured.class)

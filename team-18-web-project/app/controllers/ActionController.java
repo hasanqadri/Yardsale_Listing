@@ -17,7 +17,7 @@ import views.html.*;
  */
 public class ActionController extends Controller {
     /**
-     *
+     * @param id place in db
      * @return
      */
     @Authenticated(Secured.class)
@@ -34,11 +34,7 @@ public class ActionController extends Controller {
             } catch (NumberFormatException e) {
                 return ok(addItem.render(id, "Error: bad price"));
             }
-            SaleItem item = new SaleItem();
-            item.name = f.get("name");
-            item.description = f.get("description");
-            item.price = price;
-            item.saleId = id;
+            SaleItem item = new SaleItem(f.get("name"), f.get("description"), price, id);
             item.save();
             return ok(addItem.render(id, "Item added! Add another item?"));
         }
@@ -92,7 +88,7 @@ public class ActionController extends Controller {
      */
     @Authenticated(Secured.class)
     public Result createSaleItem() {
-        //todo this should be much like createSale() above
+        //todo this should be much like createSale() above. Doesnt addItem achieve this function?
         return ok();
     }
 
@@ -128,7 +124,6 @@ public class ActionController extends Controller {
 
     /**
      * Displays a 404 error page
-     * @param path URI of the page that doesn't exist
      * @return HTTP response to a nonexistant page
      */
     public Result notFound404() {
@@ -182,7 +177,25 @@ public class ActionController extends Controller {
         session("username", dynamicForm.get("username"));
 
         return ok(profile.render(username, user.getPassword(), user.getFirstName(), user.getLastName(), user.getEmail(), ""));
+    }
 
+
+    //TODO Method doesnt work as intended, also not in routes
+    /**
+     * Update Item page for item
+     * @return HTTP response to profile page update request
+     */
+    @Authenticated(Secured.class)
+    public Result item(String name) {
+        SaleItem item = SaleItem.find.where().eq("name", name).findUnique();
+        DynamicForm dynamicForm = Form.form().bindFromRequest();
+        // update Item
+        item.setName(dynamicForm.get("name"));
+        item.setDescription(dynamicForm.get("description"));
+        item.setPrice(Float.parseFloat(dynamicForm.get("price")));
+        item.save();
+        //return ok(item.render(item.getName(), item.getDescription(), item.getPrice(), ""));
+        return ok();
     }
 
     /**
@@ -229,4 +242,17 @@ public class ActionController extends Controller {
         }
         return notFound404();
     }
+
+    @Authenticated(Secured.class)
+    public Result searchItems() {
+        DynamicForm dynamicForm = Form.form().bindFromRequest();
+        String query = dynamicForm.get("query");
+        if (query != null) {
+            return ok(searchItems.render(query));
+        }
+        return notFound404();
+    }
+
+
+
 }

@@ -16,7 +16,7 @@
         <div class="col-sm-3">
             <div class="input-group">
 
-                <form class="form-search-field" action="/searchSale" method="post">
+                <form class="form-search-field" action="/searchItems" method="post">
 
                     <div class="input-group">
                         <input type="text" class="form-control" name="query" placeholder="Search this sale...">
@@ -43,11 +43,10 @@
     </div>
 </div>
 
-<!-- script to add sale info from database -->
+<!-- script to add item info from database -->
 <script>
-    $.post("/getSale", { "id" : "@id" }).done(function( data ) {
-        var output = "<div class=\"col-sm-8 sale\"><h2>" + data.name + "</h2>" + "<h3>" + data.street + "</h3>" + "<h3>" + data.city + ", "
-            + data.state + " " + data.zip + "</h3>" + "<h3>" + data.startDate + " - " + data.endDate + "</h3></div>";
+    $.post("/getItems", { "id" : "@id" }).done(function( data ) {
+        var output = "<div class=\"col-sm-8 sale\"><h2>" + data.name + "</h2>" + "<h3>" + data.description+ "</h3>" + "<h3>" + data.price + "</h3></div>";
             $(".sale").append(output)
     });
 </script>

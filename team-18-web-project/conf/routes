@@ -26,12 +26,16 @@ POST    /NewContact                 controllers.ActionController.postContact
 POST    /profile                    controllers.ActionController.profile
 POST    /register                   controllers.ActionController.register
 POST    /searchLocations            controllers.ActionController.searchLocations
+POST    /searchItems                controllers.ActionController.searchItems
 
 
 # Background / JSON requests
 POST    /getSale                    controllers.DataController.getSale
 GET     /getSales                   controllers.DataController.getSales
 POST    /getSearchLocations         controllers.DataController.getSearchLocations
+POST    /getItem                    controllers.DataController.getItem
+GET     /getItems                   controllers.DataController.getItems
+POST    /getSearchItems             controllers.DataController.getSearchItems
 GET     /getUsers                   controllers.DataController.getUsers
 GET     /getUsersAdmin              controllers.DataController.getUsersAdmin
 

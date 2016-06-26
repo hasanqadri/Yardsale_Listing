@@ -1,17 +1,21 @@
 package controllers;
 
 import com.avaje.ebean.Ebean;
-import java.util.List;
 import models.Sale;
+import models.SaleItem;
 import models.User;
 import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 import play.data.DynamicForm;
 import play.data.Form;
 import play.mvc.Controller;
 import play.mvc.Result;
 import play.mvc.Security;
-import views.html.*;
+import views.html.loggedinNotFound;
+import views.html.notFound;
+
+import java.util.List;
 
 import static play.libs.Json.toJson;
 
@@ -60,8 +64,9 @@ public class DataController extends Controller {
         return ok(toJson(sales));
     }
 
+
     /**
-     *
+     * Returns list of posts listed at the queried location
      * @return
      */
     @Security.Authenticated(Secured.class)
@@ -77,6 +82,53 @@ public class DataController extends Controller {
         return notFound404();
     }
 
+
+    /**
+     * Lists all data about an item
+     * @return JSON response of item data stored in database
+     */
+    @Security.Authenticated(Secured.class)
+    public Result getItem() {
+        DynamicForm dynamicForm = Form.form().bindFromRequest();
+        int id;
+        try {
+            id = Integer.parseInt(dynamicForm.get("id"));
+        } catch (NumberFormatException e) { // Null or non int string
+            return notFound404();
+        }
+        SaleItem item  = Ebean.find(SaleItem.class).where().eq("id", id).findUnique();
+        return ok(toJson(item));
+    }
+
+    /**
+     * Lists all data about all items
+     * @return JSON response of all item data stored in database
+     */
+    @Security.Authenticated(Secured.class)
+    public Result getItems() {
+        List<SaleItem> items = Ebean.find(SaleItem.class).findList();
+        return ok(toJson(items));
+    }
+
+
+    /**
+     * Returns list of posts listed with the queried item name
+     *
+     * @return items to json
+     */
+    @Security.Authenticated(Secured.class)
+    public Result getSearchItems() {
+        if (request().method() == "POST") {
+            DynamicForm dynamicForm = Form.form().bindFromRequest();
+            String query = dynamicForm.get("query");
+            if (query != null) {
+                List<SaleItem> items = Ebean.find(SaleItem.class).where().like("name", query).findList();
+                return ok(toJson(items));
+            }
+        }
+        return notFound404();
+    }
+
     /**
      * Lists name, username, email of all users
      * @return JSON response of select user data stored in database
@@ -86,10 +138,15 @@ public class DataController extends Controller {
         List<User> users = Ebean.find(User.class).findList();
         JSONArray ja = new JSONArray();
         for (User user : users) {
-            JSONObject jo = new JSONObject()
-                    .put("name", user.getName())
-                    .put("username", user.username)
-                    .put("email", user.email);
+            JSONObject jo = null;
+            try {
+                jo = new JSONObject()
+                        .put("name", user.getName())
+                        .put("username", user.username)
+                        .put("email", user.email);
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
             ja.put(jo);
         }
         return ok(ja.toString());
@@ -112,7 +169,6 @@ public class DataController extends Controller {
 
     /**
      * Displays a 404 error page
-     * @param path URI of the page that doesn't exist
      * @return HTTP response to a nonexistant page
      */
     public Result notFound404() {
