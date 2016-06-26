@@ -37,73 +37,6 @@ public class DataController extends Controller {
 
     }
 
-    /**
-     * Lists data about a sale
-     * @return JSON response of sale data stored in database
-     */
-    @Security.Authenticated(Secured.class)
-    public Result getSale() {
-        DynamicForm dynamicForm = Form.form().bindFromRequest();
-        int id;
-        try {
-            id = Integer.parseInt(dynamicForm.get("id"));
-        } catch (NumberFormatException e) { // Null or non int string
-            return notFound404();
-        }
-        Sale sale = Ebean.find(Sale.class).where().eq("id", id).findUnique();
-        User user = null;
-        if (sale != null) {
-            user = Ebean.find(User.class).where().eq("id", sale.userCreatedId).findUnique();
-        } else { // Sale doesn't exist
-            return notFound404();
-        }
-        String createdBy = "";
-        if ( user != null) {
-           createdBy = user.getName();
-        }
-        JSONObject jo = null;
-        try {
-            jo = new JSONObject()
-                    .put("name", sale.name)
-                    .put("description", sale.description)
-                    .put("street", sale.street)
-                    .put("city", sale.city)
-                    .put("state", sale.state)
-                    .put("zip", sale.zip)
-                    .put("createdBy", createdBy);
-        } catch (JSONException e) {
-            e.printStackTrace();
-            return notFound404();
-        }
-        return ok(jo.toString()).as("application/json");
-    }
-
-    /**
-     * Lists all data about all sales
-     * @return JSON response of all sale data stored in database
-     */
-    @Security.Authenticated(Secured.class)
-    public Result getSales() {
-        List<Sale> sales = Ebean.find(Sale.class).findList();
-        return ok(toJson(sales));
-    }
-
-
-    /**
-     * Returns list of posts listed at the queried location
-     * @return
-     */
-    @Security.Authenticated(Secured.class)
-    public Result getSearchLocations() {
-        DynamicForm dynamicForm = Form.form().bindFromRequest();
-        String query = dynamicForm.get("query");
-        if (query != null) {
-            List<Sale> sales = Ebean.find(Sale.class).where().like("city", query).findList();
-            return ok(toJson(sales));
-        }
-        return notFound404();
-    }
-
 
     /**
      * Lists all data about an item
@@ -139,10 +72,61 @@ public class DataController extends Controller {
         return ok(toJson(items));
     }
 
+    /**
+     * Lists data about a sale
+     * @return JSON response of sale data stored in database
+     */
+    @Security.Authenticated(Secured.class)
+    public Result getSale() {
+        DynamicForm dynamicForm = Form.form().bindFromRequest();
+        int id;
+        try {
+            id = Integer.parseInt(dynamicForm.get("id"));
+        } catch (NumberFormatException e) { // Null or non int string
+            return notFound404();
+        }
+        Sale sale = Ebean.find(Sale.class).where().eq("id", id).findUnique();
+        User user = null;
+        if (sale != null) {
+            user = Ebean.find(User.class).where().eq("id", sale.userCreatedId).findUnique();
+        } else { // Sale doesn't exist
+            return notFound404();
+        }
+        String createdBy = "";
+        if ( user != null) {
+            createdBy = user.getName();
+        }
+        JSONObject jo = null;
+        try {
+            jo = new JSONObject()
+                    .put("name", sale.name)
+                    .put("description", sale.description)
+                    .put("street", sale.street)
+                    .put("city", sale.city)
+                    .put("state", sale.state)
+                    .put("zip", sale.zip)
+                    .put("createdBy", createdBy)
+                    .put("startDate", sale.startDate)
+                    .put("endDate", sale.endDate);
+        } catch (JSONException e) {
+            e.printStackTrace();
+            return notFound404();
+        }
+        return ok(jo.toString()).as("application/json");
+    }
+
+    /**
+     * Lists all data about all sales
+     * @return JSON response of all sale data stored in database
+     */
+    @Security.Authenticated(Secured.class)
+    public Result getSales() {
+        List<Sale> sales = Ebean.find(Sale.class).findList();
+        return ok(toJson(sales));
+    }
 
     /**
      * Returns list of posts listed with the queried item name
-     *
      * @return items to json
      */
     @Security.Authenticated(Secured.class)
@@ -156,9 +140,26 @@ public class DataController extends Controller {
         }
         String query = dynamicForm.get("query");
         if (query != null) {
-            List<SaleItem> items = Ebean.find(SaleItem.class).where().eq("id", saleId).like("name", query).findList();
-            items.addAll(Ebean.find(SaleItem.class).where().eq("id", saleId).like("description", query).findList());
+            query = "%" + query + "%";
+            List<SaleItem> items = Ebean.find(SaleItem.class).where().eq("saleId", saleId).like("name", query).findList();
+            items.addAll(Ebean.find(SaleItem.class).where().eq("saleId", saleId).like("description", query).findList());
             return ok(toJson(items));
+        }
+        return notFound404();
+    }
+
+    /**
+     * Returns list of posts listed at the queried location
+     * @return
+     */
+    @Security.Authenticated(Secured.class)
+    public Result getSearchLocations() {
+        DynamicForm dynamicForm = Form.form().bindFromRequest();
+        String query = dynamicForm.get("query");
+        if (query != null) {
+            query = "%" + query + "%";
+            List<Sale> sales = Ebean.find(Sale.class).where().like("city", query).findList();
+            return ok(toJson(sales));
         }
         return notFound404();
     }

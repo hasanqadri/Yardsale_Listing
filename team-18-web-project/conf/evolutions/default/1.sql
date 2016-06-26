@@ -11,8 +11,8 @@ create table sales (
   city                      varchar(255),
   state                     varchar(255),
   zip                       integer,
-  start_date                double,
-  end_date                  double,
+  start_date                datetime(6),
+  end_date                  datetime(6),
   user_created_id           integer,
   is_active                 integer default 0,
   constraint pk_sales primary key (id))
