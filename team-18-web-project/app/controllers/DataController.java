@@ -70,7 +70,9 @@ public class DataController extends Controller {
                     .put("city", sale.city)
                     .put("state", sale.state)
                     .put("zip", sale.zip)
-                    .put("createdBy", createdBy);
+                    .put("createdBy", createdBy)
+                    .put("startDate", sale.startDate)
+                    .put("endDate", sale.endDate);
         } catch (JSONException e) {
             e.printStackTrace();
             return notFound404();
