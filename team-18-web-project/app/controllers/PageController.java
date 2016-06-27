@@ -76,6 +76,15 @@ public class PageController extends Controller {
         return ok(createSale.render(""));
     }
 
+    /**
+     * Display item page
+     * @return HTTP response to item page request
+     */
+    @Authenticated(Secured.class)
+    public Result item(int saleId, int itemId) {
+        SaleItem i = Ebean.find(SaleItem.class).where().eq("id", itemId).findUnique();
+        return ok(item.render(saleId, itemId, i.name, i.description, i.price, ""));
+    }
 
     /**
      * Display login page

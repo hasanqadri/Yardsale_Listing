@@ -1,13 +1,12 @@
 @* Displays Item page *@
-@(name:String, description:String, price:float, error:String)
+@(saleId:Int, itemId:Int, name:String, description:String, price:Float, error:String)
 
 @loggedinmain("Item") {
   <div class="container content">
-    <div class="view item" id="view-item">
+    <div class="view profile" id="view-profile">
       <div class="col-sm-6">
-        <img class="item-image" src="http://placehold.it/200x200" />
+        <img class="profile-image" src="http://placehold.it/200x200" />
         <h1>@name</h1>
-        <p class="lead">@name</p>
         <p class="lead">@description</p>
         <p class="lead">@price</p>
       </div>
@@ -17,7 +16,7 @@
       </div>
 
     </div>
-    <div class="edit item" id="edit-item">
+    <div class="edit profile" id="edit-profile">
       <div class="col-sm-4">
         <img class="profile-image" src="http://placehold.it/200x200" />
         <<h1>@name </h1>
@@ -27,7 +26,7 @@
       </div>
       <div class="col-sm-4">
         @if(error) {<h3 class="text-center">@error</h3>}
-        <form class="form-edititem" id="edit-form" action="/item" method="post">
+        <form class="form-editprofile" id="edit-form" action="/sale/@saleId/item/@itemId" method="post">
           <label for="inputName" class="sr-only">Name</label>
           <input type="text" id="inputName" name="name" class="form-control input-top" value="@name" required autofocus>
           <label for="inputDescription" class="sr-only">Description</label>
@@ -42,7 +41,6 @@
           </div>
         </form>
       </div>
-
 
     </div>
   </div>
