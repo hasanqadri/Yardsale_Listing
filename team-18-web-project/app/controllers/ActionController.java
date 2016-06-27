@@ -126,9 +126,9 @@ public class ActionController extends Controller {
             return ok(item.render(saleId, itemId, i.name, i.description, i.price, "Error: bad price"));
         }
 
-        i.name = f.get("name");
-        i.description = f.get("description");
-        i.price = price;
+        i.setName(f.get("name"));
+        i.setDescription(f.get("description"));
+        i.setPrice(price);
         i.save();
 
         return ok(item.render(saleId, itemId, i.name, i.description, i.price, ""));
