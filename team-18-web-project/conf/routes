@@ -40,9 +40,11 @@ GET     /getUsersAdmin              controllers.DataController.getUsersAdmin
 
 
 # Map requests to /sale
-GET     /sale/:id/addItem           controllers.PageController.addItem(id: Int)
 GET     /sale/:id                   controllers.PageController.sale(id: Int)
+GET     /sale/:id/addItem           controllers.PageController.addItem(id: Int)
 POST    /sale/:id/addItem           controllers.ActionController.addItem(id: Int)
+GET     /sale/:saleId/item/:itemId  controllers.PageController.item(saleId: Int, itemId: Int)
+POST    /sale/:saleId/item/:itemId  controllers.ActionController.item(saleId: Int, itemId: Int)
 POST    /sale/:id/searchItems       controllers.ActionController.searchItems(id: Int)
 
 

@@ -1,5 +1,5 @@
 @* Displays Item page *@
-@(name:String, description:String, price:String, error:String)
+@(saleId:Int, itemId:Int, name:String, description:String, price:Float, error:String)
 
 @loggedinmain("Item") {
   <div class="container content">
@@ -7,7 +7,6 @@
       <div class="col-sm-6">
         <img class="profile-image" src="http://placehold.it/200x200" />
         <h1>@name</h1>
-        <p class="lead">@name</p>
         <p class="lead">@description</p>
         <p class="lead">@price</p>
       </div>
@@ -27,13 +26,13 @@
       </div>
       <div class="col-sm-4">
         @if(error) {<h3 class="text-center">@error</h3>}
-        <form class="form-editprofile" id="edit-form" action="/item" method="post">
+        <form class="form-editprofile" id="edit-form" action="/sale/@saleId/item/@itemId" method="post">
           <label for="inputName" class="sr-only">Name</label>
-          <input type="text" id="inputName" name="Name" class="form-control input-top" value="@name" required autofocus>
+          <input type="text" id="inputName" name="name" class="form-control input-top" value="@name" required autofocus>
           <label for="inputDescription" class="sr-only">Description</label>
-          <input type="text" id="inputDescription" name="Description" class="form-control input-middle" value="@description" required>
+          <input type="text" id="inputDescription" name="description" class="form-control input-middle" value="@description" required>
           <label for="inputPrice" class="sr-only">Price</label>
-          <input type="text" id="inputPrice" name="Price" class="form-control input-middle" value="@price" required>
+          <input type="text" id="inputPrice" name="price" class="form-control input-middle" value="@price" required>
           <div class="col-sm-4">
             <div class="btn-toolbar pull-right">
               <a href="#" class="btn btn-success" onclick="changeToView();">cancel</a>
@@ -42,7 +41,6 @@
           </div>
         </form>
       </div>
-
 
     </div>
   </div>
