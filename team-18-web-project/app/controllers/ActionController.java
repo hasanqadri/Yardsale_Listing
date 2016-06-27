@@ -109,6 +109,32 @@ public class ActionController extends Controller {
     }
 
     /**
+     * Update item page
+     * @return HTTP response to item page update request
+     */
+    @Authenticated(Secured.class)
+    public Result item(int saleId, int itemId) {
+        DynamicForm f = Form.form().bindFromRequest();
+        if (f.get("name") == null || f.get("description") == null || f.get("price") == null) {
+            return notFound404();
+        }
+        SaleItem i = Ebean.find(SaleItem.class).where().eq("id", itemId).findUnique();
+        float price;
+        try {
+            price = Float.parseFloat(f.get("price"));
+        } catch (NumberFormatException e) {
+            return ok(item.render(saleId, itemId, i.name, i.description, i.price, "Error: bad price"));
+        }
+
+        i.name = f.get("name");
+        i.description = f.get("description");
+        i.price = price;
+        i.save();
+
+        return ok(item.render(saleId, itemId, i.name, i.description, i.price, ""));
+    }
+
+    /**
      * Handle login requests
      * @return Response to login request
      */
