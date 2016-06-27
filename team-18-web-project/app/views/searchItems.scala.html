@@ -51,7 +51,7 @@
                 $("#noResults").css("display", "block");
             }
             for(var i in data) {
-                var output = "<h2><a href=\"/sale/@saleId/item/" + data[i].id + "\">" + data[i].name + "</a></h2>" + "<h3>" + data[i].description + "</h3>" + "<h3>" + data[i].price +"</h3>";
+                var output = "<h2><a href=\"/sale/@saleId/item/" + data[i].id + "\">" + data[i].name + "</a></h2>" + "<h3>" + data[i].description + "</h3>" + "<h3>" + data[i].price +"</h3><hr>";
                 $(".results").append(output);
             }
         });

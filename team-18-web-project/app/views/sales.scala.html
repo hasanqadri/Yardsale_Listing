@@ -34,8 +34,8 @@
     $.getJSON("/getSales", function(data) {
         for(var i in data) {
             var text = data[i].name;
-            var output = "<div class=\"col-sm-8 sale\"><h2><a href=\"/sale/" + data[i].id + "\">" + data[i].name + "</a></h2>" + "<h3>" + data[i].street + "</h3>" + "<h3>" + data[i].city + ", "
-                + data[i].state + " " + data[i].zip + "</h3>" + "<h3>" + data[i].startDate + " - " + data[i].endDate + "</h3></div><hr>";
+            var output = "<h2><a href=\"/sale/" + data[i].id + "\">" + data[i].name + "</a></h2>" + "<h3>" + data[i].street + "</h3>" + "<h3>" + data[i].city + ", "
+                + data[i].state + " " + data[i].zip + "</h3>" + "<h3>" + data[i].startDate + " - " + data[i].endDate + "</h3><hr>";
             $(".sales").append(output)
         }
     });
