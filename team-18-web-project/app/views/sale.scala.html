@@ -13,7 +13,7 @@
                 <div class="input-group">
                     <form class="form-search-field" action="/sale/@id/searchItems" method="post">
                         <div class="input-group">
-                            <input type="text" class="form-control" name="query" placeholder="Search this sale...">
+                            <input type="text" class="form-control" name="query" placeholder="Search Items...">
                         <span class="input-group-btn">
                             <button class="btn btn-default icon" type="submit"><i class="glyphicon glyphicon-search"></i></button>
                         </span>
@@ -73,8 +73,8 @@
     // Populate page with sale items
     $.post("/getItems", { "saleId" : "@id" }).done(function( data ) {
         for(var i in data) {
-            var output = "<h2>" + data[i].name + "</h2>" + "<h3>" + data[i].description+ "</h3>" + "<h3>"
-                + data[i].price + "</h3></div>";
+            var output = "<h2><a href=\"/sale/@id/item/" + data[i].id + "\">" + data[i].name + "</a></h2>" + "<h3>" + data[i].description+ "</h3>" + "<h3>"
+                + data[i].price + "</h3></div><hr>";
             $(".items").append(output)
         }
     });

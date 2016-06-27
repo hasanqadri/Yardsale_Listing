@@ -1,6 +1,8 @@
 package controllers;
 
 import com.avaje.ebean.Ebean;
+import com.avaje.ebean.Expr;
+import java.util.List;
 import models.Sale;
 import models.SaleItem;
 import models.User;
@@ -14,8 +16,6 @@ import play.mvc.Result;
 import play.mvc.Security;
 import views.html.loggedinNotFound;
 import views.html.notFound;
-
-import java.util.List;
 
 import static play.libs.Json.toJson;
 
@@ -141,8 +141,10 @@ public class DataController extends Controller {
         String query = dynamicForm.get("query");
         if (query != null) {
             query = "%" + query + "%";
-            List<SaleItem> items = Ebean.find(SaleItem.class).where().eq("saleId", saleId).like("name", query).findList();
-            items.addAll(Ebean.find(SaleItem.class).where().eq("saleId", saleId).like("description", query).findList());
+            List<SaleItem> items = Ebean.find(SaleItem.class).where().eq("saleId", saleId).or(
+                    Expr.like("name", query),
+                    Expr.like("description", query)
+            ).findList();
             return ok(toJson(items));
         }
         return notFound404();
@@ -153,12 +155,27 @@ public class DataController extends Controller {
      * @return
      */
     @Security.Authenticated(Secured.class)
-    public Result getSearchLocations() {
+    public Result getSearchSales() {
         DynamicForm dynamicForm = Form.form().bindFromRequest();
         String query = dynamicForm.get("query");
         if (query != null) {
             query = "%" + query + "%";
-            List<Sale> sales = Ebean.find(Sale.class).where().like("city", query).findList();
+            List<Sale> sales = Ebean.find(Sale.class).where().or(
+                Expr.like("name", query),
+                Expr.or(
+                    Expr.like("description", query),
+                        Expr.or(
+                            Expr.like("street", query),
+                                Expr.or(
+                                    Expr.like("city", query),
+                                        Expr.or(
+                                            Expr.like("state", query),
+                                            Expr.like("zip", query)
+                                        )
+                                )
+                        )
+                )
+            ).findList();
             return ok(toJson(sales));
         }
         return notFound404();
