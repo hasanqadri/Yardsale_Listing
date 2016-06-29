@@ -26,7 +26,7 @@
       </div>
       <div class="col-sm-4">
         @if(error) {<h3 class="text-center">@error</h3>}
-        <form class="form-editprofile" id="edit-form" action="/sale/@saleId/item/@itemId" method="post">
+        <form class="form-edititem" id="edit-form" action="/sale/@saleId/item/@itemId" method="post">
           <label for="inputName" class="sr-only">Name</label>
           <input type="text" id="inputName" name="name" class="form-control input-top" value="@name" required autofocus>
           <label for="inputDescription" class="sr-only">Description</label>
