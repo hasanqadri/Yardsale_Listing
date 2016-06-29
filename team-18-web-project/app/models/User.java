@@ -80,6 +80,10 @@ public class User extends Model {
 
     public void setPassword(String password) { this.password = password; }
 
+    public int getLoginAttempts() { return loginAttempts; }
+
+    public void setLoginAttempts(int loginAttempts) { this.loginAttempts = loginAttempts; }
+
     public static Finder<String, User> find = new Finder<String,User>(User.class);
 
     public String toString() {

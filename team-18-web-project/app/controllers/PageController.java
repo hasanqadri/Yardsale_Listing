@@ -147,27 +147,14 @@ public class PageController extends Controller {
         return ok(profile.render(username, user.getPassword(), user.getFirstName(), user.getLastName(), user.getEmail(), ""));
     }
 
-    //TODO Method doesnt work as intended, also not in routes
-    /**
-     * Display Item page for item on a sale
-     * @param name the item we are rendering/viewing the page for
-     * @return HTTP response to profile page request
-     */
-    @Authenticated(Secured.class)
-    public Result item(String name) {
-        SaleItem item = SaleItem.find.where().eq("name", name).findUnique();
-        //return ok(item.render(item.getName(), item.getDescription(), Float.toString(item.getPrice()), ""));
-        return ok();
-    }
-
     /**
      * Display registration page
      * @return HTTP response to registration page request
      */
     public Result register() {
         String username = session("username");
-        if (username != null) { //Temporarily redirect all logged in users to /profile
-            return redirect("/profile");
+        if (username != null) {
+            return redirect("/");
         }
         return ok(register.render(""));
     }

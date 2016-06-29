@@ -57,7 +57,7 @@ public class ActionController extends Controller {
             DynamicForm dynamicForm = Form.form().bindFromRequest();
             if (dynamicForm.get("username") != null) { // Username was sent in post request
                 User userReset = User.find.where().eq("username", dynamicForm.get("username")).findUnique();
-                userReset.loginAttempts = 0;
+                userReset.setLoginAttempts(0);
                 userReset.save();
                 return noContent(); // Return HTTP code 204
             }
@@ -126,9 +126,9 @@ public class ActionController extends Controller {
             return ok(item.render(saleId, itemId, i.name, i.description, i.price, "Error: bad price"));
         }
 
-        i.name = f.get("name");
-        i.description = f.get("description");
-        i.price = price;
+        i.setName(f.get("name"));
+        i.setDescription(f.get("description"));
+        i.setPrice(price);
         i.save();
 
         return ok(item.render(saleId, itemId, i.name, i.description, i.price, ""));
@@ -150,14 +150,14 @@ public class ActionController extends Controller {
                     return ok(login.render("Your account has been locked"));
                 } else { // Create session
                     if (user.loginAttempts != 0) { // Reset loginAttempts if != 0
-                        user.loginAttempts = 0;
+                        user.setLoginAttempts(0);
                         user.save();
                     }
                     session("username", dynamicForm.get("username"));
                     return redirect("/");
                 }
             } else if (user.loginAttempts < 3) { // Incorrect password - increment lockout counter up to 3
-                user.loginAttempts++;
+                user.setLoginAttempts(user.loginAttempts + 1);
                 user.save();
             }
         }
@@ -275,6 +275,11 @@ public class ActionController extends Controller {
         return ok();
     }
 
+    /**
+     * Search items in a sale
+     * @param saleId Id of sale to search
+     * @return HTTP response to search results request
+     */
     @Authenticated(Secured.class)
     public Result searchItems(int saleId) {
         DynamicForm dynamicForm = Form.form().bindFromRequest();
@@ -285,6 +290,10 @@ public class ActionController extends Controller {
         return notFound404();
     }
 
+    /**
+     * Search sales
+     * @return HTTP response to search results request
+     */
     @Authenticated(Secured.class)
     public Result searchSales() {
         DynamicForm dynamicForm = Form.form().bindFromRequest();

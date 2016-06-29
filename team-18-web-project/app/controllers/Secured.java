@@ -5,6 +5,7 @@ import play.mvc.Http.Context;
 import play.mvc.Result;
 
 /**
+ * Checks if user is logged in
  * Created by nathancheek on 6/24/16.
  */
 public class Secured extends Authenticator {
