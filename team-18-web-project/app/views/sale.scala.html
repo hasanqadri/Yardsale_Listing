@@ -1,5 +1,5 @@
 @* Displays sale page *@
-@(id: Int)
+@(id: Int, isAdmin: Boolean)
 
 @loggedinmain("Sale") {
 <div class="container content">
@@ -7,6 +7,7 @@
         <div class="row">
             <div class="col-sm-4">
                 <a href="/sale/@id/addItem" class="btn btn-success">ADD ITEM</a>
+                @if(isAdmin) {<a href="/sale/@id/edit" class="btn btn-success">EDIT SALE</a>}
             </div>
             <div class="col-sm-5"></div>
             <div class="col-sm-3">
