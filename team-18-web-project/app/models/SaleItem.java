@@ -23,6 +23,7 @@ public class SaleItem extends Model {
     public int pictureId; // References specific Picture
     @Constraints.Required
     public int saleId; // References specific Sale
+    public int quantity; //quantity within sale
 
 
     public SaleItem (String name, String description, float price, int saleId) {

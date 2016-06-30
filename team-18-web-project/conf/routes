@@ -48,6 +48,12 @@ POST    /sale/:saleId/item/:itemId  controllers.ActionController.item(saleId: In
 POST    /sale/:id/searchItems       controllers.ActionController.searchItems(id: Int)
 
 
+
+#Map requests to /transaction
+GET    /sale/:id/transaction        controllers.PageController.transaction(id: Int)
+POST   /sale/:id/transaction        controllers.ActionController.transaction(id: Int)
+POST   /sale/:saleId/transaction/:transactionId/:lineItemId/:saleItemID  controllers.ActionController.addLineItem(saleId: Int, transactionId: Int, lineItemId: Int, saleItemID: Int)
+
 # Map requests to /image
 GET     /image/:id                  controllers.DataController.getImage(id: Int)
 

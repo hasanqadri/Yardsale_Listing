@@ -7,6 +7,8 @@ import java.util.Date;
 import models.Sale;
 import models.SaleItem;
 import models.User;
+import models.Transaction;
+import models.LineItem;
 import play.data.DynamicForm;
 import play.data.Form;
 import play.mvc.Controller;
@@ -304,6 +306,38 @@ public class ActionController extends Controller {
         return notFound404();
     }
 
+    /**
+     * @param id place in db
+     * @return
+     */
+    @Authenticated(Secured.class)
+    public Result transaction(int saleID) {
+        Sale s = Ebean.find(Sale.class).where().eq("id", saleID).findUnique();
+        if (s != null) { // Check if sale exists
+
+
+        }
+        return notFound404();
+    }
+
+    /**
+     * @param id place in db
+     * @return
+     */
+    @Authenticated(Secured.class)
+    public Result addLineItem(int saleID, int transactionID, int lineItemID, int saleItemID) {
+        Sale s = Ebean.find(Sale.class).where().eq("id", saleID).findUnique();
+        if (s != null) { //check if transaction exists
+            Transaction t = Ebean.find(Transaction.class).where().eq("id", transactionID).findUnique();
+            if (t != null) {
+
+                LineItem item = new LineItem(lineItemID, saleItemID, transactionID, 1);
+                item.save();
+                return ok(transaction.render(transactionID, "Item added! Add another item?"));
+            }
+        }
+        return notFound404();
+    }
     @Authenticated(Secured.class)
     public Result uploadProfilePicture() {
         MultipartFormData body = request().body().asMultipartFormData();

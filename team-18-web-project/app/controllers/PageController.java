@@ -4,6 +4,8 @@ import com.avaje.ebean.Ebean;
 import models.Sale;
 import models.SaleItem;
 import models.User;
+import models.Transaction;
+import models.LineItem;
 import play.data.Form;
 import play.mvc.Controller;
 import play.mvc.Result;
@@ -182,6 +184,18 @@ public class PageController extends Controller {
         return ok(sales.render());
     }
 
+    /**
+     * Displays transaction page
+     * @return HTTP response to addItem page request
+     */
+    @Authenticated(Secured.class)
+    public Result transaction(int id) {
+        Sale s = Ebean.find(Sale.class).where().eq("id", id).findUnique();
+        if (s != null) { //check if transaction exists
+            return ok(transaction.render(id, ""));
+        }
+        return notFound404();
+    }
     /**
      * Displays a list of all users
      * @return HTTP response to users list request
