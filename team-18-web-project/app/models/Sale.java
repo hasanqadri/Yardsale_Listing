@@ -35,4 +35,5 @@ public class Sale extends Model {
     public int userCreatedId;
     @Column(columnDefinition = "integer default 0") // New sales default to inactive
     public int isActive; // Use int because boolean isn't a type in mysql
+
 }

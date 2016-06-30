@@ -1,5 +1,6 @@
 package models;
 
+import com.avaje.ebean.Ebean;
 import com.avaje.ebean.Model;
 import play.data.format.*;
 import play.data.validation.Constraints;
@@ -8,6 +9,7 @@ import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Table;
 import javax.persistence.Column;
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -48,6 +50,8 @@ public class User extends Model {
         this.password = password;
     }
 
+    public int getId() { return id; }
+
     public String getEmail() { return email; }
 
     public void setEmail(String email) { this.email = email; }
@@ -84,11 +88,28 @@ public class User extends Model {
 
     public void setLoginAttempts(int loginAttempts) { this.loginAttempts = loginAttempts; }
 
-    public static Finder<String, User> find = new Finder<String,User>(User.class);
-
     public String toString() {
         return String.format("[Name: '%s' Email: '%s' Username: %s Password: %s]", firstName + " " + lastName,
                 email, username, password);
+    }
+
+    public void createSale(String name, String description, String street, String city, String state, int zip,
+            Timestamp startDate, Timestamp endDate) {
+        Sale sale = new Sale();
+        sale.name = name;
+        sale.description = description;
+        sale.street = street;
+        sale.city = city;
+        sale.state = state;
+        sale.zip = zip;
+        sale.startDate = startDate;
+        sale.endDate = endDate;
+        sale.userCreatedId = id;
+        sale.save();
+    }
+
+    public static User getUserByUsername(String username) {
+        return Ebean.find(User.class).where().eq("username", username).findUnique();
     }
 
 }

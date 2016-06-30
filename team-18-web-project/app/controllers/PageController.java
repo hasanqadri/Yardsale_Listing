@@ -59,7 +59,7 @@ public class PageController extends Controller {
      */
     @Authenticated(Secured.class)
     public Result admin() {
-        User user = User.find.where().eq("username", session("username")).findUnique();
+        User user = Ebean.find(User.class).where().eq("username", session("username")).findUnique();
         if (user.superAdmin == 1) { // Show supersecret admin page
             return ok(admin.render());
         } else { // Return 404
@@ -143,7 +143,7 @@ public class PageController extends Controller {
     @Authenticated(Secured.class)
     public Result profile() {
         String username = session("username");
-        User user = User.find.where().eq("username", username).findUnique();
+        User user = Ebean.find(User.class).where().eq("username", username).findUnique();
         return ok(profile.render(username, user.getPassword(), user.getFirstName(), user.getLastName(), user.getEmail(), ""));
     }
 

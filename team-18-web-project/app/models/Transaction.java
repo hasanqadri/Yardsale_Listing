@@ -14,9 +14,13 @@ import java.util.List;
 /**
  * Created by nathancheek on 6/24/16.
  */
+@Entity
+@Table(name="transactions")
 public class Transaction extends Model {
     @Id
     public int id;
     @Constraints.Required
-    public int saleItemId; // Id of item in transaction
+    public int saleId;
+    @Constraints.Required
+    public int cashierId;
 }

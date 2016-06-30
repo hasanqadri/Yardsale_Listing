@@ -23,14 +23,17 @@ public class SaleItem extends Model {
     public int pictureId; // References specific Picture
     @Constraints.Required
     public int saleId; // References specific Sale
+    @Constraints.Required
+    public int userCreatedId; // Multiple sellers can exist per sale
+    public int quantity;
 
-
-    public SaleItem (String name, String description, float price, int saleId) {
+    public SaleItem (String name, String description, float price, int saleId, int userCreatedId, int quantity) {
         this.name = name;
         this.description = description;
         this.price = price;
         this.saleId = saleId;
-
+        this.userCreatedId = userCreatedId;
+        this.quantity = quantity;
     }
 
 
@@ -46,8 +49,18 @@ public class SaleItem extends Model {
 
     public void setPrice(float price) { this.price = price; }
 
+    public int getSaleId() { return saleId; }
 
-    public static Finder<String, SaleItem> find = new Finder<String,SaleItem>(SaleItem.class);
+    public void setSaleId(int saleId) { this.saleId = saleId; }
+
+    public int getUserCreatedId() { return userCreatedId; }
+
+    public void setUserCreatedId(int userCreatedId) { this.userCreatedId = userCreatedId; }
+
+    public int getQuantity() { return quantity; }
+
+    public void setQuantity(int quantity) { this.quantity = quantity; }
+
 
     public String toString() {
         return String.format("[Name: " + name + " Description: " + description + " Price: "

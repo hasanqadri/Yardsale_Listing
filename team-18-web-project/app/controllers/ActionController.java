@@ -39,7 +39,7 @@ public class ActionController extends Controller {
             } catch (NumberFormatException e) {
                 return ok(addItem.render(id, "Error: bad price"));
             }
-            SaleItem item = new SaleItem(f.get("name"), f.get("description"), price, id);
+            SaleItem item = new SaleItem(f.get("name"), f.get("description"), price, id, 0, 0);
             item.save();
             return ok(addItem.render(id, "Item added! Add another item?"));
         }
@@ -52,11 +52,11 @@ public class ActionController extends Controller {
      */
     @Authenticated(Secured.class)
     public Result adminResetUser() {
-        User user = User.find.where().eq("username", session("username")).findUnique();
+        User user = Ebean.find(User.class).where().eq("username", session("username")).findUnique();
         if (user.superAdmin == 1) { // Requestor is super admin
             DynamicForm dynamicForm = Form.form().bindFromRequest();
             if (dynamicForm.get("username") != null) { // Username was sent in post request
-                User userReset = User.find.where().eq("username", dynamicForm.get("username")).findUnique();
+                User userReset = Ebean.find(User.class).where().eq("username", dynamicForm.get("username")).findUnique();
                 userReset.setLoginAttempts(0);
                 userReset.save();
                 return noContent(); // Return HTTP code 204
@@ -72,7 +72,7 @@ public class ActionController extends Controller {
     @Authenticated(Secured.class)
     public Result createSale() {
         //enters sale into database
-        User user = User.find.where().eq("username", session("username")).findUnique();
+        User user = Ebean.find(User.class).where().eq("username", session("username")).findUnique();
         DynamicForm createSaleForm = Form.form().bindFromRequest();
         Sale sale = new Sale();
         sale.name = createSaleForm.get("name");
@@ -143,7 +143,7 @@ public class ActionController extends Controller {
             return redirect("/");
         }
         DynamicForm dynamicForm = Form.form().bindFromRequest();
-        User user = User.find.where().eq("username", dynamicForm.get("username")).findUnique();
+        User user = Ebean.find(User.class).where().eq("username", dynamicForm.get("username")).findUnique();
         if (user != null) { // User exists
             if (user.getPassword().equals(dynamicForm.get("password"))) { // Correct password
                 if (user.loginAttempts == 3) { // Notify that user is locked out
@@ -195,15 +195,15 @@ public class ActionController extends Controller {
     @Authenticated(Secured.class)
     public Result profile() {
         String username = session("username");
-        User user = User.find.where().eq("username", username).findUnique();
+        User user = Ebean.find(User.class).where().eq("username", username).findUnique();
 
         DynamicForm dynamicForm = Form.form().bindFromRequest();
-        User userCheckUsername = User.find.where().eq("username", dynamicForm.get("username")).findUnique();
+        User userCheckUsername = Ebean.find(User.class).where().eq("username", dynamicForm.get("username")).findUnique();
         if (userCheckUsername != null && !dynamicForm.get("username").equals(username)) {
             return ok(profile.render(username, user.getPassword(), user.getFirstName(), user.getLastName(), user.getEmail(),
                     "Error: username already in use"));
         }
-        User userCheckEmail = User.find.where().eq("email", dynamicForm.get("email")).findUnique();
+        User userCheckEmail = Ebean.find(User.class).where().eq("email", dynamicForm.get("email")).findUnique();
         if (userCheckEmail != null && !dynamicForm.get("email").equals(user.getEmail())) {
             return ok(profile.render(username, user.getPassword(), user.getFirstName(), user.getLastName(), user.getEmail(),
                     "Error: email already in use"));
@@ -229,7 +229,7 @@ public class ActionController extends Controller {
      */
     @Authenticated(Secured.class)
     public Result item(String name) {
-        SaleItem item = SaleItem.find.where().eq("name", name).findUnique();
+        SaleItem item = Ebean.find(SaleItem.class).where().eq("name", name).findUnique();
         DynamicForm dynamicForm = Form.form().bindFromRequest();
         // update Item
         item.setName(dynamicForm.get("name"));
@@ -249,11 +249,11 @@ public class ActionController extends Controller {
             return redirect("/");
         }
         DynamicForm dynamicForm = Form.form().bindFromRequest();
-        User userCheckUsername = User.find.where().eq("username", dynamicForm.get("username")).findUnique();
+        User userCheckUsername = Ebean.find(User.class).where().eq("username", dynamicForm.get("username")).findUnique();
         if (userCheckUsername != null) {
             return ok(register.render("Error: username already in use"));
         }
-        User userCheckEmail = User.find.where().eq("email", dynamicForm.get("email")).findUnique();
+        User userCheckEmail = Ebean.find(User.class).where().eq("email", dynamicForm.get("email")).findUnique();
         if (userCheckEmail != null) {
             return ok(register.render("Error: email already in use"));
         }
@@ -314,7 +314,7 @@ public class ActionController extends Controller {
         } else {
             redirect("/profile");
         }*/
-        User user = User.find.where().eq("username", session("username")).findUnique();
+        User user = Ebean.find(User.class).where().eq("username", session("username")).findUnique();
         return ok("in progress");
     }
 }

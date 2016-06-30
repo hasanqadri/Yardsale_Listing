@@ -7,29 +7,41 @@ import play.data.validation.Constraints;
 import javax.persistence.Entity;
 import javax.persistence.Embeddable;
 import javax.persistence.EmbeddedId;
-import javax.persistence.Table;
 import javax.persistence.Column;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.Table;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 
 /**
  * Stores roles relating a specific user to a specific sale
  * Created by nathancheek on 6/24/16.
  */
-//@Entity
+@Entity
+@Table(name="roles")
 public class Role extends Model {
-    //todo get this working
-    /*@EmbeddedId
-    public RoleKey key;
-    @Constraints.Required
-    public String userRole; // I'd rather use ENUM here but I'm not sure how
+    private static final Set<String> validRoles = new HashSet<>();
+    static {
+        validRoles.add("admin");
+        validRoles.add("bookkeeper");
+        validRoles.add("cashier");
+        validRoles.add("clerk");
+        validRoles.add("seller");
+    }
 
-    @Embeddable
-    public class RoleKey { // Primary key is made up of saleId and userId
-        @Constraints.Required
-        public int saleId; // References specific Sale
-        @Constraints.Required
-        public int userId; // References specific User
-    }*/
+    @Id
+    public int id;
+    @Column(nullable=false)
+    public String name;
+    @ManyToOne
+    @JoinColumn(name = "userId", referencedColumnName = "id")
+    public User user;
+    @ManyToOne
+    @JoinColumn(name = "saleId", referencedColumnName = "id")
+    public Sale sale;
 
 }

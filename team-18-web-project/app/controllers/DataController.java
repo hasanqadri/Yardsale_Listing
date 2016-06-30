@@ -210,7 +210,7 @@ public class DataController extends Controller {
      */
     @Security.Authenticated(Secured.class)
     public Result getUsersAdmin() {
-        User user = User.find.where().eq("username", session("username")).findUnique();
+        User user = Ebean.find(User.class).where().eq("username", session("username")).findUnique();
         if (user.superAdmin == 1) { // Show supersecret user data
             List<User> users = Ebean.find(User.class).findList();
             return ok(toJson(users));
