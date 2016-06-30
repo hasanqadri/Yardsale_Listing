@@ -57,17 +57,15 @@
 <script>
     // Populate page with sale information
     $.post("/getSale", { "id" : "@id" }).done(function( data ) {
-        var start = new Date(data.startDate),
-        startTime = formatDate(start),
-        end = new Date(data.endDate),
-        endTime = formatDate(end);
+        var startDate = new Date(data.startDate)
+        var endDate = new Date(data.endDate)
 
         $("#saleName").text(data.name);
         $("#saleAddress1").text(data.street);
         $("#saleAddress2").text(data.city + ", " + data.state + " " + data.zip);
         $("#saleDescription").text(data.description);
         $("#saleCreatedBy").text(data.createdBy);
-        $("#saleDates").text(startTime + " - " + data.endDate);
+        $("#saleDates").text(startDate.toDateString() + " - " + endDate.toDateString());
     });
 
     // Populate page with sale items
