@@ -137,11 +137,40 @@ public class User extends Model {
         return true;
     }
 
+    public boolean canBeBookkeeper(int saleId) {
+        if (superAdmin == 1) { return true; }
+        Role role = Ebean.find(Role.class).where().eq("userId", id).eq("saleId", saleId).or(
+            Expr.eq("name", "admin"),
+            Expr.or(
+                Expr.eq("name", "bookkeeper"),
+                Expr.eq("name", "seller")
+            )
+        ).findUnique(); // Check this way in case same user has multiple roles on single sale
+        if (role == null) { return false; }
+        return true;
+    }
+
     public boolean canBeCashier(int saleId) {
         if (superAdmin == 1) { return true; }
         Role role = Ebean.find(Role.class).where().eq("userId", id).eq("saleId", saleId).or(
             Expr.eq("name", "admin"),
-            Expr.eq("name", "cashier")
+            Expr.or(
+                Expr.eq("name", "cashier"),
+                Expr.eq("name", "seller")
+            )
+        ).findUnique(); // Check this way in case same user has multiple roles on single sale
+        if (role == null) { return false; }
+        return true;
+    }
+
+    public boolean canBeClerk(int saleId) {
+        if (superAdmin == 1) { return true; }
+        Role role = Ebean.find(Role.class).where().eq("userId", id).eq("saleId", saleId).or(
+            Expr.eq("name", "admin"),
+            Expr.or(
+                Expr.eq("name", "clerk"),
+                Expr.eq("name", "seller")
+            )
         ).findUnique(); // Check this way in case same user has multiple roles on single sale
         if (role == null) { return false; }
         return true;
@@ -150,8 +179,8 @@ public class User extends Model {
     public boolean canBeSeller(int saleId) {
         if (superAdmin == 1) { return true; }
         Role role = Ebean.find(Role.class).where().eq("userId", id).eq("saleId", saleId).or(
-                Expr.eq("name", "admin"),
-                Expr.eq("name", "seller")
+            Expr.eq("name", "admin"),
+            Expr.eq("name", "seller")
         ).findUnique(); // Check this way in case same user has multiple roles on single sale
         if (role == null) { return false; }
         return true;
