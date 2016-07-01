@@ -6,6 +6,8 @@ import java.util.List;
 import models.Sale;
 import models.SaleItem;
 import models.User;
+import models.Transaction;
+import models.LineItem;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -52,6 +54,23 @@ public class DataController extends Controller {
             return notFound404();
         }
         SaleItem item  = Ebean.find(SaleItem.class).where().eq("id", id).findUnique();
+        return ok(toJson(item));
+    }
+
+    /**
+     * Lists all data about an item
+     * @return JSON response of item data stored in database
+     */
+    @Security.Authenticated(Secured.class)
+    public Result getLineItems() {
+        DynamicForm dynamicForm = Form.form().bindFromRequest();
+        int id;
+        try {
+            id = Integer.parseInt(dynamicForm.get("id"));
+        } catch (NumberFormatException e) { // Null or non int string
+            return notFound404();
+        }
+        LineItem item  = Ebean.find(LineItem.class).where().eq("id", id).findUnique();
         return ok(toJson(item));
     }
 

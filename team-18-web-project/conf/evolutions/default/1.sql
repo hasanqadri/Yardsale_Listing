@@ -3,6 +3,14 @@
 
 # --- !Ups
 
+create table lineItems (
+  id                        integer auto_increment not null,
+  sale_item_id              integer,
+  transaction_id            integer,
+  quantity                  integer,
+  constraint pk_lineItems primary key (id))
+;
+
 create table roles (
   id                        integer auto_increment not null,
   name                      varchar(255) not null,
@@ -42,6 +50,8 @@ create table transactions (
   id                        integer auto_increment not null,
   sale_id                   integer,
   cashier_id                integer,
+  sale_item_id              integer,
+  buyer_name                varchar(255),
   constraint pk_transactions primary key (id))
 ;
 
@@ -64,6 +74,8 @@ create table users (
 # --- !Downs
 
 SET FOREIGN_KEY_CHECKS=0;
+
+drop table lineItems;
 
 drop table roles;
 

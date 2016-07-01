@@ -1,10 +1,62 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Title</title>
-</head>
-<body>
+@(id: Int, message : String)
+@loggedinmain("Transaction") {
+<div class="container content">
+    <div class="view sale" id="view-sale">
+        <div class="row">
+            <div class="col-sm-4">
+                <h2 class="text-center">Items in Cart</h2>
+                <div class="lineItems">
+            </div>
 
-</body>
-</html>
+            <div class="col-sm-5"></div>
+            <div class="col-sm-3">
+                <div class="input-group">
+                    <form class="form-search-field" action="/sale/@id/searchItems" method="post">
+                        <div class="input-group">
+                            <input type="text" class="form-control" name="query" placeholder="Search Items...">
+                        <span class="input-group-btn">
+                            <button class="btn btn-default icon" type="submit"><i class="glyphicon glyphicon-search"></i></button>
+                        </span>
+                        </div><!-- /input-group -->
+                    </form>
+                </div>
+            </div>
+
+
+        </div>
+        <h2 class="text-center">Items for Sale</h2>
+        <div class="row">
+            <div class="col-sm-2"></div>
+            <div class="col-sm-8 items"></div>
+        </div>
+    </div>
+</div>
+    <!-- /submit -->
+
+
+<script>
+// Populate page with sale items
+$.post("/getItems", { "saleId" : "@id" }).done(function( data ) {
+for(var i in data) {
+var output = "<a href="#" class="btn btn-primary pull-left" onclick="changeToView();">ADD ITEM</a> <h2><a href=\"/sale/@id/item/"
++ data[i].id + "\">" + data[i].name + "</a></h2>"
++ "<h3>" + data[i].description+ "</h3>" + "<h3>"
+    + data[i].price + "</h3></div><hr>";
+$(".items").append(output)
+}
+});
+
+// Populate page with transaction items
+$.post("/getLineItems", { "transactionId" : "@id" }).done(function( data ) {
+for(var i in data) {
+var output = "<h2><a href=\"/sale/@id/item/"
++ data[i].id + "\">" + data[i].name + "</a></h2>"
++ "<h3>" + data[i].description+ "</h3>" + "<h3>"
+    + data[i].price + "</h3></div><hr>";
+$(".lineItems").append(output)
+}
+});
+
+</script>
+
+}

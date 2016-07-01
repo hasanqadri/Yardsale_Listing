@@ -31,7 +31,7 @@ public class SaleItem extends Model {
     public int saleId; // References specific Sale
     @Constraints.Required
     public int userCreatedId; // Multiple sellers can exist per sale
-    public int quantity;
+    public int quantity; //quantity within sale
 
     public SaleItem (String name, String description, float price, int saleId, int userCreatedId, int quantity) {
         this.name = name;
