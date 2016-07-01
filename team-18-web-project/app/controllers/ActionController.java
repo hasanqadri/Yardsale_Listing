@@ -48,7 +48,7 @@ public class ActionController extends Controller {
     @Authenticated(Secured.class)
     public Result admin() {
         User u = User.findByUsername(session("username"));
-        if (u.superAdmin == 1) { // Requestor is super admin
+        if (u.isSuperAdmin()) { // Requestor is super admin
             DynamicForm f = Form.form().bindFromRequest();
             if (f.get("userId") != null) { // Username was sent in post request
                 User userReset = User.findById(f.get("userId"));

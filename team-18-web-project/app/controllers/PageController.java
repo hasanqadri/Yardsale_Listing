@@ -63,7 +63,8 @@ public class PageController extends Controller {
      */
     @Authenticated(Secured.class)
     public Result admin() {
-        if (User.isSuperAdmin(session("username"))) { // Show supersecret admin page
+        User u = User.findByUsername(session("username"));
+        if (u.isSuperAdmin()) { // Show supersecret admin page
             return ok(admin.render(User.findAll()));
         } else { // Return 404
             return notFound404();

@@ -45,11 +45,6 @@ public class User extends Model {
         return Ebean.find(User.class).where().eq("username", username).findUnique();
     }
 
-    public static boolean isSuperAdmin(String username) {
-        User u = findByUsername(username);
-        return u.superAdmin == 1;
-    }
-
     @Id
     public int id;
     @Constraints.Required
@@ -145,7 +140,7 @@ public class User extends Model {
                 Expr.eq("name", "bookkeeper"),
                 Expr.eq("name", "seller")
             )
-        ).findUnique(); // Check this way in case same user has multiple roles on single sale
+        ).findUnique();
         if (role == null) { return false; }
         return true;
     }
@@ -158,7 +153,7 @@ public class User extends Model {
                 Expr.eq("name", "cashier"),
                 Expr.eq("name", "seller")
             )
-        ).findUnique(); // Check this way in case same user has multiple roles on single sale
+        ).findUnique();
         if (role == null) { return false; }
         return true;
     }
@@ -171,7 +166,7 @@ public class User extends Model {
                 Expr.eq("name", "clerk"),
                 Expr.eq("name", "seller")
             )
-        ).findUnique(); // Check this way in case same user has multiple roles on single sale
+        ).findUnique();
         if (role == null) { return false; }
         return true;
     }
@@ -181,7 +176,7 @@ public class User extends Model {
         Role role = Ebean.find(Role.class).where().eq("userId", id).eq("saleId", saleId).or(
             Expr.eq("name", "admin"),
             Expr.eq("name", "seller")
-        ).findUnique(); // Check this way in case same user has multiple roles on single sale
+        ).findUnique();
         if (role == null) { return false; }
         return true;
     }

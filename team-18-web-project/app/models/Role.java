@@ -49,6 +49,15 @@ public class Role extends Model {
         return r.name;
     }
 
+    private static final Set<String> validRoles = new HashSet<>();
+    static {
+        validRoles.add("admin");
+        validRoles.add("bookkeeper");
+        validRoles.add("cashier");
+        validRoles.add("clerk");
+        validRoles.add("seller");
+    }
+
     @Id
     public int id;
     @Column(nullable=false)

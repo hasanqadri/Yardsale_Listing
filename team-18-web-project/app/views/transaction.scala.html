@@ -38,7 +38,7 @@
 // Populate page with sale items
 $.post("/getItems", { "saleId" : "@id" }).done(function( data ) {
 for(var i in data) {
-var output = "<a href="#" class="btn btn-primary pull-left" onclick="changeToView();">ADD ITEM</a> <h2><a href=\"/sale/@id/item/"
+var output = "<a href=\"#\" class=\"btn btn-primary pull-left\" onclick=\"changeToView();\">ADD ITEM</a> <h2><a href=\"/sale/@id/item/"
 + data[i].id + "\">" + data[i].name + "</a></h2>"
 + "<h3>" + data[i].description+ "</h3>" + "<h3>"
     + data[i].price + "</h3></div><hr>";
