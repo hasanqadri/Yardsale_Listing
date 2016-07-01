@@ -25,30 +25,6 @@ import java.util.Set;
 @Entity
 @Table(name="roles")
 public class Role extends Model {
-    private static final Set<String> validRoles = new HashSet<>();
-    static {
-        validRoles.add("admin");
-        validRoles.add("bookkeeper");
-        validRoles.add("cashier");
-        validRoles.add("clerk");
-        validRoles.add("seller");
-    }
-
-    @Id
-    public int id;
-    @Column(nullable=false)
-    public String name;
-    @Column(nullable=false)
-    public int userId;
-    @Column(nullable=false)
-    public int saleId;
-
-    public Role (String name, int userId, int saleId) {
-        this.name = name;
-        this.userId = userId;
-        this.saleId = saleId;
-        this.save();
-    }
 
     public static Role findByIds(int userId, int saleId) {
         return Ebean.find(Role.class).where().eq("userId", userId).eq("saleId", saleId).findUnique();
@@ -71,5 +47,25 @@ public class Role extends Model {
             return "guest";
         }
         return r.name;
+    }
+
+    @Id
+    public int id;
+    @Column(nullable=false)
+    public String name;
+    @Column(nullable=false)
+    public int userId;
+    @Column(nullable=false)
+    public int saleId;
+
+    public Role (String name, int userId, int saleId) {
+        this.name = name;
+        this.userId = userId;
+        this.saleId = saleId;
+        this.save();
+    }
+
+    public User getUser() {
+        return User.findById(userId);
     }
 }

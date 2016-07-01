@@ -1,6 +1,7 @@
 package models;
 
 import com.avaje.ebean.Ebean;
+import com.avaje.ebean.Expr;
 import com.avaje.ebean.Model;
 import java.util.ArrayList;
 import java.util.List;
@@ -129,15 +130,30 @@ public class User extends Model {
 
     public boolean isSuperAdmin() { return superAdmin == 1; }
 
-    public boolean canAdmin(int saleId) {
+    public boolean canBeAdmin(int saleId) {
         if (superAdmin == 1) { return true; }
-        Role role = Ebean.find(Role.class).where().eq("userId", id).eq("saleId", saleId).findUnique();
-        return role.name.equals("admin");
+        Role role = Ebean.find(Role.class).where().eq("userId", id).eq("saleId", saleId).eq("name", "admin").findUnique();
+        if (role == null) { return false; }
+        return true;
     }
 
-    public boolean canCashier(int saleId) {
+    public boolean canBeCashier(int saleId) {
         if (superAdmin == 1) { return true; }
-        Role role = Ebean.find(Role.class).where().eq("userId", id).eq("saleId", saleId).findUnique();
-        return role.name.equals("admin") || role.name.equals("cashier");
+        Role role = Ebean.find(Role.class).where().eq("userId", id).eq("saleId", saleId).or(
+            Expr.eq("name", "admin"),
+            Expr.eq("name", "cashier")
+        ).findUnique(); // Check this way in case same user has multiple roles on single sale
+        if (role == null) { return false; }
+        return true;
+    }
+
+    public boolean canBeSeller(int saleId) {
+        if (superAdmin == 1) { return true; }
+        Role role = Ebean.find(Role.class).where().eq("userId", id).eq("saleId", saleId).or(
+                Expr.eq("name", "admin"),
+                Expr.eq("name", "seller")
+        ).findUnique(); // Check this way in case same user has multiple roles on single sale
+        if (role == null) { return false; }
+        return true;
     }
 }

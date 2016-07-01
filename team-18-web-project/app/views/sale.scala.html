@@ -6,9 +6,9 @@
     <div class="view profile" id="view-profile">
         <div class="row">
             <div class="col-sm-4">
-                <a href="/sale/@sale.id/addItem" class="btn btn-success">ADD ITEM</a>
-                @if(user.canAdmin(sale.id)) {<a href="/sale/@sale.id/edit" class="btn btn-success">EDIT SALE</a>}
-                @if(user.canCashier(sale.id)) {<a href="/sale/@sale.id" class="btn btn-success">NEW TRANSACTION</a>}
+                @if(user.canBeSeller(sale.id)) {<a href="/sale/@sale.id/addItem" class="btn btn-success">ADD ITEM</a>}
+                @if(user.canBeAdmin(sale.id)) {<a href="/sale/@sale.id/edit" class="btn btn-success">EDIT SALE</a>}
+                @if(user.canBeCashier(sale.id)) {<a href="/sale/@sale.id" class="btn btn-success">NEW TRANSACTION</a>}
             </div>
             <div class="col-sm-5"></div>
             <div class="col-sm-3">

@@ -48,7 +48,8 @@ public class PageController extends Controller {
     @Authenticated(Secured.class)
     public Result addItem(int saleId) {
         Sale s = Sale.findById(saleId);
-        if (s != null) { // Check if sale exists
+        User u = User.findByUsername(session("username"));
+        if (s != null && u.canBeSeller(saleId)) { // Check if sale exists and user can act as seller
             return ok(addItem.render(saleId));
         }
         return notFound404();
@@ -87,8 +88,8 @@ public class PageController extends Controller {
             return notFound404();
         }
         User u = User.findByUsername(session("username"));
-        if (u.canAdmin(s.id)) { // If user is a sale administrator, show edit sale page
-            return ok(editSale.render(s));
+        if (u.canBeAdmin(s.id)) { // If user is a sale administrator, show edit sale page
+            return ok(editSale.render(s, s.getRoles()));
         }
         return redirect("/sale/" + s.id);
     }

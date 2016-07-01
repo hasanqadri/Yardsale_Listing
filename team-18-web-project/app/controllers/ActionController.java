@@ -90,7 +90,10 @@ public class ActionController extends Controller {
 
     @Authenticated(Secured.class)
     public Result editSale(int saleId) {
-        return ok();
+        Sale s = Sale.findById(saleId);
+        DynamicForm f = Form.form().bindFromRequest();
+        //todo finish this
+        return ok(editSale.render(s, s.getRoles()));
     }
 
     /**
