@@ -1,5 +1,6 @@
 package models;
 
+import com.avaje.ebean.Ebean;
 import com.avaje.ebean.Model;
 import play.data.format.*;
 import play.data.validation.Constraints;
@@ -37,11 +38,57 @@ public class Role extends Model {
     public int id;
     @Column(nullable=false)
     public String name;
-    @ManyToOne
-    @JoinColumn(name = "userId", referencedColumnName = "id")
-    public User user;
-    @ManyToOne
-    @JoinColumn(name = "saleId", referencedColumnName = "id")
-    public Sale sale;
+    @Column(nullable=false)
+    public int userId;
+    @Column(nullable=false)
+    public int saleId;
 
+    public Role (String name, int userId, int saleId) {
+        this.name = name;
+        this.userId = userId;
+        this.saleId = saleId;
+        this.save();
+    }
+
+    public static List<Role> findByUserId(int userId) {
+        return Ebean.find(Role.class).where().eq("userId", userId).findList();
+    }
+
+    public static List<Role> findBySaleId(int saleId) {
+        return Ebean.find(Role.class).where().eq("saleId", saleId).findList();
+    }
+
+    public static Role findByIds(int userId, int saleId) {
+        return Ebean.find(Role.class).where().eq("userId", userId).eq("saleId", saleId).findUnique();
+    }
+
+    public static boolean isAdmin(int userId, int saleId) {
+        Role r = findByIds(userId, saleId);
+        if (r == null) { return false; }
+        return r.name.equals("admin");
+    }
+
+    public static boolean isBookkeeper(int userId, int saleId) {
+        Role r = findByIds(userId, saleId);
+        if (r == null) { return false; }
+        return r.name.equals("bookkeeper");
+    }
+
+    public static boolean isCashier(int userId, int saleId) {
+        Role r = findByIds(userId, saleId);
+        if (r == null) { return false; }
+        return r.name.equals("cashier");
+    }
+
+    public static boolean isClerk(int userId, int saleId) {
+        Role r = findByIds(userId, saleId);
+        if (r == null) { return false; }
+        return r.name.equals("clerk");
+    }
+
+    public static boolean isSeller(int userId, int saleId) {
+        Role r = findByIds(userId, saleId);
+        if (r == null) { return false; }
+        return r.name.equals("seller");
+    }
 }

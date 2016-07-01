@@ -78,10 +78,10 @@ public class DataController extends Controller {
      */
     @Security.Authenticated(Secured.class)
     public Result getSale() {
-        DynamicForm dynamicForm = Form.form().bindFromRequest();
+        DynamicForm f = Form.form().bindFromRequest();
         int id;
         try {
-            id = Integer.parseInt(dynamicForm.get("id"));
+            id = Integer.parseInt(f.get("id"));
         } catch (NumberFormatException e) { // Null or non int string
             return notFound404();
         }
@@ -121,7 +121,7 @@ public class DataController extends Controller {
      */
     @Security.Authenticated(Secured.class)
     public Result getSales() {
-        List<Sale> sales = Ebean.find(Sale.class).findList();
+        List<Sale> sales = Ebean.find(Sale.class).orderBy("id desc").findList();
         return ok(toJson(sales));
     }
 

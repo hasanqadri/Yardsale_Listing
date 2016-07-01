@@ -11,20 +11,20 @@
         <div class="col-sm-4">
         <form class="form-editSale" id="createSale" method="post">
             <label for="inputName" class="sr-only">Name</label>
-            <input type="text" id="inputName" name="name" class="form-control input-top" value="@sale.name" required autofocus>
+            <input type="text" maxlength="255" id="inputName" name="name" class="form-control input-top" value="@sale.name" required autofocus>
             <label for="inputDescription" class="sr-only">Description</label>
-            <input type="text" id="inputDescription" name="description" class="form-control input-top" value="@sale.description">
+            <input type="text" maxlength="255" id="inputDescription" name="description" class="form-control input-top" value="@sale.description">
             <label for="inputStreet" class="sr-only">Address</label>
-            <input type="text" id="inputStreet" name="street" class="form-control input-middle" value="@sale.street" required>
+            <input type="text" maxlength="255" id="inputStreet" name="street" class="form-control input-middle" value="@sale.street" required>
             <label for="inputCity" class="sr-only">City</label>
-            <input type="text" id="inputCity" name="city" class="form-control input-middle" value="@sale.city" required>
+            <input type="text" maxlength="255" id="inputCity" name="city" class="form-control input-middle" value="@sale.city" required>
             <label for="inputUsername" class="sr-only">Username</label>
-            <input type="text" id="inputState" name="state" class="form-control input-middle" value="@sale.state" required>
+            <input type="text" maxlength="2" id="inputState" name="state" class="form-control input-middle" value="@sale.state" required>
             <label for="inputZip" class="sr-only">Zip Code</label>
-            <input type="text" id="inputZip" name="zip" class="form-control input-bottom" value="@sale.zip" required>
+            <input type="number" maxlength="5" min="0" id="inputZip" name="zip" class="form-control input-bottom" value="@sale.zip" required>
             <div class="form-group">
                 <div class='input-group date' id='datetimepicker1'>
-                    <input type='text' id="startDate" name="startDate" class="form-control" placeholder="Start Date..." />
+                    <input type='text' id="startDate" name="startDate" class="form-control" value="@sale.formatStartDate" />
             <span class="input-group-addon">
                 <span class="glyphicon glyphicon-calendar"></span>
             </span>
@@ -32,7 +32,7 @@
             </div>
             <div class="form-group">
                 <div class='input-group date' id='datetimepicker2'>
-                    <input type='text' id="endDate" name="endDate" class="form-control" placeholder="End Date..."/>
+                    <input type='text' id="endDate" name="endDate" class="form-control" value="@sale.formatEndDate" />
             <span class="input-group-addon">
                 <span class="glyphicon glyphicon-calendar"></span>
             </span>

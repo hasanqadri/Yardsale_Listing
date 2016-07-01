@@ -2,6 +2,8 @@ package models;
 
 import com.avaje.ebean.Ebean;
 import com.avaje.ebean.Model;
+import java.util.ArrayList;
+import java.util.List;
 import play.data.format.*;
 import play.data.validation.Constraints;
 
@@ -9,9 +11,7 @@ import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Table;
 import javax.persistence.Column;
-import java.sql.Timestamp;
-import java.util.ArrayList;
-import java.util.List;
+
 
 @Entity
 @Table(name="users")
@@ -32,6 +32,7 @@ public class User extends Model {
     public int loginAttempts;
     @Column(columnDefinition = "tinyint default 0") // Default not a superUser
     public int superAdmin;
+    @Column(columnDefinition = "int default 0")
     public int profilePictureId;
 
     public User (String firstName, String lastName, String email, String username, String password) {
@@ -93,23 +94,12 @@ public class User extends Model {
                 email, username, password);
     }
 
-    public void createSale(String name, String description, String street, String city, String state, int zip,
-            Timestamp startDate, Timestamp endDate) {
-        Sale sale = new Sale();
-        sale.name = name;
-        sale.description = description;
-        sale.street = street;
-        sale.city = city;
-        sale.state = state;
-        sale.zip = zip;
-        sale.startDate = startDate;
-        sale.endDate = endDate;
-        sale.userCreatedId = id;
-        sale.save();
+    public static User findByUsername(String username) {
+        return Ebean.find(User.class).where().eq("username", username).findUnique();
     }
 
-    public static User getUserByUsername(String username) {
-        return Ebean.find(User.class).where().eq("username", username).findUnique();
+    public static User findById(int id) {
+        return Ebean.find(User.class).where().eq("id", id).findUnique();
     }
 
 }

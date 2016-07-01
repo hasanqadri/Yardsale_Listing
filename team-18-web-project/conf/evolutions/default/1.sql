@@ -3,6 +3,14 @@
 
 # --- !Ups
 
+create table roles (
+  id                        integer auto_increment not null,
+  name                      varchar(255) not null,
+  user_id                   integer not null,
+  sale_id                   integer not null,
+  constraint pk_roles primary key (id))
+;
+
 create table sales (
   id                        integer auto_increment not null,
   name                      varchar(255),
@@ -25,7 +33,16 @@ create table saleItems (
   price                     float,
   picture_id                integer,
   sale_id                   integer,
+  user_created_id           integer,
+  quantity                  integer,
   constraint pk_saleItems primary key (id))
+;
+
+create table transactions (
+  id                        integer auto_increment not null,
+  sale_id                   integer,
+  cashier_id                integer,
+  constraint pk_transactions primary key (id))
 ;
 
 create table users (
@@ -37,7 +54,7 @@ create table users (
   password                  varchar(255),
   login_attempts            tinyint default 0,
   super_admin               tinyint default 0,
-  profile_picture_id        integer,
+  profile_picture_id        int default 0,
   constraint pk_users primary key (id))
 ;
 
@@ -48,9 +65,13 @@ create table users (
 
 SET FOREIGN_KEY_CHECKS=0;
 
+drop table roles;
+
 drop table sales;
 
 drop table saleItems;
+
+drop table transactions;
 
 drop table users;
 

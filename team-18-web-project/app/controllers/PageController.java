@@ -1,6 +1,7 @@
 package controllers;
 
 import com.avaje.ebean.Ebean;
+import models.Role;
 import models.Sale;
 import models.SaleItem;
 import models.User;
@@ -77,13 +78,30 @@ public class PageController extends Controller {
     }
 
     /**
+     * Display edit sale page
+     * @return HTTP response to edit sale page request
+     */
+    @Authenticated(Secured.class)
+    public Result editSale(int saleId) {
+        Sale s = Sale.findById(saleId);
+        if (s == null) {
+            return notFound404();
+        }
+        User u = User.findByUsername(session("username"));
+        if (Role.isAdmin(u.id, s.id)) {
+            return ok(editSale.render(s));
+        }
+        return redirect("/sale/" + s.id);
+    }
+
+    /**
      * Display item page
      * @return HTTP response to item page request
      */
     @Authenticated(Secured.class)
     public Result item(int saleId, int itemId) {
         SaleItem i = Ebean.find(SaleItem.class).where().eq("id", itemId).findUnique();
-        return ok(item.render(saleId, itemId, i.name, i.description, i.price, ""));
+        return ok(item.render(i));
     }
 
     /**
@@ -166,9 +184,10 @@ public class PageController extends Controller {
      */
     @Authenticated(Secured.class)
     public Result sale(int id) {
-        Sale s = Ebean.find(Sale.class).where().eq("id", id).findUnique();
+        Sale s = Sale.findById(id);
+        User u = User.findByUsername(session("username"));
         if (s != null) { // Check if sale exists
-            return ok(sale.render(id));
+            return ok(sale.render(s, Role.isAdmin(u.id, s.id)));
         }
         return notFound404();
     }

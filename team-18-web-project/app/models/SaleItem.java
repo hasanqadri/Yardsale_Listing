@@ -66,4 +66,8 @@ public class SaleItem extends Model {
         return String.format("[Name: " + name + " Description: " + description + " Price: "
                 + price);
     }
+
+    public String formatPrice() {
+        return String.format("%.2f", price);
+    }
 }

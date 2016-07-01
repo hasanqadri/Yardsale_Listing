@@ -19,7 +19,6 @@ GET     /users                      controllers.PageController.users
 # Action page requests
 POST    /adminResetUser             controllers.ActionController.adminResetUser
 POST    /createSale                 controllers.ActionController.createSale
-POST    /createSaleItem             controllers.ActionController.createSaleItem
 POST    /login                      controllers.ActionController.login
 POST    /NewContact                 controllers.ActionController.postContact
 POST    /profile                    controllers.ActionController.profile
@@ -43,6 +42,8 @@ GET     /getUsersAdmin              controllers.DataController.getUsersAdmin
 GET     /sale/:id                   controllers.PageController.sale(id: Int)
 GET     /sale/:id/addItem           controllers.PageController.addItem(id: Int)
 POST    /sale/:id/addItem           controllers.ActionController.addItem(id: Int)
+GET     /sale/:id/edit              controllers.PageController.editSale(id: Int)
+POST    /sale/:id/edit              controllers.ActionController.editSale(id: Int)
 GET     /sale/:saleId/item/:itemId  controllers.PageController.item(saleId: Int, itemId: Int)
 POST    /sale/:saleId/item/:itemId  controllers.ActionController.item(saleId: Int, itemId: Int)
 POST    /sale/:id/searchItems       controllers.ActionController.searchItems(id: Int)
