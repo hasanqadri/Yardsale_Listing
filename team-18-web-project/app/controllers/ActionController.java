@@ -33,15 +33,8 @@ public class ActionController extends Controller {
             if (f.get("name") == null || f.get("description") == null || f.get("price") == null) { // Improper request
                 return notFound404();
             }
-            float price;
-            try {
-                price = Float.parseFloat(f.get("price"));
-            } catch (NumberFormatException e) {
-                return ok(addItem.render(id, "Error: bad price"));
-            }
-            SaleItem item = new SaleItem(f.get("name"), f.get("description"), price, id, 0, 0);
-            item.save();
-            return ok(addItem.render(id, "Item added! Add another item?"));
+            s.addItem(f.get("name"), f.get("description"), f.get("price"), 0, 0);
+            return redirect("/sale/" + id);
         }
         return notFound404();
     }
@@ -51,15 +44,15 @@ public class ActionController extends Controller {
      * @return Response to user account request
      */
     @Authenticated(Secured.class)
-    public Result adminResetUser() {
-        User user = Ebean.find(User.class).where().eq("username", session("username")).findUnique();
-        if (user.superAdmin == 1) { // Requestor is super admin
-            DynamicForm dynamicForm = Form.form().bindFromRequest();
-            if (dynamicForm.get("username") != null) { // Username was sent in post request
-                User userReset = Ebean.find(User.class).where().eq("username", dynamicForm.get("username")).findUnique();
+    public Result admin() {
+        User u = User.findByUsername(session("username"));
+        if (u.superAdmin == 1) { // Requestor is super admin
+            DynamicForm f = Form.form().bindFromRequest();
+            if (f.get("userId") != null) { // Username was sent in post request
+                User userReset = User.findById(f.get("userId"));
                 userReset.setLoginAttempts(0);
                 userReset.save();
-                return noContent(); // Return HTTP code 204
+                return ok(admin.render(User.findAll()));
             }
         }
         return notFound404();
@@ -110,7 +103,7 @@ public class ActionController extends Controller {
         if (f.get("name") == null || f.get("description") == null || f.get("price") == null) {
             return notFound404();
         }
-        SaleItem i = Ebean.find(SaleItem.class).where().eq("id", itemId).findUnique();
+        SaleItem i = SaleItem.findById(itemId);
         float price;
         try {
             price = Float.parseFloat(f.get("price"));
@@ -134,10 +127,10 @@ public class ActionController extends Controller {
         if (session("username") != null) { // Redirect if user already logged in
             return redirect("/");
         }
-        DynamicForm dynamicForm = Form.form().bindFromRequest();
-        User user = Ebean.find(User.class).where().eq("username", dynamicForm.get("username")).findUnique();
+        DynamicForm f = Form.form().bindFromRequest();
+        User user = User.findByUsername(f.get("username"));
         if (user != null) { // User exists
-            if (user.getPassword().equals(dynamicForm.get("password"))) { // Correct password
+            if (user.getPassword().equals(f.get("password"))) { // Correct password
                 if (user.loginAttempts == 3) { // Notify that user is locked out
                     return ok(login.render("Your account has been locked"));
                 } else { // Create session
@@ -145,7 +138,7 @@ public class ActionController extends Controller {
                         user.setLoginAttempts(0);
                         user.save();
                     }
-                    session("username", dynamicForm.get("username"));
+                    session("username", f.get("username"));
                     return redirect("/");
                 }
             } else if (user.loginAttempts < 3) { // Incorrect password - increment lockout counter up to 3
@@ -177,7 +170,7 @@ public class ActionController extends Controller {
         userdata data = formdata.get();
         User user = new User(data.firstName, data.lastName, data.email, data.username, data.password);
         user.save();
-        return ok(postContact.render(data.firstName + " " + data.lastName));
+        return ok(postContact.render(user));
     }
 
     /**
@@ -187,18 +180,16 @@ public class ActionController extends Controller {
     @Authenticated(Secured.class)
     public Result profile() {
         String username = session("username");
-        User user = Ebean.find(User.class).where().eq("username", username).findUnique();
+        User user = User.findByUsername(session("username"));
 
         DynamicForm f = Form.form().bindFromRequest();
-        User userCheckUsername = Ebean.find(User.class).where().eq("username", f.get("username")).findUnique();
+        User userCheckUsername = User.findByUsername(f.get("username"));
         if (userCheckUsername != null && !f.get("username").equals(username)) {
-            return ok(profile.render(username, user.getPassword(), user.getFirstName(), user.getLastName(), user.getEmail(),
-                    "Error: username already in use"));
+            return ok(profile.render(user, "Error: username already in use"));
         }
-        User userCheckEmail = Ebean.find(User.class).where().eq("email", f.get("email")).findUnique();
+        User userCheckEmail = User.findByEmail(f.get("email"));
         if (userCheckEmail != null && !f.get("email").equals(user.getEmail())) {
-            return ok(profile.render(username, user.getPassword(), user.getFirstName(), user.getLastName(), user.getEmail(),
-                    "Error: email already in use"));
+            return ok(profile.render(user, "Error: email already in use"));
 
         }
         // Username and email not already in use, update user
@@ -208,9 +199,9 @@ public class ActionController extends Controller {
         user.setUsername(f.get("username"));
         user.setPassword(f.get("password"));
         user.save();
-        session("username", f.get("username"));
+        session("username", f.get("username")); //Set new cookie in case username was changed
 
-        return ok(profile.render(username, user.getPassword(), user.getFirstName(), user.getLastName(), user.getEmail(), ""));
+        return ok(profile.render(user, ""));
     }
 
     /**
@@ -222,18 +213,18 @@ public class ActionController extends Controller {
             return redirect("/");
         }
         DynamicForm f = Form.form().bindFromRequest();
-        User userCheckUsername = Ebean.find(User.class).where().eq("username", f.get("username")).findUnique();
+        User userCheckUsername = User.findByUsername(f.get("username"));
         if (userCheckUsername != null) {
             return ok(register.render("Error: username already in use"));
         }
-        User userCheckEmail = Ebean.find(User.class).where().eq("email", f.get("email")).findUnique();
+        User userCheckEmail = User.findByEmail(f.get("email"));
         if (userCheckEmail != null) {
             return ok(register.render("Error: email already in use"));
         }
         //If username or email not already in use, create user
         User user = new User(f.get("firstName"), f.get("lastName"), f.get("email"), f.get("username"), f.get("password"));
         user.save();
-        return ok(postContact.render(f.get("firstName") + " " + f.get("lastName")));
+        return ok(postContact.render(user));
     }
 
     /**

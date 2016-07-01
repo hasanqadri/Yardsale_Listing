@@ -22,6 +22,11 @@ import java.sql.Timestamp;
 @Entity
 @Table(name="sales")
 public class Sale extends Model {
+
+    public static Sale findById(int id) {
+        return Ebean.find(Sale.class).where().eq("id", id).findUnique();
+    }
+
     @Id
     public int id;
     @Constraints.Required
@@ -53,31 +58,22 @@ public class Sale extends Model {
         Role r = new Role("admin", userCreatedId, this.id);
     }
 
-    public List<Role> getRoles() {
-        return Role.findBySaleId(this.id);
+    public SaleItem addItem(String name, String description, float price, int userId, int quantity) {
+        return new SaleItem(name, description, price, id, userId, quantity);
+    }
+
+    public SaleItem addItem(String name, String description, String priceStr, int userId, int quantity) {
+        float price = 0;
+        try {
+            price = Float.parseFloat(priceStr);
+        } catch (NumberFormatException e) {
+            e.printStackTrace();
+        }
+        return addItem(name, description, price, userId, quantity);
     }
 
     public void addRole(String name, int userId) {
         Role r = new Role(name, userId, this.id);
-    }
-
-    public void deleteRole(int userId) {
-        Role r = Role.findByIds(userId, this.id);
-        r.delete();
-    }
-
-    public static Sale findById(int id) {
-        return Ebean.find(Sale.class).where().eq("id", id).findUnique();
-    }
-
-    public String formatStartDate() {
-        SimpleDateFormat f = new SimpleDateFormat("MM/dd/yyyy");
-        return f.format(this.startDate);
-    }
-
-    public String formatEndDate() {
-        SimpleDateFormat f = new SimpleDateFormat("MM/dd/yyyy");
-        return f.format(this.endDate);
     }
 
     public String createdBy() {
@@ -86,4 +82,26 @@ public class Sale extends Model {
         return u.getName();
     }
 
+    public void deleteRole(int userId) {
+        Role r = Role.findByIds(userId, this.id);
+        r.delete();
+    }
+
+    public String formatEndDate() {
+        SimpleDateFormat f = new SimpleDateFormat("MM/dd/yyyy");
+        return f.format(this.endDate);
+    }
+
+    public String formatStartDate() {
+        SimpleDateFormat f = new SimpleDateFormat("MM/dd/yyyy");
+        return f.format(this.startDate);
+    }
+
+    public List<Role> getRoles() {
+        return Role.findBySaleId(this.id);
+    }
+
+    public List<SaleItem> getItems() {
+        return Ebean.find(SaleItem.class).where().eq("saleId", id).findList();
+    }
 }

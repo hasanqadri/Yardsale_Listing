@@ -68,7 +68,7 @@ public class DataController extends Controller {
         } catch (NumberFormatException e) { // Null or non int string
             return notFound404();
         }
-        List<SaleItem> items = Ebean.find(SaleItem.class).where().eq("saleId", saleId).findList();
+        List<SaleItem> items = Ebean.find(SaleItem.class).where().eq("saleId", saleId).orderBy("id desc").findList();
         return ok(toJson(items));
     }
 
@@ -179,44 +179,6 @@ public class DataController extends Controller {
             return ok(toJson(sales));
         }
         return notFound404();
-    }
-
-    /**
-     * Lists name, username, email of all users
-     * @return JSON response of select user data stored in database
-     */
-    @Security.Authenticated(Secured.class)
-    public Result getUsers() {
-        List<User> users = Ebean.find(User.class).findList();
-        JSONArray ja = new JSONArray();
-        for (User user : users) {
-            JSONObject jo = null;
-            try {
-                jo = new JSONObject()
-                        .put("name", user.getName())
-                        .put("username", user.username)
-                        .put("email", user.email);
-            } catch (JSONException e) {
-                e.printStackTrace();
-            }
-            ja.put(jo);
-        }
-        return ok(ja.toString());
-    }
-
-    /**
-     * Lists complete json data of all users
-     * @return JSON response of all user data stored in database
-     */
-    @Security.Authenticated(Secured.class)
-    public Result getUsersAdmin() {
-        User user = Ebean.find(User.class).where().eq("username", session("username")).findUnique();
-        if (user.superAdmin == 1) { // Show supersecret user data
-            List<User> users = Ebean.find(User.class).findList();
-            return ok(toJson(users));
-        } else { // Return 404 if requesting user is not privileged
-            return notFound404();
-        }
     }
 
     /**

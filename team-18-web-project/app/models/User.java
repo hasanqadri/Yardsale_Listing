@@ -16,6 +16,39 @@ import javax.persistence.Column;
 @Entity
 @Table(name="users")
 public class User extends Model {
+
+    public static List<User> findAll() {
+        return Ebean.find(User.class).findList();
+    }
+
+    public static User findByEmail(String email) {
+        return Ebean.find(User.class).where().eq("email", email).findUnique();
+    }
+
+    public static User findById(int id) {
+        return Ebean.find(User.class).where().eq("id", id).findUnique();
+    }
+
+    public static User findById(String idStr) {
+        int id = 0;
+        try {
+            id = Integer.parseInt(idStr);
+        } catch (NumberFormatException e) {
+            e.printStackTrace();
+            return null;
+        }
+        return findById(id);
+    }
+
+    public static User findByUsername(String username) {
+        return Ebean.find(User.class).where().eq("username", username).findUnique();
+    }
+
+    public static boolean isSuperAdmin(String username) {
+        User u = findByUsername(username);
+        return u.superAdmin == 1;
+    }
+
     @Id
     public int id;
     @Constraints.Required
@@ -94,12 +127,17 @@ public class User extends Model {
                 email, username, password);
     }
 
-    public static User findByUsername(String username) {
-        return Ebean.find(User.class).where().eq("username", username).findUnique();
+    public boolean isSuperAdmin() { return superAdmin == 1; }
+
+    public boolean canAdmin(int saleId) {
+        if (superAdmin == 1) { return true; }
+        Role role = Ebean.find(Role.class).where().eq("userId", id).eq("saleId", saleId).findUnique();
+        return role.name.equals("admin");
     }
 
-    public static User findById(int id) {
-        return Ebean.find(User.class).where().eq("id", id).findUnique();
+    public boolean canCashier(int saleId) {
+        if (superAdmin == 1) { return true; }
+        Role role = Ebean.find(Role.class).where().eq("userId", id).eq("saleId", saleId).findUnique();
+        return role.name.equals("admin") || role.name.equals("cashier");
     }
-
 }

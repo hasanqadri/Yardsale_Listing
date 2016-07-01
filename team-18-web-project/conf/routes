@@ -17,7 +17,7 @@ GET     /users                      controllers.PageController.users
 
 
 # Action page requests
-POST    /adminResetUser             controllers.ActionController.adminResetUser
+POST    /admin                      controllers.ActionController.admin
 POST    /createSale                 controllers.ActionController.createSale
 POST    /login                      controllers.ActionController.login
 POST    /NewContact                 controllers.ActionController.postContact
@@ -34,8 +34,6 @@ POST    /getSearchItems             controllers.DataController.getSearchItems
 POST    /getSearchSales             controllers.DataController.getSearchSales
 POST    /getItem                    controllers.DataController.getItem
 POST    /getItems                   controllers.DataController.getItems
-GET     /getUsers                   controllers.DataController.getUsers
-GET     /getUsersAdmin              controllers.DataController.getUsersAdmin
 
 
 # Map requests to /sale

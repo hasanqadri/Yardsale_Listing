@@ -46,10 +46,10 @@ public class PageController extends Controller {
      * @return HTTP response to addItem page request
      */
     @Authenticated(Secured.class)
-    public Result addItem(int id) {
-        Sale s = Ebean.find(Sale.class).where().eq("id", id).findUnique();
+    public Result addItem(int saleId) {
+        Sale s = Sale.findById(saleId);
         if (s != null) { // Check if sale exists
-            return ok(addItem.render(id, ""));
+            return ok(addItem.render(saleId));
         }
         return notFound404();
     }
@@ -60,9 +60,8 @@ public class PageController extends Controller {
      */
     @Authenticated(Secured.class)
     public Result admin() {
-        User user = Ebean.find(User.class).where().eq("username", session("username")).findUnique();
-        if (user.superAdmin == 1) { // Show supersecret admin page
-            return ok(admin.render());
+        if (User.isSuperAdmin(session("username"))) { // Show supersecret admin page
+            return ok(admin.render(User.findAll()));
         } else { // Return 404
             return notFound404();
         }
@@ -84,11 +83,11 @@ public class PageController extends Controller {
     @Authenticated(Secured.class)
     public Result editSale(int saleId) {
         Sale s = Sale.findById(saleId);
-        if (s == null) {
+        if (s == null) { // A user might request a url of a sale that doesn't exist
             return notFound404();
         }
         User u = User.findByUsername(session("username"));
-        if (Role.isAdmin(u.id, s.id)) {
+        if (u.canAdmin(s.id)) { // If user is a sale administrator, show edit sale page
             return ok(editSale.render(s));
         }
         return redirect("/sale/" + s.id);
@@ -100,7 +99,7 @@ public class PageController extends Controller {
      */
     @Authenticated(Secured.class)
     public Result item(int saleId, int itemId) {
-        SaleItem i = Ebean.find(SaleItem.class).where().eq("id", itemId).findUnique();
+        SaleItem i = SaleItem.findById(itemId);
         return ok(item.render(i));
     }
 
@@ -160,9 +159,11 @@ public class PageController extends Controller {
      */
     @Authenticated(Secured.class)
     public Result profile() {
-        String username = session("username");
-        User user = Ebean.find(User.class).where().eq("username", username).findUnique();
-        return ok(profile.render(username, user.getPassword(), user.getFirstName(), user.getLastName(), user.getEmail(), ""));
+        User user = User.findByUsername(session("username"));
+        if (user == null) {
+            return notFound404();
+        }
+        return ok(profile.render(user, ""));
     }
 
     /**
@@ -187,7 +188,7 @@ public class PageController extends Controller {
         Sale s = Sale.findById(id);
         User u = User.findByUsername(session("username"));
         if (s != null) { // Check if sale exists
-            return ok(sale.render(s, Role.isAdmin(u.id, s.id)));
+            return ok(sale.render(u, s, s.getItems()));
         }
         return notFound404();
     }
@@ -207,6 +208,6 @@ public class PageController extends Controller {
      */
     @Authenticated(Secured.class)
     public Result users() {
-        return ok(users.render());
+        return ok(users.render(User.findAll()));
     }
 }

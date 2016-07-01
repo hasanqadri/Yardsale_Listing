@@ -50,45 +50,26 @@ public class Role extends Model {
         this.save();
     }
 
-    public static List<Role> findByUserId(int userId) {
-        return Ebean.find(Role.class).where().eq("userId", userId).findList();
+    public static Role findByIds(int userId, int saleId) {
+        return Ebean.find(Role.class).where().eq("userId", userId).eq("saleId", saleId).findUnique();
     }
 
     public static List<Role> findBySaleId(int saleId) {
         return Ebean.find(Role.class).where().eq("saleId", saleId).findList();
     }
 
-    public static Role findByIds(int userId, int saleId) {
-        return Ebean.find(Role.class).where().eq("userId", userId).eq("saleId", saleId).findUnique();
+    public static List<Role> findByUserId(int userId) {
+        return Ebean.find(Role.class).where().eq("userId", userId).findList();
     }
 
-    public static boolean isAdmin(int userId, int saleId) {
+    public static String findRole(int userId, int saleId) {
+        if (User.findById(userId).isSuperAdmin()) {
+            return "superAdmin";
+        }
         Role r = findByIds(userId, saleId);
-        if (r == null) { return false; }
-        return r.name.equals("admin");
-    }
-
-    public static boolean isBookkeeper(int userId, int saleId) {
-        Role r = findByIds(userId, saleId);
-        if (r == null) { return false; }
-        return r.name.equals("bookkeeper");
-    }
-
-    public static boolean isCashier(int userId, int saleId) {
-        Role r = findByIds(userId, saleId);
-        if (r == null) { return false; }
-        return r.name.equals("cashier");
-    }
-
-    public static boolean isClerk(int userId, int saleId) {
-        Role r = findByIds(userId, saleId);
-        if (r == null) { return false; }
-        return r.name.equals("clerk");
-    }
-
-    public static boolean isSeller(int userId, int saleId) {
-        Role r = findByIds(userId, saleId);
-        if (r == null) { return false; }
-        return r.name.equals("seller");
+        if (r == null) {
+            return "guest";
+        }
+        return r.name;
     }
 }

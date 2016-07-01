@@ -144,3 +144,7 @@ form .input-bottom {
 #noResults {
     color: #FFAAAA;
 }
+
+.hidden-form {
+    display: inline-block;
+}

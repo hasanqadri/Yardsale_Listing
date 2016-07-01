@@ -1,5 +1,6 @@
 package models;
 
+import com.avaje.ebean.Ebean;
 import com.avaje.ebean.Model;
 import play.data.validation.Constraints;
 
@@ -14,6 +15,11 @@ import javax.persistence.Table;
 @Entity
 @Table(name="saleItems")
 public class SaleItem extends Model {
+
+    public static SaleItem findById(int id) {
+        return Ebean.find(SaleItem.class).where().eq("id", id).findUnique();
+    }
+
     @Id
     public int id;
     @Constraints.Required
@@ -34,8 +40,8 @@ public class SaleItem extends Model {
         this.saleId = saleId;
         this.userCreatedId = userCreatedId;
         this.quantity = quantity;
+        this.save();
     }
-
 
     public String getName() { return name; }
 
