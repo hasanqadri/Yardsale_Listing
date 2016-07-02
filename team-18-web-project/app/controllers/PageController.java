@@ -1,9 +1,12 @@
 package controllers;
 
 import com.avaje.ebean.Ebean;
+import models.Role;
 import models.Sale;
 import models.SaleItem;
 import models.User;
+import models.Transaction;
+import models.LineItem;
 import play.data.Form;
 import play.mvc.Controller;
 import play.mvc.Result;
@@ -45,10 +48,11 @@ public class PageController extends Controller {
      * @return HTTP response to addItem page request
      */
     @Authenticated(Secured.class)
-    public Result addItem(int id) {
-        Sale s = Ebean.find(Sale.class).where().eq("id", id).findUnique();
-        if (s != null) { // Check if sale exists
-            return ok(addItem.render(id, ""));
+    public Result addItem(int saleId) {
+        Sale s = Sale.findById(saleId);
+        User u = User.findByUsername(session("username"));
+        if (s != null && u.canBeSeller(saleId)) { // Check if sale exists and user can act as seller
+            return ok(addItem.render(saleId));
         }
         return notFound404();
     }
@@ -59,9 +63,9 @@ public class PageController extends Controller {
      */
     @Authenticated(Secured.class)
     public Result admin() {
-        User user = Ebean.find(User.class).where().eq("username", session("username")).findUnique();
-        if (user.superAdmin == 1) { // Show supersecret admin page
-            return ok(admin.render());
+        User u = User.findByUsername(session("username"));
+        if (u.isSuperAdmin()) { // Show supersecret admin page
+            return ok(admin.render(User.findAll()));
         } else { // Return 404
             return notFound404();
         }
@@ -77,13 +81,30 @@ public class PageController extends Controller {
     }
 
     /**
+     * Display edit sale page
+     * @return HTTP response to edit sale page request
+     */
+    @Authenticated(Secured.class)
+    public Result editSale(int saleId) {
+        Sale s = Sale.findById(saleId);
+        if (s == null) { // A user might request a url of a sale that doesn't exist
+            return notFound404();
+        }
+        User u = User.findByUsername(session("username"));
+        if (u.canBeAdmin(s.id)) { // If user is a sale administrator, show edit sale page
+            return ok(editSale.render(s, s.getRoles()));
+        }
+        return redirect("/sale/" + s.id);
+    }
+
+    /**
      * Display item page
      * @return HTTP response to item page request
      */
     @Authenticated(Secured.class)
     public Result item(int saleId, int itemId) {
-        SaleItem i = Ebean.find(SaleItem.class).where().eq("id", itemId).findUnique();
-        return ok(item.render(saleId, itemId, i.name, i.description, i.price, ""));
+        SaleItem i = SaleItem.findById(itemId);
+        return ok(item.render(i));
     }
 
     /**
@@ -142,9 +163,11 @@ public class PageController extends Controller {
      */
     @Authenticated(Secured.class)
     public Result profile() {
-        String username = session("username");
-        User user = Ebean.find(User.class).where().eq("username", username).findUnique();
-        return ok(profile.render(username, user.getPassword(), user.getFirstName(), user.getLastName(), user.getEmail(), ""));
+        User user = User.findByUsername(session("username"));
+        if (user == null) {
+            return notFound404();
+        }
+        return ok(profile.render(user, ""));
     }
 
     /**
@@ -166,9 +189,10 @@ public class PageController extends Controller {
      */
     @Authenticated(Secured.class)
     public Result sale(int id) {
-        Sale s = Ebean.find(Sale.class).where().eq("id", id).findUnique();
+        Sale s = Sale.findById(id);
+        User u = User.findByUsername(session("username"));
         if (s != null) { // Check if sale exists
-            return ok(sale.render(id));
+            return ok(sale.render(u, s, s.getItems()));
         }
         return notFound404();
     }
@@ -183,11 +207,23 @@ public class PageController extends Controller {
     }
 
     /**
+     * Displays transaction page
+     * @return HTTP response to addItem page request
+     */
+    @Authenticated(Secured.class)
+    public Result transaction(int saleId, int tranId) {
+        Sale s = Ebean.find(Sale.class).where().eq("id", saleId).findUnique();
+        if (s != null) { //check if transaction exists
+            return ok(transaction.render(saleId, tranId, ""));
+        }
+        return notFound404();
+    }
+    /**
      * Displays a list of all users
      * @return HTTP response to users list request
      */
     @Authenticated(Secured.class)
     public Result users() {
-        return ok(users.render());
+        return ok(users.render(User.findAll()));
     }
 }

@@ -17,9 +17,8 @@ GET     /users                      controllers.PageController.users
 
 
 # Action page requests
-POST    /adminResetUser             controllers.ActionController.adminResetUser
+POST    /admin                      controllers.ActionController.admin
 POST    /createSale                 controllers.ActionController.createSale
-POST    /createSaleItem             controllers.ActionController.createSaleItem
 POST    /login                      controllers.ActionController.login
 POST    /NewContact                 controllers.ActionController.postContact
 POST    /profile                    controllers.ActionController.profile
@@ -35,19 +34,25 @@ POST    /getSearchItems             controllers.DataController.getSearchItems
 POST    /getSearchSales             controllers.DataController.getSearchSales
 POST    /getItem                    controllers.DataController.getItem
 POST    /getItems                   controllers.DataController.getItems
-GET     /getUsers                   controllers.DataController.getUsers
-GET     /getUsersAdmin              controllers.DataController.getUsersAdmin
 
 
 # Map requests to /sale
 GET     /sale/:id                   controllers.PageController.sale(id: Int)
 GET     /sale/:id/addItem           controllers.PageController.addItem(id: Int)
 POST    /sale/:id/addItem           controllers.ActionController.addItem(id: Int)
+GET     /sale/:id/edit              controllers.PageController.editSale(id: Int)
+POST    /sale/:id/edit              controllers.ActionController.editSale(id: Int)
 GET     /sale/:saleId/item/:itemId  controllers.PageController.item(saleId: Int, itemId: Int)
 POST    /sale/:saleId/item/:itemId  controllers.ActionController.item(saleId: Int, itemId: Int)
 POST    /sale/:id/searchItems       controllers.ActionController.searchItems(id: Int)
 
 
+
+#Map requests to /transaction
+POST   /createTransaction/:saleId   controllers.ActionController.createTransaction(saleId: Int)
+GET    /sale/:saleId/transaction/:tranId       controllers.PageController.transaction(saleId: Int, tranId: Int)
+POST   /sale/:id/transaction        controllers.ActionController.transaction(id: Int)
+POST   /sale/:saleId/transaction/:transactionId/:saleItemID/addLineItem  controllers.ActionController.addLineItem(saleId: Int, transactionId: Int, saleItemID: Int)
 # Map requests to /image
 GET     /image/:id                  controllers.DataController.getImage(id: Int)
 

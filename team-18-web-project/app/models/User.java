@@ -1,7 +1,10 @@
 package models;
 
 import com.avaje.ebean.Ebean;
+import com.avaje.ebean.Expr;
 import com.avaje.ebean.Model;
+import java.util.ArrayList;
+import java.util.List;
 import play.data.format.*;
 import play.data.validation.Constraints;
 
@@ -9,13 +12,39 @@ import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Table;
 import javax.persistence.Column;
-import java.sql.Timestamp;
-import java.util.ArrayList;
-import java.util.List;
+
 
 @Entity
 @Table(name="users")
 public class User extends Model {
+
+    public static List<User> findAll() {
+        return Ebean.find(User.class).findList();
+    }
+
+    public static User findByEmail(String email) {
+        return Ebean.find(User.class).where().eq("email", email).findUnique();
+    }
+
+    public static User findById(int id) {
+        return Ebean.find(User.class).where().eq("id", id).findUnique();
+    }
+
+    public static User findById(String idStr) {
+        int id = 0;
+        try {
+            id = Integer.parseInt(idStr);
+        } catch (NumberFormatException e) {
+            e.printStackTrace();
+            return null;
+        }
+        return findById(id);
+    }
+
+    public static User findByUsername(String username) {
+        return Ebean.find(User.class).where().eq("username", username).findUnique();
+    }
+
     @Id
     public int id;
     @Constraints.Required
@@ -32,6 +61,7 @@ public class User extends Model {
     public int loginAttempts;
     @Column(columnDefinition = "tinyint default 0") // Default not a superUser
     public int superAdmin;
+    @Column(columnDefinition = "int default 0")
     public int profilePictureId;
 
     public User (String firstName, String lastName, String email, String username, String password) {
@@ -93,23 +123,61 @@ public class User extends Model {
                 email, username, password);
     }
 
-    public void createSale(String name, String description, String street, String city, String state, int zip,
-            Timestamp startDate, Timestamp endDate) {
-        Sale sale = new Sale();
-        sale.name = name;
-        sale.description = description;
-        sale.street = street;
-        sale.city = city;
-        sale.state = state;
-        sale.zip = zip;
-        sale.startDate = startDate;
-        sale.endDate = endDate;
-        sale.userCreatedId = id;
-        sale.save();
+    public boolean isSuperAdmin() { return superAdmin == 1; }
+
+    public boolean canBeAdmin(int saleId) {
+        if (superAdmin == 1) { return true; }
+        Role role = Ebean.find(Role.class).where().eq("userId", id).eq("saleId", saleId).eq("name", "admin").findUnique();
+        if (role == null) { return false; }
+        return true;
     }
 
-    public static User getUserByUsername(String username) {
-        return Ebean.find(User.class).where().eq("username", username).findUnique();
+    public boolean canBeBookkeeper(int saleId) {
+        if (superAdmin == 1) { return true; }
+        Role role = Ebean.find(Role.class).where().eq("userId", id).eq("saleId", saleId).or(
+            Expr.eq("name", "admin"),
+            Expr.or(
+                Expr.eq("name", "bookkeeper"),
+                Expr.eq("name", "seller")
+            )
+        ).findUnique();
+        if (role == null) { return false; }
+        return true;
     }
 
+    public boolean canBeCashier(int saleId) {
+        if (superAdmin == 1) { return true; }
+        Role role = Ebean.find(Role.class).where().eq("userId", id).eq("saleId", saleId).or(
+            Expr.eq("name", "admin"),
+            Expr.or(
+                Expr.eq("name", "cashier"),
+                Expr.eq("name", "seller")
+            )
+        ).findUnique();
+        if (role == null) { return false; }
+        return true;
+    }
+
+    public boolean canBeClerk(int saleId) {
+        if (superAdmin == 1) { return true; }
+        Role role = Ebean.find(Role.class).where().eq("userId", id).eq("saleId", saleId).or(
+            Expr.eq("name", "admin"),
+            Expr.or(
+                Expr.eq("name", "clerk"),
+                Expr.eq("name", "seller")
+            )
+        ).findUnique();
+        if (role == null) { return false; }
+        return true;
+    }
+
+    public boolean canBeSeller(int saleId) {
+        if (superAdmin == 1) { return true; }
+        Role role = Ebean.find(Role.class).where().eq("userId", id).eq("saleId", saleId).or(
+            Expr.eq("name", "admin"),
+            Expr.eq("name", "seller")
+        ).findUnique();
+        if (role == null) { return false; }
+        return true;
+    }
 }

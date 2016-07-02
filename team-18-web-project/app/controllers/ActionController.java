@@ -4,8 +4,11 @@ import com.avaje.ebean.Ebean;
 import java.sql.Timestamp;
 import java.text.*;
 import java.util.Date;
+import models.LineItem;
+import models.Role;
 import models.Sale;
 import models.SaleItem;
+import models.Transaction;
 import models.User;
 import play.data.DynamicForm;
 import play.data.Form;
@@ -22,28 +25,22 @@ import views.html.*;
  */
 public class ActionController extends Controller {
     /**
-     * @param id place in db
-     * @return
+     * Add an item to a sale
+     * @param saleId Id of sale to add item to
+     * @return HTTP response to add item request
      */
     @Authenticated(Secured.class)
-    public Result addItem(int id) {
-        Sale s = Ebean.find(Sale.class).where().eq("id", id).findUnique();
+    public Result addItem(int saleId) {
+        Sale s = Sale.findById(saleId);
         if (s != null) { // Check if sale exists
             DynamicForm f = Form.form().bindFromRequest();
             if (f.get("name") == null || f.get("description") == null || f.get("price") == null) { // Improper request
                 return notFound404();
             }
-            float price;
-            try {
-                price = Float.parseFloat(f.get("price"));
-            } catch (NumberFormatException e) {
-                return ok(addItem.render(id, "Error: bad price"));
-            }
-            SaleItem item = new SaleItem(f.get("name"), f.get("description"), price, id, 0, 0);
-            item.save();
-            return ok(addItem.render(id, "Item added! Add another item?"));
+            s.addItem(f.get("name"), f.get("description"), f.get("price"), 0, 0);
+            return redirect("/sale/" + saleId);
         }
-        return notFound404();
+        return notFound404(); // Return 404 error if sale doesn't exist
     }
 
     /**
@@ -51,18 +48,18 @@ public class ActionController extends Controller {
      * @return Response to user account request
      */
     @Authenticated(Secured.class)
-    public Result adminResetUser() {
-        User user = Ebean.find(User.class).where().eq("username", session("username")).findUnique();
-        if (user.superAdmin == 1) { // Requestor is super admin
-            DynamicForm dynamicForm = Form.form().bindFromRequest();
-            if (dynamicForm.get("username") != null) { // Username was sent in post request
-                User userReset = Ebean.find(User.class).where().eq("username", dynamicForm.get("username")).findUnique();
+    public Result admin() {
+        User u = User.findByUsername(session("username"));
+        if (u.isSuperAdmin()) { // Requestor is super admin
+            DynamicForm f = Form.form().bindFromRequest();
+            if (f.get("userId") != null) { // Username was sent in post request
+                User userReset = User.findById(f.get("userId"));
                 userReset.setLoginAttempts(0);
                 userReset.save();
-                return noContent(); // Return HTTP code 204
+                return ok(admin.render(User.findAll()));
             }
         }
-        return notFound404();
+        return notFound404(); // Return 404 error if user is not a super admin
     }
 
     /**
@@ -71,41 +68,117 @@ public class ActionController extends Controller {
      */
     @Authenticated(Secured.class)
     public Result createSale() {
-        //enters sale into database
-        User user = Ebean.find(User.class).where().eq("username", session("username")).findUnique();
-        DynamicForm createSaleForm = Form.form().bindFromRequest();
-        Sale sale = new Sale();
-        sale.name = createSaleForm.get("name");
-        sale.street = createSaleForm.get("street");
-        sale.city = createSaleForm.get("city");
-        sale.state = createSaleForm.get("state");
-        sale.zip = Integer.parseInt(createSaleForm.get("zip"));
-        sale.userCreatedId = user.id;
-
+        User user = User.findByUsername(session("username"));
+        DynamicForm f = Form.form().bindFromRequest();
+        int zip;
+        Timestamp startDate;
+        Timestamp endDate;
         try {
-            DateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
-            Date startingDate = dateFormat.parse(createSaleForm.get("startDate"));
+            zip = Integer.parseInt(f.get("zip"));
+            DateFormat dateFormat = new SimpleDateFormat("MM/dd/yyyy");
+            Date startingDate = dateFormat.parse(f.get("startDate"));
             long startTime = startingDate.getTime();
-            sale.startDate = new Timestamp(startTime);
+            startDate = new Timestamp(startTime);
 
-            Date endingDate = dateFormat.parse(createSaleForm.get("startDate"));
+            Date endingDate = dateFormat.parse(f.get("endDate"));
             long endTime = endingDate.getTime();
-            sale.endDate = new Timestamp(endTime);
-        } catch(ParseException e) {
+            endDate = new Timestamp(endTime);
+        } catch(ParseException|NumberFormatException e) {
             e.printStackTrace();
+            return notFound404();
         }
-        sale.save();
-        return ok(createSale.render("Sale Created! Create Another Sale?"));
+        Sale sale = new Sale(f.get("name"), f.get("description"), f.get("street"), f.get("city"), f.get("state"),
+                zip, startDate, endDate, user.id);
+        return redirect("/sale/" + sale.id);
     }
 
     /**
-     * Creates a sale item
-     * @return HTTP response to create sale item request
+     * Update a sale
+     * @param saleId Id of sale to edit
+     * @return HTTP response to edit sale page update request
      */
     @Authenticated(Secured.class)
-    public Result createSaleItem() {
-        //todo this should be much like createSale() above. Doesnt addItem achieve this function?
-        return ok();
+    public Result createTransaction(int saleId) {
+
+        Transaction transaction = new Transaction(saleId);
+        return redirect("/sale/" + saleId + "/transaction/" + transaction.id );
+    }
+    @Authenticated(Secured.class)
+    public Result editSale(int saleId) {
+        Sale s = Sale.findById(saleId);
+        User u = User.findByUsername(session("username"));
+        if (!u.canBeAdmin(saleId) || s == null) {
+            return notFound404(); // If user is not an administrator for the sale or sale doesn't exist, return 404 error
+        }
+        DynamicForm f = Form.form().bindFromRequest();
+
+        // Handle role creation requests
+        if (f.get("addRoleUsername") != null && f.get("addRoleName") != null &&
+                Role.validRoles.contains(f.get("addRoleName"))) {
+            User ua = User.findByUsername(f.get("addRoleUsername"));
+            if (ua != null) {
+                Role r = Role.findByIds(ua.id, s.id);
+                if (r != null) { // There's already a role for this user; modify it
+                    r.setName(f.get("addRoleUsername"));
+                    r.save();
+                }
+                // Create a new role
+                Role ra = new Role(f.get("addRoleName"), ua.id, s.id);
+            }
+            return ok(editSale.render(s, s.getRoles()));
+        }
+
+        // Handle role deletion requests
+        if (f.get("deleteRoleUserId") != null) {
+            int roleDeleteUserId;
+            try {
+                roleDeleteUserId = Integer.parseInt(f.get("deleteRoleUserId"));
+            } catch (NumberFormatException e) {
+                e.printStackTrace();
+                return notFound404();
+            }
+            Role r = Role.findByIds(roleDeleteUserId, s.id);
+            if (r != null) {
+                r.delete();
+            }
+            return ok(editSale.render(s, s.getRoles()));
+        }
+
+        // Handle sale info update requests
+        if (f.get("name") != null && f.get("description") != null && f.get("street") != null && f.get("city") != null &&
+                f.get("state") != null && f.get("zip") != null && f.get("startDate") != null &&
+                f.get("endDate") != null) {
+            s.setName(f.get("name"));
+            s.setDescription(f.get("description"));
+            s.setStreet(f.get("street"));
+            s.setCity(f.get("city"));
+            s.setState(f.get("state"));
+            int zip;
+            Timestamp startDate;
+            Timestamp endDate;
+            try {
+                zip = Integer.parseInt(f.get("zip"));
+                DateFormat dateFormat = new SimpleDateFormat("MM/dd/yyyy");
+                Date startingDate = dateFormat.parse(f.get("startDate"));
+                long startTime = startingDate.getTime();
+                startDate = new Timestamp(startTime);
+
+                Date endingDate = dateFormat.parse(f.get("endDate"));
+                long endTime = endingDate.getTime();
+                endDate = new Timestamp(endTime);
+            } catch (ParseException | NumberFormatException e) {
+                e.printStackTrace();
+                return notFound404();
+            }
+            s.setZip(zip);
+            s.setStartDate(startDate);
+            s.setEndDate(endDate);
+            s.save();
+            return ok(editSale.render(s, s.getRoles()));
+        }
+
+        return notFound404(); // If sale doesn't exist, or invalid form return 404 error
+
     }
 
     /**
@@ -114,16 +187,16 @@ public class ActionController extends Controller {
      */
     @Authenticated(Secured.class)
     public Result item(int saleId, int itemId) {
+        SaleItem i = SaleItem.findById(itemId);
         DynamicForm f = Form.form().bindFromRequest();
-        if (f.get("name") == null || f.get("description") == null || f.get("price") == null) {
+        if (i == null || f.get("name") == null || f.get("description") == null || f.get("price") == null) {
             return notFound404();
         }
-        SaleItem i = Ebean.find(SaleItem.class).where().eq("id", itemId).findUnique();
         float price;
         try {
             price = Float.parseFloat(f.get("price"));
         } catch (NumberFormatException e) {
-            return ok(item.render(saleId, itemId, i.name, i.description, i.price, "Error: bad price"));
+            return notFound404();
         }
 
         i.setName(f.get("name"));
@@ -131,7 +204,7 @@ public class ActionController extends Controller {
         i.setPrice(price);
         i.save();
 
-        return ok(item.render(saleId, itemId, i.name, i.description, i.price, ""));
+        return ok(item.render(i));
     }
 
     /**
@@ -142,10 +215,10 @@ public class ActionController extends Controller {
         if (session("username") != null) { // Redirect if user already logged in
             return redirect("/");
         }
-        DynamicForm dynamicForm = Form.form().bindFromRequest();
-        User user = Ebean.find(User.class).where().eq("username", dynamicForm.get("username")).findUnique();
+        DynamicForm f = Form.form().bindFromRequest();
+        User user = User.findByUsername(f.get("username"));
         if (user != null) { // User exists
-            if (user.getPassword().equals(dynamicForm.get("password"))) { // Correct password
+            if (user.getPassword().equals(f.get("password"))) { // Correct password
                 if (user.loginAttempts == 3) { // Notify that user is locked out
                     return ok(login.render("Your account has been locked"));
                 } else { // Create session
@@ -153,7 +226,7 @@ public class ActionController extends Controller {
                         user.setLoginAttempts(0);
                         user.save();
                     }
-                    session("username", dynamicForm.get("username"));
+                    session("username", f.get("username"));
                     return redirect("/");
                 }
             } else if (user.loginAttempts < 3) { // Incorrect password - increment lockout counter up to 3
@@ -185,7 +258,7 @@ public class ActionController extends Controller {
         userdata data = formdata.get();
         User user = new User(data.firstName, data.lastName, data.email, data.username, data.password);
         user.save();
-        return ok(postContact.render(data.firstName + " " + data.lastName));
+        return ok(postContact.render(user));
     }
 
     /**
@@ -195,49 +268,28 @@ public class ActionController extends Controller {
     @Authenticated(Secured.class)
     public Result profile() {
         String username = session("username");
-        User user = Ebean.find(User.class).where().eq("username", username).findUnique();
+        User user = User.findByUsername(session("username"));
 
-        DynamicForm dynamicForm = Form.form().bindFromRequest();
-        User userCheckUsername = Ebean.find(User.class).where().eq("username", dynamicForm.get("username")).findUnique();
-        if (userCheckUsername != null && !dynamicForm.get("username").equals(username)) {
-            return ok(profile.render(username, user.getPassword(), user.getFirstName(), user.getLastName(), user.getEmail(),
-                    "Error: username already in use"));
+        DynamicForm f = Form.form().bindFromRequest();
+        User userCheckUsername = User.findByUsername(f.get("username"));
+        if (userCheckUsername != null && !f.get("username").equals(username)) {
+            return ok(profile.render(user, "Error: username already in use"));
         }
-        User userCheckEmail = Ebean.find(User.class).where().eq("email", dynamicForm.get("email")).findUnique();
-        if (userCheckEmail != null && !dynamicForm.get("email").equals(user.getEmail())) {
-            return ok(profile.render(username, user.getPassword(), user.getFirstName(), user.getLastName(), user.getEmail(),
-                    "Error: email already in use"));
+        User userCheckEmail = User.findByEmail(f.get("email"));
+        if (userCheckEmail != null && !f.get("email").equals(user.getEmail())) {
+            return ok(profile.render(user, "Error: email already in use"));
 
         }
         // Username and email not already in use, update user
-        user.setFirstName(dynamicForm.get("firstName"));
-        user.setLastName(dynamicForm.get("lastName"));
-        user.setEmail(dynamicForm.get("email"));
-        user.setUsername(dynamicForm.get("username"));
-        user.setPassword(dynamicForm.get("password"));
+        user.setFirstName(f.get("firstName"));
+        user.setLastName(f.get("lastName"));
+        user.setEmail(f.get("email"));
+        user.setUsername(f.get("username"));
+        user.setPassword(f.get("password"));
         user.save();
-        session("username", dynamicForm.get("username"));
+        session("username", f.get("username")); //Set new cookie in case username was changed
 
-        return ok(profile.render(username, user.getPassword(), user.getFirstName(), user.getLastName(), user.getEmail(), ""));
-    }
-
-
-    //TODO Method doesnt work as intended, also not in routes
-    /**
-     * Update Item page for item
-     * @return HTTP response to profile page update request
-     */
-    @Authenticated(Secured.class)
-    public Result item(String name) {
-        SaleItem item = Ebean.find(SaleItem.class).where().eq("name", name).findUnique();
-        DynamicForm dynamicForm = Form.form().bindFromRequest();
-        // update Item
-        item.setName(dynamicForm.get("name"));
-        item.setDescription(dynamicForm.get("description"));
-        item.setPrice(Float.parseFloat(dynamicForm.get("price")));
-        item.save();
-        //return ok(item.render(item.getName(), item.getDescription(), item.getPrice(), ""));
-        return ok();
+        return ok(profile.render(user, ""));
     }
 
     /**
@@ -248,31 +300,19 @@ public class ActionController extends Controller {
         if (session("username") != null) { // Redirect if user already logged in
             return redirect("/");
         }
-        DynamicForm dynamicForm = Form.form().bindFromRequest();
-        User userCheckUsername = Ebean.find(User.class).where().eq("username", dynamicForm.get("username")).findUnique();
+        DynamicForm f = Form.form().bindFromRequest();
+        User userCheckUsername = User.findByUsername(f.get("username"));
         if (userCheckUsername != null) {
             return ok(register.render("Error: username already in use"));
         }
-        User userCheckEmail = Ebean.find(User.class).where().eq("email", dynamicForm.get("email")).findUnique();
+        User userCheckEmail = User.findByEmail(f.get("email"));
         if (userCheckEmail != null) {
             return ok(register.render("Error: email already in use"));
         }
         //If username or email not already in use, create user
-        User user = new User(dynamicForm.get("firstName"), dynamicForm.get("lastName"), dynamicForm.get("email"), dynamicForm.get("username"), dynamicForm.get("password"));
+        User user = new User(f.get("firstName"), f.get("lastName"), f.get("email"), f.get("username"), f.get("password"));
         user.save();
-        return ok(postContact.render(dynamicForm.get("firstName") + " " + dynamicForm.get("lastName")));
-    }
-
-    /**
-     * Update a sale
-     * @param strId Id of sale
-     * @return
-     */
-    @Authenticated(Secured.class)
-    public Result sale(String strId) {
-        int id = Integer.parseInt(strId);
-        //todo check if user is authorized for this sale, then update
-        return ok();
+        return ok(postContact.render(user));
     }
 
     /**
@@ -282,8 +322,8 @@ public class ActionController extends Controller {
      */
     @Authenticated(Secured.class)
     public Result searchItems(int saleId) {
-        DynamicForm dynamicForm = Form.form().bindFromRequest();
-        String query = dynamicForm.get("query");
+        DynamicForm f = Form.form().bindFromRequest();
+        String query = f.get("query");
         if (query != null) {
             return ok(searchItems.render(saleId, query));
         }
@@ -296,14 +336,46 @@ public class ActionController extends Controller {
      */
     @Authenticated(Secured.class)
     public Result searchSales() {
-        DynamicForm dynamicForm = Form.form().bindFromRequest();
-        String query = dynamicForm.get("query");
+        DynamicForm f = Form.form().bindFromRequest();
+        String query = f.get("query");
         if (query != null) {
             return ok(searchSales.render(query));
         }
         return notFound404();
     }
 
+    /**
+     * @param id place in db
+     * @return
+     */
+    @Authenticated(Secured.class)
+    public Result transaction(int saleID) {
+        Sale s = Ebean.find(Sale.class).where().eq("id", saleID).findUnique();
+        if (s != null) { // Check if sale exists
+
+
+        }
+        return notFound404();
+    }
+
+    /**
+     * @param id place in db
+     * @return
+     */
+    @Authenticated(Secured.class)
+    public Result addLineItem(int saleID, int transactionID, int saleItemID) {
+        Sale s = Ebean.find(Sale.class).where().eq("id", saleID).findUnique();
+        if (s != null) { //check if transaction exists
+            Transaction t = Ebean.find(Transaction.class).where().eq("id", transactionID).findUnique();
+            if (t != null) {
+
+                LineItem item = new LineItem(saleItemID, transactionID, 1);
+                item.save();
+                return ok(transaction.render(saleID, transactionID, "Item added! Add another item?"));
+            }
+        }
+        return notFound404();
+    }
     @Authenticated(Secured.class)
     public Result uploadProfilePicture() {
         MultipartFormData body = request().body().asMultipartFormData();

@@ -1,4 +1,5 @@
 @* Displays list of users *@
+@(users: List[User])
 @loggedinmain("Users") {
 <div class="container content">
     <h3>Current Users</h3>
@@ -6,23 +7,19 @@
         <thead>
             <tr>
                 <th>Name</th>
-                <th></th>
                 <th>Username</th>
                 <th>Email</th>
             </tr>
         </thead>
         <tbody id="users">
-
+            @for(index <- 0 until users.size){
+            <tr>
+                <td>@users(index).getName</td>
+                <td>@users(index).username</td>
+                <td>@users(index).email</td>
+            </tr>
+            }
         </tbody>
     </table>
 </div>
-
-<script>
-    $.getJSON("/getUsers", function(data) {
-        for(var i in data) {
-            var output = "<tr><td>"+data[i].name+"<td><td>" + data[i].username+"</td><td>"+data[i].email+"</td></tr>";
-            $("#users").append(output)
-        }
-    });
-</script>
 }

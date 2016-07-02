@@ -1,5 +1,6 @@
 package models;
 
+import com.avaje.ebean.Ebean;
 import com.avaje.ebean.Model;
 import play.data.format.*;
 import play.data.validation.Constraints;
@@ -24,7 +25,31 @@ import java.util.Set;
 @Entity
 @Table(name="roles")
 public class Role extends Model {
-    private static final Set<String> validRoles = new HashSet<>();
+
+    public static Role findByIds(int userId, int saleId) {
+        return Ebean.find(Role.class).where().eq("userId", userId).eq("saleId", saleId).findUnique();
+    }
+
+    public static List<Role> findBySaleId(int saleId) {
+        return Ebean.find(Role.class).where().eq("saleId", saleId).findList();
+    }
+
+    public static List<Role> findByUserId(int userId) {
+        return Ebean.find(Role.class).where().eq("userId", userId).findList();
+    }
+
+    public static String findRole(int userId, int saleId) {
+        if (User.findById(userId).isSuperAdmin()) {
+            return "superAdmin";
+        }
+        Role r = findByIds(userId, saleId);
+        if (r == null) {
+            return "guest";
+        }
+        return r.name;
+    }
+
+    public static final Set<String> validRoles = new HashSet<>();
     static {
         validRoles.add("admin");
         validRoles.add("bookkeeper");
@@ -37,11 +62,25 @@ public class Role extends Model {
     public int id;
     @Column(nullable=false)
     public String name;
-    @ManyToOne
-    @JoinColumn(name = "userId", referencedColumnName = "id")
-    public User user;
-    @ManyToOne
-    @JoinColumn(name = "saleId", referencedColumnName = "id")
-    public Sale sale;
+    @Column(nullable=false)
+    public int userId;
+    @Column(nullable=false)
+    public int saleId;
 
+    public Role (String name, int userId, int saleId) {
+        this.name = name;
+        this.userId = userId;
+        this.saleId = saleId;
+        this.save();
+    }
+
+    public void setName(String name) { this.name = name; }
+
+    public void setUserId(int userId) { this.userId = userId; }
+
+    public void setSaleId(int saleId) { this.saleId = saleId; }
+
+    public User getUser() {
+        return User.findById(userId);
+    }
 }

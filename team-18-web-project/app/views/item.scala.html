@@ -1,18 +1,17 @@
 @* Displays Item page *@
-@(saleId:Int, itemId:Int, name:String, description:String, price:Float, error:String)
+@(item: SaleItem)
 
 @loggedinmain("Item") {
   <div class="container content">
     <div class="view profile" id="view-profile">
       <div class="col-sm-6">
         <img class="profile-image" src="http://placehold.it/200x200" />
-        <h1>@name</h1>
-        <p class="lead">@description</p>
-        <p class="lead">@price</p>
-        <a href="/sale/@saleId"><h4>&#8592; Return to Sale</h4></a>
+        <h1>@item.name</h1>
+        <p class="lead">@item.description</p>
+        <p class="lead">@item.formatPrice</p>
+        <a href="/sale/@item.saleId"><h4>&#8592; Return to Sale</h4></a>
       </div>
       <div class="col-sm-6">
-        @if(error) {<h3 class="text-center">@error</h3>}
         <a href="#" class="btn btn-success pull-right" onclick="changeToEdit();">Edit Item</a>
       </div>
 
@@ -20,25 +19,23 @@
     <div class="edit profile" id="edit-profile">
       <div class="col-sm-4">
         <img class="profile-image" src="http://placehold.it/200x200" />
-        <<h1>@name </h1>
-        <p class="lead">@description</p>
-        <p class="lead">@price</p>
-        <a href="/sale/@saleId"><h4>&#8592; Return to Sale</h4></a>
+        <h1>@item.name </h1>
+        <p class="lead">@item.description</p>
+        <p class="lead">@item.formatPrice</p>
+        <a href="/sale/@item.saleId"><h4>&#8592; Return to Sale</h4></a>
 
       </div>
       <div class="col-sm-4">
-        <form class="form-editprofile" id="edit-form" action="/sale/@saleId/item/@itemId" method="post">
+        <form class="form-editprofile" id="edit-form" action="/sale/@item.saleId/item/@item.id" method="post">
           <label for="inputName" class="sr-only">Name</label>
-          <input type="text" id="inputName" name="name" class="form-control input-top" value="@name" required autofocus>
+          <input type="text" maxlength="255" id="inputName" name="name" class="form-control input-top" value="@item.name" required autofocus>
           <label for="inputDescription" class="sr-only">Description</label>
-          <input type="text" id="inputDescription" name="description" class="form-control input-middle" value="@description" required>
+          <input type="text" maxlength="255" id="inputDescription" name="description" class="form-control input-middle" value="@item.description" required>
           <label for="inputPrice" class="sr-only">Price</label>
-          <input type="text" id="inputPrice" name="price" class="form-control input-middle" value="@price" required>
-          <div class="col-sm-4">
-            <div class="btn-toolbar pull-right">
-              <a href="#" class="btn btn-success" onclick="changeToView();">cancel</a>
-              <button class="btn btn-success" type="submit">Save Changes</button>
-            </div>
+          <input type="number" max="9999999" step="0.01" id="inputPrice" name="price" class="form-control input-bottom" value="@item.formatPrice" required>
+          <div class="btn-toolbar">
+            <a href="#" class="btn btn-success pull-left" onclick="changeToView();">CANCEL</a>
+            <button class="btn btn-success pull-right" type="submit">SAVE CHANGES</button>
           </div>
         </form>
       </div>

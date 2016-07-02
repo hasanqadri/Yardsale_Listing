@@ -1,16 +1,15 @@
-@(id: Int, message : String)
+@(saleId: Int)
 @loggedinmain("Add Item to Sale") {
 <div class="container content">
     <div class="col-sm-4">
-        <a href="/sale/@id"><h4>&#8592; Return to Sale</h4></a>
-        @if(message) {<h3 class="text-center">@message</h3>}
-        <form class="form-createSale" id="createSale" action="/sale/@id/addItem" method="post">
+        <a href="/sale/@saleId"><h4>&#8592; Return to Sale</h4></a>
+        <form class="form-createSale" id="createSale" action="/sale/@saleId/addItem" method="post">
             <label for="inputName" class="sr-only">Name</label>
-            <input type="text" id="inputName" name="name" class="form-control input-top" placeholder="Name" required autofocus>
+            <input type="text" maxlength="255" id="inputName" name="name" class="form-control input-top" placeholder="Name" required autofocus>
             <label for="inputStreet" class="sr-only">Description</label>
-            <input type="text" id="inputDescription" name="description" class="form-control input-middle" placeholder="Description" required>
+            <input type="text" maxlength="255" id="inputDescription" name="description" class="form-control input-middle" placeholder="Description" required>
             <label for="inputCity" class="sr-only">Price</label>
-            <input type="text" id="inputPrice" name="price" class="form-control input-bottom" placeholder="Price" required>
+            <input type="number" max="9999999" step="0.01" id="inputPrice" name="price" class="form-control input-bottom" placeholder="Price" required>
             <div class="col-sm-4">
                 <div class="btn-toolbar pull-right">
                     <button class="btn btn-success" type="submit">Add Item</button>

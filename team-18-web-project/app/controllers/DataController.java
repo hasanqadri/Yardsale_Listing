@@ -6,6 +6,8 @@ import java.util.List;
 import models.Sale;
 import models.SaleItem;
 import models.User;
+import models.Transaction;
+import models.LineItem;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -56,6 +58,23 @@ public class DataController extends Controller {
     }
 
     /**
+     * Lists all data about an item
+     * @return JSON response of item data stored in database
+     */
+    @Security.Authenticated(Secured.class)
+    public Result getLineItems() {
+        DynamicForm dynamicForm = Form.form().bindFromRequest();
+        int id;
+        try {
+            id = Integer.parseInt(dynamicForm.get("id"));
+        } catch (NumberFormatException e) { // Null or non int string
+            return notFound404();
+        }
+        LineItem item  = Ebean.find(LineItem.class).where().eq("id", id).findUnique();
+        return ok(toJson(item));
+    }
+
+    /**
      * Lists all data about all items
      * @return JSON response of all item data stored in database
      */
@@ -68,7 +87,7 @@ public class DataController extends Controller {
         } catch (NumberFormatException e) { // Null or non int string
             return notFound404();
         }
-        List<SaleItem> items = Ebean.find(SaleItem.class).where().eq("saleId", saleId).findList();
+        List<SaleItem> items = Ebean.find(SaleItem.class).where().eq("saleId", saleId).orderBy("id desc").findList();
         return ok(toJson(items));
     }
 
@@ -78,10 +97,10 @@ public class DataController extends Controller {
      */
     @Security.Authenticated(Secured.class)
     public Result getSale() {
-        DynamicForm dynamicForm = Form.form().bindFromRequest();
+        DynamicForm f = Form.form().bindFromRequest();
         int id;
         try {
-            id = Integer.parseInt(dynamicForm.get("id"));
+            id = Integer.parseInt(f.get("id"));
         } catch (NumberFormatException e) { // Null or non int string
             return notFound404();
         }
@@ -121,7 +140,7 @@ public class DataController extends Controller {
      */
     @Security.Authenticated(Secured.class)
     public Result getSales() {
-        List<Sale> sales = Ebean.find(Sale.class).findList();
+        List<Sale> sales = Ebean.find(Sale.class).orderBy("id desc").findList();
         return ok(toJson(sales));
     }
 
@@ -179,44 +198,6 @@ public class DataController extends Controller {
             return ok(toJson(sales));
         }
         return notFound404();
-    }
-
-    /**
-     * Lists name, username, email of all users
-     * @return JSON response of select user data stored in database
-     */
-    @Security.Authenticated(Secured.class)
-    public Result getUsers() {
-        List<User> users = Ebean.find(User.class).findList();
-        JSONArray ja = new JSONArray();
-        for (User user : users) {
-            JSONObject jo = null;
-            try {
-                jo = new JSONObject()
-                        .put("name", user.getName())
-                        .put("username", user.username)
-                        .put("email", user.email);
-            } catch (JSONException e) {
-                e.printStackTrace();
-            }
-            ja.put(jo);
-        }
-        return ok(ja.toString());
-    }
-
-    /**
-     * Lists complete json data of all users
-     * @return JSON response of all user data stored in database
-     */
-    @Security.Authenticated(Secured.class)
-    public Result getUsersAdmin() {
-        User user = Ebean.find(User.class).where().eq("username", session("username")).findUnique();
-        if (user.superAdmin == 1) { // Show supersecret user data
-            List<User> users = Ebean.find(User.class).findList();
-            return ok(toJson(users));
-        } else { // Return 404 if requesting user is not privileged
-            return notFound404();
-        }
     }
 
     /**

@@ -1,5 +1,6 @@
 package models;
 
+import com.avaje.ebean.Ebean;
 import com.avaje.ebean.Model;
 import play.data.validation.Constraints;
 
@@ -14,6 +15,11 @@ import javax.persistence.Table;
 @Entity
 @Table(name="saleItems")
 public class SaleItem extends Model {
+
+    public static SaleItem findById(int id) {
+        return Ebean.find(SaleItem.class).where().eq("id", id).findUnique();
+    }
+
     @Id
     public int id;
     @Constraints.Required
@@ -25,7 +31,7 @@ public class SaleItem extends Model {
     public int saleId; // References specific Sale
     @Constraints.Required
     public int userCreatedId; // Multiple sellers can exist per sale
-    public int quantity;
+    public int quantity; //quantity within sale
 
     public SaleItem (String name, String description, float price, int saleId, int userCreatedId, int quantity) {
         this.name = name;
@@ -34,8 +40,8 @@ public class SaleItem extends Model {
         this.saleId = saleId;
         this.userCreatedId = userCreatedId;
         this.quantity = quantity;
+        this.save();
     }
-
 
     public String getName() { return name; }
 
@@ -65,5 +71,9 @@ public class SaleItem extends Model {
     public String toString() {
         return String.format("[Name: " + name + " Description: " + description + " Price: "
                 + price);
+    }
+
+    public String formatPrice() {
+        return String.format("%.2f", price);
     }
 }
