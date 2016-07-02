@@ -101,7 +101,7 @@ public class ActionController extends Controller {
     public Result createTransaction(int saleId) {
 
         Transaction transaction = new Transaction(saleId);
-        return redirect("/sale/" + saleId + "/transaction/" + transaction.id );
+        return redirect("/sale/" + saleId + "/transaction/" + transaction.id);
     }
     @Authenticated(Secured.class)
     public Result editSale(int saleId) {
@@ -349,7 +349,7 @@ public class ActionController extends Controller {
      * @return
      */
     @Authenticated(Secured.class)
-    public Result transaction(int saleID) {
+    public Result transaction(int saleID, int tranId) {
         Sale s = Ebean.find(Sale.class).where().eq("id", saleID).findUnique();
         if (s != null) { // Check if sale exists
 
