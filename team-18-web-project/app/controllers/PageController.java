@@ -211,10 +211,10 @@ public class PageController extends Controller {
      * @return HTTP response to addItem page request
      */
     @Authenticated(Secured.class)
-    public Result transaction(int id) {
-        Sale s = Ebean.find(Sale.class).where().eq("id", id).findUnique();
+    public Result transaction(int saleId, int tranId) {
+        Sale s = Ebean.find(Sale.class).where().eq("id", saleId).findUnique();
         if (s != null) { //check if transaction exists
-            return ok(transaction.render(id, ""));
+            return ok(transaction.render(saleId, tranId, ""));
         }
         return notFound404();
     }
