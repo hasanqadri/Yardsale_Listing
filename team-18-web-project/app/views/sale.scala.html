@@ -6,9 +6,9 @@
     <div class="view sale" id="view-sale">
         <div class="row">
             <div class="col-sm-9">
-                @if(user.canBeSeller(sale.id)) {<a href="/sale/@sale.id/addItem" class="btn btn-success">ADD ITEM</a>}
-                @if(user.canBeAdmin(sale.id)) {<a href="/sale/@sale.id/edit" class="btn btn-success">EDIT SALE</a>}
-                @if(user.canBeCashier(sale.id)) {<a href="/sale/@sale.id/transaction" class="btn btn-success">CREATE TRANSACTION</a>}
+                @if(user.canBeSeller(sale.id)) {<a href="/sale/@sale.id/addItem" class="btn btn-primary">ADD ITEM</a>}
+                @if(user.canBeAdmin(sale.id)) {<a href="/sale/@sale.id/edit" class="btn btn-primary">EDIT SALE</a>}
+                @if(user.canBeCashier(sale.id)) {<a href="/sale/@sale.id/transaction" class="btn btn-primary">CREATE TRANSACTION</a>}
             </div>
             <div class="col-sm-3">
                 <div class="input-group">
