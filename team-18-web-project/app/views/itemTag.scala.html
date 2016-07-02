@@ -1,0 +1,38 @@
+@* Displays Tag page *@
+@(saleId: Int, itemId: Int)
+
+@loggedinmain("Sale") {
+  <div class="container content">
+    <div class="view profile" id="view-profile">
+      <div class="row">
+        <div class="col-sm-4">
+        </div>
+        <div class="col-sm-5"></div>
+        <div class="col-sm-3">
+        </div>
+      </div>
+    </div>
+
+      <ul class="itemTags">
+          <h2 class="text-center">Item Tag</h2>
+          <div class="row">
+              <div class="col-sm-2"></div>
+              <div class="col-sm-8 items saleItem"></div>
+          </div>
+      </ul>
+  </div>
+
+
+        <!-- script to add item info from database -->
+    <script>
+            // Populate page with sale items
+            $.post("/getItem", { "id" : "@itemId" }).done(function( data ) {
+                    var output = "<h2>" + "Name: "  + data.name + "</a></h2>" + "<h3>" + "Stock Number: " + data.stockNumber + "</h3>"  + "<h3>" + "Description: " + data.description+ "</h3>" + "<h3>"
+                            +"Price: $" + data.price + "</h3></div><hr>";
+                    $(".items").append(output)
+            });
+
+
+    </script>
+
+}

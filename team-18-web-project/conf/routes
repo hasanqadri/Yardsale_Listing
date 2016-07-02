@@ -37,14 +37,16 @@ POST    /getItems                   controllers.DataController.getItems
 
 
 # Map requests to /sale
-GET     /sale/:id                   controllers.PageController.sale(id: Int)
-GET     /sale/:id/addItem           controllers.PageController.addItem(id: Int)
-POST    /sale/:id/addItem           controllers.ActionController.addItem(id: Int)
-GET     /sale/:id/edit              controllers.PageController.editSale(id: Int)
-POST    /sale/:id/edit              controllers.ActionController.editSale(id: Int)
-GET     /sale/:saleId/item/:itemId  controllers.PageController.item(saleId: Int, itemId: Int)
-POST    /sale/:saleId/item/:itemId  controllers.ActionController.item(saleId: Int, itemId: Int)
-POST    /sale/:id/searchItems       controllers.ActionController.searchItems(id: Int)
+GET     /sale/:id                               controllers.PageController.sale(id: Int)
+GET     /sale/:id/addItem                       controllers.PageController.addItem(id: Int)
+POST    /sale/:id/addItem                       controllers.ActionController.addItem(id: Int)
+GET     /sale/:saleId/item/:itemId              controllers.PageController.item(saleId: Int, itemId: Int)
+POST    /sale/:saleId/item/:itemId              controllers.ActionController.item(saleId: Int, itemId: Int)
+POST    /sale/:id/searchItems                   controllers.ActionController.searchItems(id: Int)
+GET     /sale/:saleId/item/:itemId/itemTag      controllers.PageController.itemTag(saleId: Int, itemId: Int)
+GET     /sale/:saleId/saleTag                   controllers.PageController.saleTag(saleId: Int)
+GET     /sale/:id/edit                          controllers.PageController.editSale(id: Int)
+POST    /sale/:id/edit                          controllers.ActionController.editSale(id: Int)
 
 
 

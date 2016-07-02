@@ -198,6 +198,33 @@ public class PageController extends Controller {
     }
 
     /**
+     * Display a Tag page
+     * @param saleId Id of item to display
+     * @param itemId Id of item to display
+     * @return HTTP response to tag page request
+     */
+    @Authenticated(Secured.class)
+    public Result itemTag(int saleId, int itemId) {
+        SaleItem s = Ebean.find(SaleItem.class).where().eq("id", itemId).findUnique();
+        if (s != null) { // Check if sale exists
+            return ok(itemTag.render(saleId, itemId));
+        }
+        return notFound404();
+    }
+
+    /**
+     * Display a sale items tags page
+     * @return HTTP response to tag page request
+     */
+    @Authenticated(Secured.class)
+    public Result saleTag(int saleId) {
+            return ok(saleTag.render(saleId));
+    }
+
+
+
+
+    /**
      * Display list of sales
      * @return HTTP response to sales page request
      */
