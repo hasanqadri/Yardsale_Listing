@@ -101,16 +101,32 @@ public class ActionController extends Controller {
     public Result editSale(int saleId) {
         Sale s = Sale.findById(saleId);
         User u = User.findByUsername(session("username"));
-        if (!u.canBeAdmin(saleId)) {
-            return notFound404(); // If user is not an administrator for the sale return 404 error
+        if (!u.canBeAdmin(saleId) || s == null) {
+            return notFound404(); // If user is not an administrator for the sale or sale doesn't exist, return 404 error
         }
         DynamicForm f = Form.form().bindFromRequest();
 
+        // Handle role creation requests
+        if (f.get("addRoleUsername") != null && f.get("addRoleName") != null &&
+                Role.validRoles.contains(f.get("addRoleName"))) {
+            User ua = User.findByUsername(f.get("addRoleUsername"));
+            if (ua != null) {
+                Role r = Role.findByIds(ua.id, s.id);
+                if (r != null) { // There's already a role for this user; modify it
+                    r.setName(f.get("addRoleUsername"));
+                    r.save();
+                }
+                // Create a new role
+                Role ra = new Role(f.get("addRoleName"), ua.id, s.id);
+            }
+            return ok(editSale.render(s, s.getRoles()));
+        }
+
         // Handle role deletion requests
-        if (f.get("roleDeleteUserId") != null) {
+        if (f.get("deleteRoleUserId") != null) {
             int roleDeleteUserId;
             try {
-                roleDeleteUserId = Integer.parseInt(f.get("roleDeleteUserId"));
+                roleDeleteUserId = Integer.parseInt(f.get("deleteRoleUserId"));
             } catch (NumberFormatException e) {
                 e.printStackTrace();
                 return notFound404();
@@ -123,38 +139,40 @@ public class ActionController extends Controller {
         }
 
         // Handle sale info update requests
-        if (s == null || f.get("name") == null || f.get("description") == null || f.get("street") == null ||
-                f.get("city") == null || f.get("state") == null || f.get("zip") == null || f.get("startDate") == null ||
-                f.get("endDate") == null) {
-            return notFound404(); // If sale doesn't exist, or invalid form return 404 error
-        }
-        s.setName(f.get("name"));
-        s.setDescription(f.get("description"));
-        s.setStreet(f.get("street"));
-        s.setCity(f.get("city"));
-        s.setState(f.get("state"));
-        int zip;
-        Timestamp startDate;
-        Timestamp endDate;
-        try {
-            zip = Integer.parseInt(f.get("zip"));
-            DateFormat dateFormat = new SimpleDateFormat("MM/dd/yyyy");
-            Date startingDate = dateFormat.parse(f.get("startDate"));
-            long startTime = startingDate.getTime();
-            startDate = new Timestamp(startTime);
+        if (f.get("name") != null && f.get("description") != null && f.get("street") != null && f.get("city") != null &&
+                f.get("state") != null && f.get("zip") != null && f.get("startDate") != null &&
+                f.get("endDate") != null) {
+            s.setName(f.get("name"));
+            s.setDescription(f.get("description"));
+            s.setStreet(f.get("street"));
+            s.setCity(f.get("city"));
+            s.setState(f.get("state"));
+            int zip;
+            Timestamp startDate;
+            Timestamp endDate;
+            try {
+                zip = Integer.parseInt(f.get("zip"));
+                DateFormat dateFormat = new SimpleDateFormat("MM/dd/yyyy");
+                Date startingDate = dateFormat.parse(f.get("startDate"));
+                long startTime = startingDate.getTime();
+                startDate = new Timestamp(startTime);
 
-            Date endingDate = dateFormat.parse(f.get("endDate"));
-            long endTime = endingDate.getTime();
-            endDate = new Timestamp(endTime);
-        } catch(ParseException|NumberFormatException e) {
-            e.printStackTrace();
-            return notFound404();
+                Date endingDate = dateFormat.parse(f.get("endDate"));
+                long endTime = endingDate.getTime();
+                endDate = new Timestamp(endTime);
+            } catch (ParseException | NumberFormatException e) {
+                e.printStackTrace();
+                return notFound404();
+            }
+            s.setZip(zip);
+            s.setStartDate(startDate);
+            s.setEndDate(endDate);
+            s.save();
+            return ok(editSale.render(s, s.getRoles()));
         }
-        s.setZip(zip);
-        s.setStartDate(startDate);
-        s.setEndDate(endDate);
-        s.save();
-        return ok(editSale.render(s, s.getRoles()));
+
+        return notFound404(); // If sale doesn't exist, or invalid form return 404 error
+
     }
 
     /**

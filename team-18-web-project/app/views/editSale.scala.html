@@ -7,6 +7,7 @@
 <div class="container content">
     <h1 class="text-center">Edit Sale</h1>
     <div class="col-sm-4">
+        <a href="/sale/@sale.id"><h4>&#8592; Return to Sale</h4></a>
         <form class="form-editSale" id="editSale" method="post">
             <label for="inputName" class="sr-only">Name</label>
             <input type="text" maxlength="255" id="inputName" name="name" class="form-control input-top" value="@sale.name" required autofocus>
@@ -65,11 +66,28 @@
                 <td>@roles(index).getUser().username</td>
                 <td>@roles(index).getUser().email</td>
                 <td>@roles(index).name</td>
-                <td><form method="post" class="hidden-form"><button class="btn btn-sm btn-danger" type="submit" name="roleDeleteUserId" value="@roles(index).userId">Remove</button></form></td></td>
+                <td><form method="post" class="hidden-form"><button class="btn btn-sm btn-danger" type="submit" name="deleteRoleUserId" value="@roles(index).userId">Remove</button></form></td></td>
             </tr>
             }
             </tbody>
         </table>
+        <form method="post" class="form-inline">
+            <div class="form-group">
+                <label for="addRoleUsername">Username</label>
+                <input name="addRoleUsername" id="addRoleUsername" class="form-control" required>
+            </div>
+            <div class="form-group">
+                <label for="addRoleName">Role</label>
+                <select name="addRoleName" id="addRoleName" class="form-control" required>
+                    <option value="admin">Admin</option>
+                    <option value="cashier">Cashier</option>
+                    <option value="clerk">Clerk</option>
+                    <option value="seller">Seller</option>
+                </select>
+                <button type="submit" class="btn btn-primary">Add User</button>
+            </div>
+
+        </form>
     </div>
 </div>
 

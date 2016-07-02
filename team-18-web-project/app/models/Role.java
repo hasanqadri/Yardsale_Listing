@@ -49,7 +49,7 @@ public class Role extends Model {
         return r.name;
     }
 
-    private static final Set<String> validRoles = new HashSet<>();
+    public static final Set<String> validRoles = new HashSet<>();
     static {
         validRoles.add("admin");
         validRoles.add("bookkeeper");
@@ -73,6 +73,12 @@ public class Role extends Model {
         this.saleId = saleId;
         this.save();
     }
+
+    public void setName(String name) { this.name = name; }
+
+    public void setUserId(int userId) { this.userId = userId; }
+
+    public void setSaleId(int saleId) { this.saleId = saleId; }
 
     public User getUser() {
         return User.findById(userId);
