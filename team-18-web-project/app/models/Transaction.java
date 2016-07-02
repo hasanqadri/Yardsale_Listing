@@ -25,4 +25,9 @@ public class Transaction extends Model {
     public int cashierId;
     public int saleItemId; // Id of item in transaction
     public String buyerName; //buyers name
+
+    public Transaction(int saleId) {
+
+        this.saleId = saleId;
+    }
 }

@@ -24,8 +24,8 @@ public class LineItem extends Model {
     public int transactionId; //References specific Transaction
     public int quantity; //item quantity with transaction
 
-    public LineItem (int id, int saleItemId, int transactionId, int quantity) {
-        this.id = id;
+    public LineItem (int saleItemId, int transactionId, int quantity) {
+
         this.saleItemId = saleItemId;
         this.transactionId= transactionId;
         this.quantity = quantity;

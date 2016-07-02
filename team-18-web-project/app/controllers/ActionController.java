@@ -91,6 +91,12 @@ public class ActionController extends Controller {
     }
 
     @Authenticated(Secured.class)
+    public Result createTransaction(int saleId) {
+
+        Transaction transaction = new Transaction(saleId);
+        return redirect("/sale/" + saleId + "/transaction/" + transaction.id );
+    }
+    @Authenticated(Secured.class)
     public Result editSale(int saleId) {
         Sale s = Sale.findById(saleId);
         DynamicForm f = Form.form().bindFromRequest();
@@ -280,15 +286,15 @@ public class ActionController extends Controller {
      * @return
      */
     @Authenticated(Secured.class)
-    public Result addLineItem(int saleID, int transactionID, int lineItemID, int saleItemID) {
+    public Result addLineItem(int saleID, int transactionID, int saleItemID) {
         Sale s = Ebean.find(Sale.class).where().eq("id", saleID).findUnique();
         if (s != null) { //check if transaction exists
             Transaction t = Ebean.find(Transaction.class).where().eq("id", transactionID).findUnique();
             if (t != null) {
 
-                LineItem item = new LineItem(lineItemID, saleItemID, transactionID, 1);
+                LineItem item = new LineItem(saleItemID, transactionID, 1);
                 item.save();
-                return ok(transaction.render(transactionID, "Item added! Add another item?"));
+                return ok(transaction.render(saleID, transactionID, "Item added! Add another item?"));
             }
         }
         return notFound404();
