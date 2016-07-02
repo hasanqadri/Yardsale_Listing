@@ -4,11 +4,12 @@ import com.avaje.ebean.Ebean;
 import java.sql.Timestamp;
 import java.text.*;
 import java.util.Date;
+import models.LineItem;
+import models.Role;
 import models.Sale;
 import models.SaleItem;
-import models.User;
 import models.Transaction;
-import models.LineItem;
+import models.User;
 import play.data.DynamicForm;
 import play.data.Form;
 import play.mvc.Controller;
@@ -24,21 +25,22 @@ import views.html.*;
  */
 public class ActionController extends Controller {
     /**
-     * @param id place in db
-     * @return
+     * Add an item to a sale
+     * @param saleId Id of sale to add item to
+     * @return HTTP response to add item request
      */
     @Authenticated(Secured.class)
-    public Result addItem(int id) {
-        Sale s = Sale.findById(id);
+    public Result addItem(int saleId) {
+        Sale s = Sale.findById(saleId);
         if (s != null) { // Check if sale exists
             DynamicForm f = Form.form().bindFromRequest();
             if (f.get("name") == null || f.get("description") == null || f.get("price") == null) { // Improper request
                 return notFound404();
             }
             s.addItem(f.get("name"), f.get("description"), f.get("price"), 0, 0);
-            return redirect("/sale/" + id);
+            return redirect("/sale/" + saleId);
         }
-        return notFound404();
+        return notFound404(); // Return 404 error if sale doesn't exist
     }
 
     /**
@@ -57,7 +59,7 @@ public class ActionController extends Controller {
                 return ok(admin.render(User.findAll()));
             }
         }
-        return notFound404();
+        return notFound404(); // Return 404 error if user is not a super admin
     }
 
     /**
@@ -90,11 +92,68 @@ public class ActionController extends Controller {
         return redirect("/sale/" + sale.id);
     }
 
+    /**
+     * Update a sale
+     * @param saleId Id of sale to edit
+     * @return HTTP response to edit sale page update request
+     */
     @Authenticated(Secured.class)
     public Result editSale(int saleId) {
         Sale s = Sale.findById(saleId);
+        User u = User.findByUsername(session("username"));
+        if (!u.canBeAdmin(saleId)) {
+            return notFound404(); // If user is not an administrator for the sale return 404 error
+        }
         DynamicForm f = Form.form().bindFromRequest();
-        //todo finish this
+
+        // Handle role deletion requests
+        if (f.get("roleDeleteUserId") != null) {
+            int roleDeleteUserId;
+            try {
+                roleDeleteUserId = Integer.parseInt(f.get("roleDeleteUserId"));
+            } catch (NumberFormatException e) {
+                e.printStackTrace();
+                return notFound404();
+            }
+            Role r = Role.findByIds(roleDeleteUserId, s.id);
+            if (r != null) {
+                r.delete();
+            }
+            return ok(editSale.render(s, s.getRoles()));
+        }
+
+        // Handle sale info update requests
+        if (s == null || f.get("name") == null || f.get("description") == null || f.get("street") == null ||
+                f.get("city") == null || f.get("state") == null || f.get("zip") == null || f.get("startDate") == null ||
+                f.get("endDate") == null) {
+            return notFound404(); // If sale doesn't exist, or invalid form return 404 error
+        }
+        s.setName(f.get("name"));
+        s.setDescription(f.get("description"));
+        s.setStreet(f.get("street"));
+        s.setCity(f.get("city"));
+        s.setState(f.get("state"));
+        int zip;
+        Timestamp startDate;
+        Timestamp endDate;
+        try {
+            zip = Integer.parseInt(f.get("zip"));
+            DateFormat dateFormat = new SimpleDateFormat("MM/dd/yyyy");
+            Date startingDate = dateFormat.parse(f.get("startDate"));
+            long startTime = startingDate.getTime();
+            startDate = new Timestamp(startTime);
+
+            Date endingDate = dateFormat.parse(f.get("endDate"));
+            long endTime = endingDate.getTime();
+            endDate = new Timestamp(endTime);
+        } catch(ParseException|NumberFormatException e) {
+            e.printStackTrace();
+            return notFound404();
+        }
+        s.setZip(zip);
+        s.setStartDate(startDate);
+        s.setEndDate(endDate);
+        s.save();
         return ok(editSale.render(s, s.getRoles()));
     }
 
@@ -104,11 +163,11 @@ public class ActionController extends Controller {
      */
     @Authenticated(Secured.class)
     public Result item(int saleId, int itemId) {
+        SaleItem i = SaleItem.findById(itemId);
         DynamicForm f = Form.form().bindFromRequest();
-        if (f.get("name") == null || f.get("description") == null || f.get("price") == null) {
+        if (i == null || f.get("name") == null || f.get("description") == null || f.get("price") == null) {
             return notFound404();
         }
-        SaleItem i = SaleItem.findById(itemId);
         float price;
         try {
             price = Float.parseFloat(f.get("price"));

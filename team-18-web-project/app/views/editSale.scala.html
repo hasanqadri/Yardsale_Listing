@@ -7,7 +7,7 @@
 <div class="container content">
     <h1 class="text-center">Edit Sale</h1>
     <div class="col-sm-4">
-        <form class="form-editSale" id="createSale" method="post">
+        <form class="form-editSale" id="editSale" method="post">
             <label for="inputName" class="sr-only">Name</label>
             <input type="text" maxlength="255" id="inputName" name="name" class="form-control input-top" value="@sale.name" required autofocus>
             <label for="inputDescription" class="sr-only">Description</label>
@@ -19,21 +19,21 @@
             <label for="inputUsername" class="sr-only">Username</label>
             <input type="text" maxlength="2" id="inputState" name="state" class="form-control input-middle" value="@sale.state" required>
             <label for="inputZip" class="sr-only">Zip Code</label>
-            <input type="number" maxlength="5" min="0" id="inputZip" name="zip" class="form-control input-bottom" value="@sale.zip" required>
+            <input type="number" min="0" max="99999" id="inputZip" name="zip" class="form-control input-bottom" value="@sale.zip" required>
             <div class="form-group">
                 <div class='input-group date' id='datetimepicker1'>
                     <input type='text' id="startDate" name="startDate" class="form-control" value="@sale.formatStartDate" />
-            <span class="input-group-addon">
-                <span class="glyphicon glyphicon-calendar"></span>
-            </span>
+                    <span class="input-group-addon">
+                        <span class="glyphicon glyphicon-calendar"></span>
+                    </span>
                 </div>
             </div>
             <div class="form-group">
                 <div class='input-group date' id='datetimepicker2'>
                     <input type='text' id="endDate" name="endDate" class="form-control" value="@sale.formatEndDate" />
-            <span class="input-group-addon">
-                <span class="glyphicon glyphicon-calendar"></span>
-            </span>
+                    <span class="input-group-addon">
+                        <span class="glyphicon glyphicon-calendar"></span>
+                    </span>
                 </div>
             </div>
 
@@ -55,6 +55,7 @@
                 <th>Username</th>
                 <th>Email</th>
                 <th>Role</th>
+                <th></th>
             </tr>
             </thead>
             <tbody id="users">
@@ -64,6 +65,7 @@
                 <td>@roles(index).getUser().username</td>
                 <td>@roles(index).getUser().email</td>
                 <td>@roles(index).name</td>
+                <td><form method="post" class="hidden-form"><button class="btn btn-sm btn-danger" type="submit" name="roleDeleteUserId" value="@roles(index).userId">Remove</button></form></td></td>
             </tr>
             }
             </tbody>

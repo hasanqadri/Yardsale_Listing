@@ -58,6 +58,17 @@ public class Sale extends Model {
         Role r = new Role("admin", userCreatedId, this.id);
     }
 
+    public void setName(String name) { this.name = name; }
+    public void setDescription(String description) { this.description = description; }
+    public void setStreet(String street) { this.street = street; }
+    public void setCity(String city) { this.city = city; }
+    public void setState(String state) { this.state = state; }
+    public void setZip(int zip) { this.zip = zip; }
+    public void setStartDate(Timestamp startDate) { this.startDate = startDate; }
+    public void setEndDate(Timestamp endDate) { this.endDate = endDate; }
+    public void setUserCreatedId(int userCreatedId) { this.userCreatedId = userCreatedId; }
+
+
     public SaleItem addItem(String name, String description, float price, int userId, int quantity) {
         return new SaleItem(name, description, price, id, userId, quantity);
     }
