@@ -34,7 +34,8 @@ POST    /getSearchItems             controllers.DataController.getSearchItems
 POST    /getSearchSales             controllers.DataController.getSearchSales
 POST    /getItem                    controllers.DataController.getItem
 POST    /getItems                   controllers.DataController.getItems
-
+POST    /getLineItem                controllers.DataController.getLineItem
+POST    /getLineItems               controllers.DataController.getLineItems
 
 # Map requests to /sale
 GET     /sale/:id                               controllers.PageController.sale(id: Int)
@@ -52,8 +53,11 @@ POST    /sale/:id/edit                          controllers.ActionController.edi
 #Map requests to /transaction
 GET    /createTransaction/:saleId               controllers.ActionController.createTransaction(saleId: Int)
 GET    /sale/:saleId/transaction/:tranId        controllers.PageController.transaction(saleId: Int, tranId: Int)
-POST   /sale/:saleId/transaction/:tranId       controllers.ActionController.transaction(saleId: Int, tranId: Int)
-POST   /sale/:saleId/transaction/:transactionId/:saleItemID/addLineItem  controllers.ActionController.addLineItem(saleId: Int, transactionId: Int, saleItemID: Int)
+POST   /sale/:saleId/transaction/:tranId        controllers.ActionController.transaction(saleId: Int, tranId: Int)
+GET   /sale/:saleId/transaction/:tranId/addLineItem/itemId  controllers.ActionController.addLineItem(saleId: Int, tranId: Int, itemId: Int)
+POST   /sale/:saleID/transaction/:tranId/searchItemStock    controllers.ActionController.searchItemStock(saleID: Int, tranId: Int)
+GET    /sale/:saleId/transaction/:tranId/buy    controllers.PageController.buy(saleId: Int, tranId: Int)
+
 
 
 # Map requests to /image

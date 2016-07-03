@@ -233,6 +233,17 @@ public class PageController extends Controller {
         return ok(sales.render());
     }
 
+
+    /**
+     * Display a reciept page
+     * @param saleId Id of item to display
+     * @param tranId Id of transaction to display
+     * @return HTTP response to tag page request
+     */
+    @Authenticated(Secured.class)
+    public Result buy(int saleId, int tranId) {
+            return ok(buy.render(saleId, tranId));
+    }
     /**
      * Displays transaction page
      * @return HTTP response to addItem page request

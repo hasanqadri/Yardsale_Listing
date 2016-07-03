@@ -1,0 +1,46 @@
+@* Displays Receipt page of transaction page *@
+@(saleId: Int, tranId: Int)
+
+@loggedinmain("Reciept") {
+  <div class="container content">
+    <div class="view profile" id="view-profile">
+      <div class="row">
+        <div class="col-sm-4">
+        </div>
+        <div class="col-sm-5"></div>
+        <div class="col-sm-3">
+        </div>
+      </div>
+    </div>
+
+    <ul class="itemTags">
+      <h2 class="text-center">Receipt</h2>
+      <div class="row">
+        <a href="/sale/@saleId/transaction/@tranId"><h4>&#8592; Return to Transaction</h4></a>
+
+        <div class="col-sm-2"></div>
+        <div class="col-sm-8 items saleItem"></div>
+      </div>
+      <div class="col-sm-8 sum saleItem"></div>
+
+    </ul>
+  </div>
+
+    <!-- script to add item info from database -->
+  <script>
+          // Populate page with sale items
+          $.post("/getLineItems", { "tranId" : "@tranId" }).done(function( data ) {
+            var sum = 0;
+            for(var i in data) {
+              var output = "<h2>" + "Name: "  + data[i].name + "</a></h2>" + "<h3>" + "Stock Number: " + data[i].stockNumber + "</h3>"  + "<h3>" + "Description: " + data[i].description+ "</h3>" + "<h3>"
+                      +"Price: $" + data[i].price + "</h3></div><hr>";
+              var sum = sum + data[i].price;
+              $(".items").append(output)
+              $(".sum").append(sum)
+            }
+          });
+
+
+  </script>
+
+}

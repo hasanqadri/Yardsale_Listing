@@ -341,15 +341,15 @@ public class ActionController extends Controller {
     }
 
     /**
-     * @param saleID place in db
-     * @return
+     * Search sales
+     * @return HTTP response to search results request
      */
     @Authenticated(Secured.class)
-    public Result transaction(int saleID, int tranId) {
-        Sale s = Ebean.find(Sale.class).where().eq("id", saleID).findUnique();
-        if (s != null) { // Check if sale exists
-            return ok(transaction.render(saleID, tranId, ""));
-
+    public Result searchItemStock(int saleID, int tranId) {
+        DynamicForm f = Form.form().bindFromRequest();
+        String query = f.get("query");
+        if (query != null) {
+            return ok(searchItemStock.render(saleID, tranId, query));
         }
         return notFound404();
     }
@@ -359,19 +359,35 @@ public class ActionController extends Controller {
      * @return
      */
     @Authenticated(Secured.class)
-    public Result addLineItem(int saleID, int transactionID, int saleItemID) {
+    public Result transaction(int saleID, int tranId) {
+        Sale s = Ebean.find(Sale.class).where().eq("id", saleID).findUnique();
+        if (s != null) { // Check if sale exists
+            return ok(transaction.render(saleID, tranId, ""));
+        }
+        return notFound404();
+    }
+
+    /**
+     * @param saleID place in db
+     * @return
+     */
+    @Authenticated(Secured.class)
+    public Result addLineItem(int saleID, int transactionID, int itemId) {
         Sale s = Ebean.find(Sale.class).where().eq("id", saleID).findUnique();
         if (s != null) { //check if transaction exists
             Transaction t = Ebean.find(Transaction.class).where().eq("id", transactionID).findUnique();
             if (t != null) {
 
-                LineItem item = new LineItem(saleItemID, transactionID, 1);
+                LineItem item = new LineItem(itemId, transactionID, 1);
                 item.save();
                 return ok(transaction.render(saleID, transactionID, "Item added! Add another item?"));
             }
         }
         return notFound404();
     }
+
+
+
     @Authenticated(Secured.class)
     public Result uploadProfilePicture() {
         MultipartFormData body = request().body().asMultipartFormData();

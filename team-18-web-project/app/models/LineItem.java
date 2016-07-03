@@ -1,21 +1,22 @@
 package models;
 
+import com.avaje.ebean.Ebean;
 import com.avaje.ebean.Model;
-import play.data.format.*;
 import play.data.validation.Constraints;
 
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Table;
-import javax.persistence.Column;
-import java.util.ArrayList;
-import java.util.List;
 /**
  * Created by nyokley on 6/28/2016.
  */
 @Entity
 @Table(name="lineItems")
 public class LineItem extends Model {
+
+    public static LineItem findById(int id) {
+        return Ebean.find(LineItem.class).where().eq("id", id).findUnique();
+    }
 
     @Id
     public int id;

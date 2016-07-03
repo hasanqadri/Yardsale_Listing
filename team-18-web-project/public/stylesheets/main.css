@@ -152,6 +152,9 @@ form .input-bottom {
     color: #FFAAAA;
 }
 
+.verticalLine {
+    border-left: thick solid gray;
+}
 .hidden-form {
     display: inline-block;
 }
