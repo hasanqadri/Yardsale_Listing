@@ -83,8 +83,8 @@ $.post("/getItems", { "saleId" : "@saleId" }).done(function( data ) {
     for(var i in data) {
         var output = "<form method=\"post\" class=\"hidden-form pull-left\"><input type=\"hidden\" value=\"1\" name=\"addItemQuantity\"><button class=\"btn btn-primary\" type=\"submit\" name=\"addItemId\" value=\""
                 + data[i].id + "\">ADD ITEM</button></form> <h2><a href=\"/sale/@saleId/item/"
-                + data[i].id + "\">" + data[i].name + "</a></h2><h3" + data[i].stockNumber +
-                + "</h3><h3>" + data[i].description + "</h3><h3>$" + data[i].price + "</h3></div><hr>";
+                + data[i].id + "\">" + data[i].name + "</a></h2><h3>" + data[i].stockNumber
+                + "</h3><h3>" + data[i].description + "</h3><h3>$" + data[i].price + "</h3><hr>";
         $(".items").append(output);
     }
 });
