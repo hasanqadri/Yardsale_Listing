@@ -1,4 +1,4 @@
-@(saleId: Int, tranId: Int, message : String)
+@(lineItems: List[LineItem], saleId: Int, tranId: Int, message : String)
 @loggedinmain("Transaction") {
 <div class="container content">
 
@@ -19,19 +19,56 @@
         </div>
 
         <div class="row">
-            <div class="col-sm-4">
+            <div class="col-sm-5">
                 <h2 class="text-center">Items in Cart</h2>
                 <div class="lineItems">
+                    <table class="table table-striped">
+                        <thead>
+                            <tr>
+                                <th>Item</th>
+                                <th>Quantity</th>
+                                <th>Cost</th>
+                                <th></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                        @for(index <- 0 until lineItems.size){
+                            <tr>
+                                <td>@lineItems(index).getName</td>
+                                <td>@lineItems(index).quantity</td>
+                                <td>@lineItems(index).getPrice</td>
+                                <td><form method="post" class="hidden-form"><button class="btn btn-sm btn-danger" type="submit" name="deleteItemId" value="@lineItems(index).id"><span class="glyphicon glyphicon-trash"></span></button></form></td>
+                            </tr>
+                            }
+                        </tbody>
+                    </table>
+                    @if(lineItems.size == 0){
+                    <h3 id="noResults" class="text-center">Empty cart. Add items on the right.</h3>
+                    }
+                </div>
             </div>
 
+            <div class="col-sm-1"></div>
 
+            <div class="col-sm-6">
+                <h2 class="text-center">Items for Sale</h2>
+                @if(message){<h3>@message</h3>}
+                <form method="post" class="form-inline">
+                    <div class="form-group">
+                        <label for="addItemId">Item Id</label>
+                        <input type="number" min="1" name="addItemId" id="addItemId" class="form-control" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="addItemQuantity">Quantity</label>
+                        <input type="number" min="1" name="addItemQuantity" id="addItemQuantity" class="form-control" value="1" required>
+                    </div>
+                    <button type="submit" class="btn btn-primary">Add Item</button>
+                </form>
+                <div class="items">
 
+                </div>
+            </div>
 
-        </div>
-        <h2 class="text-center">Items for Sale</h2>
-        <div class="row">
-            <div class="col-sm-8"></div>
-            <div class="col-sm-4 items"></div>
         </div>
     </div>
 </div>
@@ -41,29 +78,28 @@
 <script>
 // Populate page with sale items
 $.post("/getItems", { "saleId" : "@saleId" }).done(function( data ) {
-for(var i in data) {
-var output = "<a href=\"#\" class=\"btn btn-primary pull-left\" onclick="/sale/:@saleId/transaction/:@tranId/:data[i].id/addLineItem">ADD ITEM</a> <h2><a href=\"/sale/@saleId/item/"
-+ data[i].id + "\">" + data[i].name + "</a></h2>"
-+ "<h3>" + data[i].description+ "</h3>" + "<h3>"
-    + data[i].price + "</h3></div><hr>";
-$(".items").append(output)
-}
+    for(var i in data) {
+        var output = "<form method=\"post\" class=\"hidden-form pull-left\"><input type=\"hidden\" value=\"1\" name=\"addItemQuantity\"><button class=\"btn btn-primary\" type=\"submit\" name=\"addItemId\" value=\""
+                + data[i].id + "\">ADD ITEM</button></form> <h2><a href=\"/sale/@saleId/item/"
+                + data[i].id + "\">" + data[i].name + "</a></h2>"
+                + "<h3>" + data[i].description+ "</h3>" + "<h3>"
+                + data[i].price + "</h3></div><hr>";
+        $(".items").append(output);
+    }
 });
 
 // Populate page with transaction items
 
 
-    $.post("/getLineItems", { "transactionId" : "@tranId" }).done(function( data ) {
+$.post("/getLineItems", { "transactionId" : "@tranId" }).done(function( data ) {
     for(var i in data) {
-    var output = "<h2><a href=\"/sale/@saleId/item/"
-    + data[i].id + "\">" + data[i].name + "</a></h2>"
-    + "<h3>" + data[i].description+ "</h3>" + "<h3>"
-        + data[i].price + "</h3></div><hr>";
-    $(".lineItems").append(output)
-
-    });
-
-}
+        var output = "<h2><a href=\"/sale/@saleId/item/"
+                + data[i].id + "\">" + data[i].name + "</a></h2>"
+                + "<h3>" + data[i].description+ "</h3>" + "<h3>"
+                + data[i].price + "</h3></div><hr>";
+        $(".lineItems").append(output);
+    }
+});
 
 </script>
 

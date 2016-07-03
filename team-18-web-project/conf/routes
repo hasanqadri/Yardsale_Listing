@@ -49,10 +49,10 @@ POST    /sale/:id/searchItems       controllers.ActionController.searchItems(id:
 
 
 #Map requests to /transaction
-GET   /createTransaction/:saleId   controllers.ActionController.createTransaction(saleId: Int)
-GET    /sale/:saleId/transaction/:tranId       controllers.PageController.transaction(saleId: Int, tranId: Int)
-POST   /sale/:saleId/transaction/:tranId         controllers.ActionController.transaction(saleId: Int, tranId: Int)
-POST   /sale/:saleId/transaction/:transactionId/:saleItemID/addLineItem  controllers.ActionController.addLineItem(saleId: Int, transactionId: Int, saleItemID: Int)
+GET     /createTransaction/:saleId   controllers.ActionController.createTransaction(saleId: Int)
+GET     /sale/:saleId/transaction/:tranId       controllers.PageController.transaction(saleId: Int, tranId: Int)
+POST    /sale/:saleId/transaction/:tranId         controllers.ActionController.transaction(saleId: Int, tranId: Int)
+POST    /sale/:saleId/transaction/:transactionId/:saleItemID/addLineItem  controllers.ActionController.addLineItem(saleId: Int, transactionId: Int, saleItemID: Int)
 # Map requests to /image
 GET     /image/:id                  controllers.DataController.getImage(id: Int)
 

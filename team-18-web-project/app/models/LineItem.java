@@ -1,5 +1,6 @@
 package models;
 
+import com.avaje.ebean.Ebean;
 import com.avaje.ebean.Model;
 import play.data.format.*;
 import play.data.validation.Constraints;
@@ -17,6 +18,18 @@ import java.util.List;
 @Table(name="lineItems")
 public class LineItem extends Model {
 
+    public static LineItem findById(int id) {
+        return Ebean.find(LineItem.class).where().eq("id", id).findUnique();
+    }
+
+    public static List<LineItem> findByTransactionId(int transactionId) {
+        return Ebean.find(LineItem.class).where().eq("transactionId", transactionId).findList();
+    }
+
+    public static LineItem findByItemIdTransactionId(int itemId, int transactionId) {
+        return Ebean.find(LineItem.class).where().eq("saleItemId", itemId).eq("transactionId", transactionId).findUnique();
+    }
+
     @Id
     public int id;
     @Constraints.Required
@@ -29,15 +42,29 @@ public class LineItem extends Model {
         this.saleItemId = saleItemId;
         this.transactionId= transactionId;
         this.quantity = quantity;
+        this.save();
 
     }
 
-    //returns price of item*quantity
+    public void setQuantity(int quantity) { this.quantity = quantity; }
+
+    /**
+     * Get the price of item*quantity
+     * @return item*quantity
+     */
     public float getPrice() {
 
         SaleItem item = SaleItem.findById(saleItemId);
 
         return item.price*quantity;
+    }
+
+    /**
+     * Get the name of the item
+     * @return name of the item
+     */
+    public String getName() {
+        return SaleItem.findById(saleItemId).name;
     }
 
 }
