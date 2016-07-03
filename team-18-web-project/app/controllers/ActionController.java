@@ -16,6 +16,7 @@ import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.List;
 
 /**
  * Created by nathancheek on 6/25/16.
@@ -366,7 +367,7 @@ public class ActionController extends Controller {
 
             DynamicForm f = Form.form().bindFromRequest();
 
-            // Handle item quick-add form
+            // Handle item add form
             if (f.get("addItemId") != null && f.get("addItemQuantity") != null) {
                 int itemId;
                 int itemQuantity;
@@ -396,10 +397,10 @@ public class ActionController extends Controller {
             }
 
             // Handle item delete form
-            if (f.get("deleteItemId") != null) {
+            if (f.get("deleteLineItemId") != null) {
                 int lineItemId;
                 try { // Convert string to integer
-                    lineItemId = Integer.parseInt(f.get("deleteItemId"));
+                    lineItemId = Integer.parseInt(f.get("deleteLineItemId"));
                 } catch (NumberFormatException e) {
                     e.printStackTrace();
                     return notFound404();
@@ -409,6 +410,46 @@ public class ActionController extends Controller {
                     li.delete();
                 }
                 return ok(transaction.render(t.getLineItems(), saleId, tranId, ""));
+            }
+
+            // Handle item update quantity form
+            if (f.get("updateLineItemId") != null && f.get("quantity") != null) {
+                int lineItemId;
+                int quantity;
+                try { // Convert strings to integers
+                    lineItemId = Integer.parseInt(f.get("lineItemId"));
+                    quantity = Integer.parseInt(f.get("quantity"));
+                } catch (NumberFormatException e) {
+                    e.printStackTrace();
+                    return notFound404();
+                }
+                LineItem li = LineItem.findById(lineItemId);
+                if (li != null) {
+                    li.setQuantity(quantity);
+                    li.save();
+                }
+                return ok(transaction.render(t.getLineItems(), saleId, tranId, ""));
+            }
+
+            // Handle transaction cancel form
+            if (f.get("cancelTransactionId") != null) {
+                int transactionId;
+                try { // Convert string to integer
+                    transactionId = Integer.parseInt(f.get("cancelTransactionId"));
+                } catch (NumberFormatException e) {
+                    e.printStackTrace();
+                    return notFound404();
+                }
+
+                // Delete line items
+                List<LineItem> list = LineItem.findByTransactionId(tranId);
+                for (LineItem li : list) {
+                    li.delete();
+                }
+
+                t.delete();
+
+                return redirect("/sale/" + saleId);
             }
         }
         return notFound404();

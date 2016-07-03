@@ -4,8 +4,8 @@
 <div class="container content">
 
     <div class="view sale" id="view-sale">
-        <div class="col-sm-4"></div>
-        <div class="col-sm-5"></div>
+        <div class="col-sm-9">
+        </div>
         <div class="col-sm-3">
             <div class="input-group">
                 <form class="form-search-field" action="/sale/@saleId/transaction/@tranId/searchItemStock" method="post">
@@ -38,8 +38,8 @@
                             <tr>
                                 <td>@lineItems(index).getName</td>
                                 <td>@lineItems(index).quantity</td>
-                                <td>@lineItems(index).getPrice</td>
-                                <td><form method="post" class="hidden-form"><button class="btn btn-sm btn-danger" type="submit" name="deleteItemId" value="@lineItems(index).id"><span class="glyphicon glyphicon-trash"></span></button></form></td>
+                                <td>$@lineItems(index).formatPrice</td>
+                                <td><form method="post" class="hidden-form"><button class="btn btn-sm btn-danger" type="submit" name="deleteLineItemId" value="@lineItems(index).id"><span class="glyphicon glyphicon-trash"></span></button></form></td>
                             </tr>
                             }
                         </tbody>
@@ -89,9 +89,8 @@ $.post("/getItems", { "saleId" : "@saleId" }).done(function( data ) {
     }
 });
 
+// This is currently not being used
 // Populate page with transaction items
-
-
 $.post("/getLineItems", { "transactionId" : "@tranId" }).done(function( data ) {
     for(var i in data) {
         var output = "<h2><a href=\"/sale/@saleId/item/"

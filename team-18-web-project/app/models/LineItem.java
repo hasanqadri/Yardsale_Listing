@@ -59,6 +59,15 @@ public class LineItem extends Model {
     }
 
     /**
+     * Get a formatted price of item*quantity
+     * @return item*quantity to 2 decimal places
+     */
+    public String formatPrice() {
+        float price = getPrice();
+        return String.format("%.2f", price);
+    }
+
+    /**
      * Get the name of the item
      * @return name of the item
      */
