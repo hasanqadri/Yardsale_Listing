@@ -1,0 +1,42 @@
+
+@(lineItems: List[LineItem], saleId: Int, tranId: Int, message : String)
+@loggedinmain("Transaction") {
+<div class="container content">
+
+    <div class="row">
+        <div class="col-sm-12">
+
+            </div>
+        </div>
+    <div class="row">
+        <div class="col-sm-12">
+            <h2 class="text-center">Items Purchased</h2>
+            <div class="lineItems">
+                <table class="table table-striped">
+                    <thead>
+                    <tr>
+                        <th>Item</th>
+                        <th>Quantity</th>
+                        <th>Cost</th>
+                        <th></th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    @for(index <- 0 until lineItems.size){
+                    <tr>
+                        <td>@lineItems(index).getName</td>
+                        <td>@lineItems(index).quantity</td>
+                        <td>$@lineItems(index).formatPrice</td>
+                        <td><form method="post" class="hidden-form"><button class="btn btn-sm btn-danger" type="submit" name="deleteLineItemId" value="@lineItems(index).id"><span class="glyphicon glyphicon-trash"></span></button></form></td>
+                    </tr>
+                    }
+                    </tbody>
+                </table>
+                @if(lineItems.size == 0){
+                <h3 id="noResults" class="text-center">Empty cart. Add items on the right.</h3>
+                }
+            </div>
+        </div>
+</div>
+
+}

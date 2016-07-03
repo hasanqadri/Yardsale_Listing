@@ -51,8 +51,10 @@ create table transactions (
   id                        integer auto_increment not null,
   sale_id                   integer,
   cashier_id                integer,
-  sale_item_id              integer,
   buyer_name                varchar(255),
+  buyer_address             varchar(255),
+  buyer_email               varchar(255),
+  completed                 tinyint default 0,
   constraint pk_transactions primary key (id))
 ;
 

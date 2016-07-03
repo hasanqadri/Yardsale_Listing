@@ -5,12 +5,16 @@
 
     <div class="view sale" id="view-sale">
         <div class="col-sm-9">
+
+            <a href="/sale/@saleId" class="btn btn-danger" onclick = "cancelTransactionId">CANCEL TRANSACTION</a>
+            <a href="/sale/@saleId/confirmTransaction/@tranId" class="btn btn-success">CONFIRM TRANSACTION</a>
         </div>
+
         <div class="col-sm-3">
             <div class="input-group">
                 <form class="form-search-field" action="/sale/@saleId/transaction/@tranId/searchItemStock" method="post">
                     <div class="input-group">
-                        <input type="text" class="form-control" name="query" placeholder="Add by stock number...">
+                        <input type="text" class="form-control" name="query" placeholder="Search items...">
                         <span class="input-group-btn">
                             <button class="btn btn-default icon" type="submit"><i class="glyphicon glyphicon-search"></i></button>
                         </span>
