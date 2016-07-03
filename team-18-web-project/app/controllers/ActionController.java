@@ -35,7 +35,7 @@ public class ActionController extends Controller {
             if (f.get("name") == null || f.get("description") == null || f.get("price") == null) { // Improper request
                 return notFound404();
             }
-            s.addItem(f.get("name"), f.get("description"), f.get("price"), 0, 0);
+            s.addItem(f.get("name"), f.get("description"), f.get("price"), 0, 1);
             return redirect("/sale/" + saleId);
         }
         return notFound404(); // Return 404 error if sale doesn't exist
@@ -60,6 +60,60 @@ public class ActionController extends Controller {
         return notFound404(); // Return 404 error if user is not a super admin
     }
 
+    /**
+     * Confirms transaction
+     * @return HTTP response to create sale request
+     */
+    @Authenticated(Secured.class)
+    public Result confirmTransaction(int saleId, int tranId) {
+
+        User user = User.findByUsername(session("username"));
+        DynamicForm f = Form.form().bindFromRequest();
+
+        // Handle transaction cancel form
+        if (f.get("cancelTransactionId") != null) {
+            int transactionId;
+            try { // Convert string to integer
+                transactionId = Integer.parseInt(f.get("cancelTransactionId"));
+            } catch (NumberFormatException e) {
+                e.printStackTrace();
+                return notFound404();
+            }
+
+            // Delete line items
+            List<LineItem> list = LineItem.findByTransactionId(tranId);
+            for (LineItem li : list) {
+                li.delete();
+            }
+            return redirect("/sale/" + saleId);
+        }
+        if (f.get("confirmTransaction") != null) {
+
+            Sale s = Sale.findById(saleId);
+            Transaction t = Transaction.findById(tranId);
+            t.buyerName = f.get("inputName");
+            t.buyerAddress = f.get("inputAddress");
+            t.buyerEmail = f.get("inputEmail");
+            t.completed = 1;
+            t.save();
+
+            List<SaleItem> saleItems = s.getItems();
+            List<LineItem> lineItems = t.getLineItems();
+            for (LineItem li : lineItems) {
+                for (SaleItem si: saleItems) {
+
+                    if (li.id == si.id) {
+
+                        si.quantity = si.quantity - li.quantity;
+                        si.save();
+                    }
+                }
+            }
+
+        }
+
+        return redirect("/sale/" + saleId + "/transactionReciept/" + tranId);
+    }
     /**
      * Creates a sale
      * @return HTTP response to create sale request

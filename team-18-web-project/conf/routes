@@ -56,6 +56,9 @@ GET    /sale/:saleId/transaction/:tranId        controllers.PageController.trans
 POST   /sale/:saleId/transaction/:tranId        controllers.ActionController.transaction(saleId: Int, tranId: Int)
 POST   /sale/:saleID/transaction/:tranId/searchItemStock    controllers.ActionController.searchItemStock(saleID: Int, tranId: Int)
 GET    /sale/:saleId/transaction/:tranId/buy    controllers.PageController.buy(saleId: Int, tranId: Int)
+GET    /sale/:saleId/confirmTransaction/:tranId        controllers.PageController.confirmTransaction(saleId: Int, tranId: Int)
+POST   /sale/:saleId/confirmTransaction/:tranId        controllers.ActionController.confirmTransaction(saleId: Int, tranId: Int)
+GET   /sale/:saleId/transactionReceipt/:tranId        controllers.PageController.transactionReceipt(saleId: Int, tranId: Int)
 
 
 # Map requests to /image

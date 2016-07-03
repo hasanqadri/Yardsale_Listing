@@ -55,6 +55,7 @@
                     <h2><a href="/sale/@sale.id/item/@items(index).id">@items(index).name</a></h2>
                     <h3>@items(index).description</h3>
                     <h3>$@items(index).formatPrice</h3>
+                    <h3>Quantity: @items(index).quantity</h3>
                     @if(index+1 != items.size){<hr>}
                 }
                 </div>
@@ -62,4 +63,8 @@
         </ul>
     </div>
 </div>
+<script>
+
+
+</script>
 }

@@ -72,6 +72,22 @@ public class PageController extends Controller {
     }
 
     /**
+     * Displays transaction page
+     * @return HTTP response to transaction page request
+     */
+    @Authenticated(Secured.class)
+    public Result confirmTransaction(int saleId, int tranId) {
+        Sale s = Sale.findById(saleId);
+        Transaction t = Transaction.findById(tranId);
+        User u = User.findByUsername(session("username"));
+        if (s != null && t != null && t.completed == 0 && u != null && u.canBeSeller(saleId)) {
+            // Check if sale exists, and transaction exists and is not completed, and user exists and can be seller
+            return ok(confirmTransaction.render(saleId, tranId, ""));
+        }
+        return notFound404();
+    }
+
+    /**
      * Display create sale page
      * @return HTTP response to create sale page request
      */
@@ -256,6 +272,23 @@ public class PageController extends Controller {
         if (s != null && t != null && t.completed == 0 && u != null && u.canBeSeller(saleId)) {
                 // Check if sale exists, and transaction exists and is not completed, and user exists and can be seller
             return ok(transaction.render(t.getLineItems(), saleId, tranId, ""));
+        }
+        return notFound404();
+    }
+
+    /**
+     * Displays transaction receipt
+     * @return HTTP response to transaction receipt page request
+     */
+    @Authenticated(Secured.class)
+    public Result transactionReceipt(int saleId, int tranId) {
+
+        Sale s = Sale.findById(saleId);
+        Transaction t = Transaction.findById(tranId);
+        User u = User.findByUsername(session("username"));
+        if (s != null && t != null && t.completed == 1 && u != null ) {
+            // Check if sale exists, and transaction exists and is completed, and user exists and can be seller
+            return ok(transactionReceipt.render(t.getLineItems(), saleId, tranId, ""));
         }
         return notFound404();
     }
