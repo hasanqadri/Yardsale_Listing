@@ -1,0 +1,60 @@
+@* Displays item query results *@
+@(saleId: Int, query: String)
+@loggedinmain("Search Items") {
+<div class="container content">
+    <div class="view profile" id="view-profile">
+        <div class="row">
+            <div class="col-sm-4">
+                <a href="/sale/@saleId/addItem" class="btn btn-success">ADD ITEM</a>
+                <a href="/sale/@saleId"><h4>&#8592; Return to Sale</h4></a>
+            </div>
+            <div class="col-sm-5">
+
+            </div>
+            <div class="col-sm-3">
+                <div class="input-group">
+
+                    <form class="form-search-field" action="/sale/@saleId/searchItems" method="post">
+
+                        <div class="input-group">
+                            <input type="text" class="form-control" name="query" placeholder="Search Items..." value="@query">
+                        <span class="input-group-btn">
+                             <button class="btn btn-default icon" type="submit"><i class="glyphicon glyphicon-search"></i></button>
+                        </span>
+                        </div><!-- /input-group -->
+                    </form>
+                </div>
+
+            </div>
+        </div>
+
+        <div class="itemList">
+            <h1 class="text-center">Search Results</h1>
+            <div class="col-sm-2">
+
+            </div>
+            <div class="col-sm-8 results">
+                <div id="noResults" style="display: none;">
+                    <h3 class="text-center">No Results Found</h3>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- script to load query results -->
+<script>
+    $.post("/getSearchItems", { "saleId" : "@saleId", "query" : "@query" })
+        .done(function(data) {
+            if (jQuery.isEmptyObject(data)) {
+                $("#noResults").css("display", "block");
+            }
+            for(var i in data) {
+                var output = "<h2><a href=\"/sale/@saleId/item/" + data[i].id + "\">" + data[i].name + "</a></h2>" + "<h3>" + data[i].description + "</h3>" + "<h3>" + data[i].price +"</h3><hr>";
+                $(".results").append(output);
+            }
+        });
+</script>
+
+}

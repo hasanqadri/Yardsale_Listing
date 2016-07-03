@@ -1,17 +1,10 @@
-@*
-* This template takes a single argument, a String containing a
-* message to display.
-*@
+@* Displays new contact page *@
 @(contactForm: Form[views.formdata.userdata])
 @import helper._
-@*
-* Call the `main` template with two arguments. The first
-* argument is a `String` with the title of the page, the second
-* argument is an `Html` object containing the body of the page.
-*@
+
 @main("NewContact") {
   <div class="container content">
-    @form(routes.ApplicationController.postContact(), 'class -> "form-horizontal") {
+    @form(routes.ActionController.postContact(), 'class -> "form-horizontal") {
       <div class="form-group">
         <label class = "col-sm-2 control-label">Name</label>
         <div class="col-sm-6">

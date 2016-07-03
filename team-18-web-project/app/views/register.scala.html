@@ -1,0 +1,32 @@
+@* Displays registration page *@
+@(message: String)
+
+@main("Register") {
+<div class="container content">
+    @if(message) {<h3 class="text-center">@message</h3>}
+    <form class="form-signin" id="sign-up" action="/register" method="post">
+        <div class="form-signin-heading">
+            <div class="form-signin-major pull-left">Sign up</div>
+            <div class="form-signin-minor pull-right">or <a href="/login">Sign In</a></div>
+        </div>
+
+        <label for="inputName" class="sr-only">First Name</label>
+        <input type="text" maxlength="255" id="inputFirstName" name="firstName" class="form-control input-top" placeholder="First Name*" required autofocus>
+
+        <label for="inputName" class="sr-only">Last Name</label>
+        <input type="text" maxlength="255" id="inputLastName" name="lastName" class="form-control input-middle" placeholder="Last Name">
+
+        <label for="inputEmail" class="sr-only">Email</label>
+        <input type="email" maxlength="255" id="inputEmail" name="email" class="form-control input-middle" placeholder="Email*" required>
+
+        <label for="inputUsername" class="sr-only">Username</label>
+        <input type="text" maxlength="255" id="inputUsername" name="username" class="form-control input-middle" placeholder="Username*" required>
+
+        <label for="inputPassword" class="sr-only">Password</label>
+        <input type="password" id="inputPassword" name="password" class="form-control input-bottom" placeholder="Password*" required>
+
+        <button class="btn btn-lg btn-primary btn-block" type="submit">Sign up</button>
+        <a href="/"><h4>&#8592; Go home</h4></a>
+    </form>
+</div> <!-- /container -->
+}
