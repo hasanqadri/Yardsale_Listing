@@ -92,7 +92,7 @@ public class PageController extends Controller {
         }
         User u = User.findByUsername(session("username"));
         if (u.canBeAdmin(s.id)) { // If user is a sale administrator, show edit sale page
-            return ok(editSale.render(s, s.getRoles()));
+            return ok(editSale.render(s,  s.getRoles()));
         }
         return redirect("/sale/" + s.id);
     }
@@ -251,6 +251,6 @@ public class PageController extends Controller {
      */
     @Authenticated(Secured.class)
     public Result users() {
-        return ok(users.render(User.findAll()));
+        return ok(users.render( User.findAll()));
     }
 }

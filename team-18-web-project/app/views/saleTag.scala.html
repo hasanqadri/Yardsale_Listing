@@ -16,8 +16,10 @@
     <ul class="itemTags">
         <h2 class="text-center">Item Tags</h2>
         <div class="row">
-          <div class="col-sm-2"></div>
-          <div class="col-sm-8 items"></div>
+            <a href="/sale/@id"><h4>&#8592; Return to Sale</h4></a>
+
+            <div class="col-sm-2"></div>
+          <div class="col-sm-8 items saleItem"></div>
         </div>
     </ul>
   </div>
@@ -27,8 +29,8 @@
           // Populate page with sale items
           $.post("/getItems", { "saleId" : "@id" }).done(function( data ) {
             for(var i in data) {
-                var output = "<h2>" + "Name: "  + data.name + "</a></h2>" + "<h3>" + "Stock Number: " + data.stockNumber + "</h3>"  + "<h3>" + "Description: " + data.description+ "</h3>" + "<h3>"
-                        +"Price: $" + data.price + "</h3></div><hr>";
+                var output = "<h2>" + "Name: "  + data[i].name + "</a></h2>" + "<h3>" + "Stock Number: " + data[i].stockNumber + "</h3>"  + "<h3>" + "Description: " + data[i].description+ "</h3>" + "<h3>"
+                        +"Price: $" + data[i].price + "</h3></div><hr>";
               $(".items").append(output)
             }
           });

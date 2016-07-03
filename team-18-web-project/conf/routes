@@ -49,17 +49,20 @@ GET     /sale/:id/edit                          controllers.PageController.editS
 POST    /sale/:id/edit                          controllers.ActionController.editSale(id: Int)
 
 
-
 #Map requests to /transaction
-POST   /createTransaction/:saleId   controllers.ActionController.createTransaction(saleId: Int)
-GET    /sale/:saleId/transaction/:tranId       controllers.PageController.transaction(saleId: Int, tranId: Int)
-POST   /sale/:id/transaction        controllers.ActionController.transaction(id: Int)
+GET    /createTransaction/:saleId               controllers.ActionController.createTransaction(saleId: Int)
+GET    /sale/:saleId/transaction/:tranId        controllers.PageController.transaction(saleId: Int, tranId: Int)
+POST   /sale/:saleId/transaction/:tranId       controllers.ActionController.transaction(saleId: Int, tranId: Int)
 POST   /sale/:saleId/transaction/:transactionId/:saleItemID/addLineItem  controllers.ActionController.addLineItem(saleId: Int, transactionId: Int, saleItemID: Int)
+
+
 # Map requests to /image
 GET     /image/:id                  controllers.DataController.getImage(id: Int)
 
+
 # Map static resources from the /public folder to the /assets URL path
 GET     /assets/*file               controllers.Assets.versioned(path="/public", file: Asset)
+
 
 # Catch all other requests and show a 404
 GET     /*path                      controllers.PageController.notFound404(path: String)

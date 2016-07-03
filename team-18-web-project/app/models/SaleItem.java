@@ -40,7 +40,7 @@ public class SaleItem extends Model {
         this.saleId = saleId;
         this.userCreatedId = userCreatedId;
         this.quantity = quantity;
-        stockNumber = 1000 + id;
+        stockNumber = 1000 + saleId;
         this.save();
     }
 

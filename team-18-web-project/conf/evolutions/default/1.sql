@@ -43,6 +43,7 @@ create table saleItems (
   sale_id                   integer,
   user_created_id           integer,
   quantity                  integer,
+  stock_number              integer,
   constraint pk_saleItems primary key (id))
 ;
 
