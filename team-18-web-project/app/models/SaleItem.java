@@ -40,7 +40,7 @@ public class SaleItem extends Model {
         this.saleId = saleId;
         this.userCreatedId = userCreatedId;
         this.quantity = quantity;
-        stockNumber = 1000 + saleId;
+        stockNumber = (int) (System.currentTimeMillis() & 0xfffffff);
         this.save();
     }
 
