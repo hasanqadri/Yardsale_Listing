@@ -1,25 +1,21 @@
 package controllers;
 
 import com.avaje.ebean.Ebean;
-import java.sql.Timestamp;
-import java.text.*;
-import java.util.Date;
-import java.util.List;
-import models.LineItem;
-import models.Role;
-import models.Sale;
-import models.SaleItem;
-import models.Transaction;
-import models.User;
+import models.*;
 import play.data.DynamicForm;
 import play.data.Form;
 import play.mvc.Controller;
 import play.mvc.Http.MultipartFormData;
-import play.mvc.Http.MultipartFormData.FilePart;
 import play.mvc.Result;
 import play.mvc.Security.Authenticated;
 import views.formdata.userdata;
 import views.html.*;
+
+import java.sql.Timestamp;
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 /**
  * Created by nathancheek on 6/25/16.
@@ -57,7 +53,7 @@ public class ActionController extends Controller {
                 User userReset = User.findById(f.get("userId"));
                 userReset.setLoginAttempts(0);
                 userReset.save();
-                return ok(admin.render(User.findAll()));
+                return ok(admin.render( User.findAll()));
             }
         }
         return notFound404(); // Return 404 error if user is not a super admin
@@ -151,7 +147,7 @@ public class ActionController extends Controller {
             if (r != null) {
                 r.delete();
             }
-            return ok(editSale.render(s, s.getRoles()));
+            return ok(editSale.render(s,  s.getRoles()));
         }
 
         // Handle sale info update requests
@@ -414,29 +410,45 @@ public class ActionController extends Controller {
                 }
                 return ok(transaction.render(t.getLineItems(), saleId, tranId, ""));
             }
+        }
+        return notFound404();
+    }
 
+     /**
+     * Search sales
+     * @return HTTP response to search results request
+     */
+    @Authenticated(Secured.class)
+    public Result searchItemStock(int saleID, int tranId) {
+        DynamicForm f = Form.form().bindFromRequest();
+        String query = f.get("query");
+        if (query != null) {
+            return ok(searchItemStock.render(saleID, tranId, query));
         }
         return notFound404();
     }
 
     /**
-     * @param id place in db
+     * @param saleID place in db
      * @return
      */
     @Authenticated(Secured.class)
-    public Result addLineItem(int saleID, int transactionID, int saleItemID) {
+    public Result addLineItem(int saleID, int transactionID, int itemId) {
         Sale s = Ebean.find(Sale.class).where().eq("id", saleID).findUnique();
         if (s != null) { //check if transaction exists
             Transaction t = Ebean.find(Transaction.class).where().eq("id", transactionID).findUnique();
             if (t != null) {
 
-                LineItem item = new LineItem(saleItemID, transactionID, 1);
+                LineItem item = new LineItem(itemId, transactionID, 1);
                 item.save();
                 return ok(transaction.render(t.getLineItems(), saleID, transactionID, "Item added! Add another item?"));
             }
         }
         return notFound404();
     }
+
+
+
     @Authenticated(Secured.class)
     public Result uploadProfilePicture() {
         MultipartFormData body = request().body().asMultipartFormData();

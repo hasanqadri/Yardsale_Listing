@@ -141,10 +141,20 @@ form .input-bottom {
 
 }
 
+.saleItem {
+    background-color: slategrey;
+    color: white;
+    margin: 20px 0 20px 0;
+    padding: 20px;
+}
+
 #noResults {
     color: #FFAAAA;
 }
 
+.verticalLine {
+    border-left: thick solid gray;
+}
 .hidden-form {
     display: inline-block;
 }

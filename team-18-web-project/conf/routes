@@ -34,30 +34,37 @@ POST    /getSearchItems             controllers.DataController.getSearchItems
 POST    /getSearchSales             controllers.DataController.getSearchSales
 POST    /getItem                    controllers.DataController.getItem
 POST    /getItems                   controllers.DataController.getItems
-
+POST    /getLineItem                controllers.DataController.getLineItem
+POST    /getLineItems               controllers.DataController.getLineItems
 
 # Map requests to /sale
-GET     /sale/:id                   controllers.PageController.sale(id: Int)
-GET     /sale/:id/addItem           controllers.PageController.addItem(id: Int)
-POST    /sale/:id/addItem           controllers.ActionController.addItem(id: Int)
-GET     /sale/:id/edit              controllers.PageController.editSale(id: Int)
-POST    /sale/:id/edit              controllers.ActionController.editSale(id: Int)
-GET     /sale/:saleId/item/:itemId  controllers.PageController.item(saleId: Int, itemId: Int)
-POST    /sale/:saleId/item/:itemId  controllers.ActionController.item(saleId: Int, itemId: Int)
-POST    /sale/:id/searchItems       controllers.ActionController.searchItems(id: Int)
-
+GET     /sale/:id                               controllers.PageController.sale(id: Int)
+GET     /sale/:id/addItem                       controllers.PageController.addItem(id: Int)
+POST    /sale/:id/addItem                       controllers.ActionController.addItem(id: Int)
+GET     /sale/:saleId/item/:itemId              controllers.PageController.item(saleId: Int, itemId: Int)
+POST    /sale/:saleId/item/:itemId              controllers.ActionController.item(saleId: Int, itemId: Int)
+POST    /sale/:id/searchItems                   controllers.ActionController.searchItems(id: Int)
+GET     /sale/:saleId/item/:itemId/itemTag      controllers.PageController.itemTag(saleId: Int, itemId: Int)
+GET     /sale/:saleId/saleTag                   controllers.PageController.saleTag(saleId: Int)
+GET     /sale/:id/edit                          controllers.PageController.editSale(id: Int)
+POST    /sale/:id/edit                          controllers.ActionController.editSale(id: Int)
 
 
 #Map requests to /transaction
-GET     /createTransaction/:saleId   controllers.ActionController.createTransaction(saleId: Int)
-GET     /sale/:saleId/transaction/:tranId       controllers.PageController.transaction(saleId: Int, tranId: Int)
-POST    /sale/:saleId/transaction/:tranId         controllers.ActionController.transaction(saleId: Int, tranId: Int)
-POST    /sale/:saleId/transaction/:transactionId/:saleItemID/addLineItem  controllers.ActionController.addLineItem(saleId: Int, transactionId: Int, saleItemID: Int)
+GET    /createTransaction/:saleId               controllers.ActionController.createTransaction(saleId: Int)
+GET    /sale/:saleId/transaction/:tranId        controllers.PageController.transaction(saleId: Int, tranId: Int)
+POST   /sale/:saleId/transaction/:tranId        controllers.ActionController.transaction(saleId: Int, tranId: Int)
+POST   /sale/:saleID/transaction/:tranId/searchItemStock    controllers.ActionController.searchItemStock(saleID: Int, tranId: Int)
+GET    /sale/:saleId/transaction/:tranId/buy    controllers.PageController.buy(saleId: Int, tranId: Int)
+
+
 # Map requests to /image
 GET     /image/:id                  controllers.DataController.getImage(id: Int)
 
+
 # Map static resources from the /public folder to the /assets URL path
 GET     /assets/*file               controllers.Assets.versioned(path="/public", file: Asset)
+
 
 # Catch all other requests and show a 404
 GET     /*path                      controllers.PageController.notFound404(path: String)

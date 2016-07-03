@@ -5,7 +5,7 @@
     <div class="view profile" id="view-profile">
         <div class="row">
             <div class="col-sm-4">
-                <a href="/sale/@saleId/addItem" class="btn btn-success">ADD ITEM</a>
+                <a href="/sale/@saleId/addItem" class="btn btn-success">ADD ITEM TO SALE</a>
                 <a href="/sale/@saleId"><h4>&#8592; Return to Sale</h4></a>
             </div>
             <div class="col-sm-5">
@@ -51,7 +51,8 @@
                 $("#noResults").css("display", "block");
             }
             for(var i in data) {
-                var output = "<h2><a href=\"/sale/@saleId/item/" + data[i].id + "\">" + data[i].name + "</a></h2>" + "<h3>" + data[i].description + "</h3>" + "<h3>" + data[i].price +"</h3><hr>";
+                var output =
+                "<h2><a href=\"/sale/@saleId/item/" + data[i].id + "\">" + data[i].name + "</a></h2>" + "<h3>" + data[i].stockNumber + "<h3>" + "<h3>" + data[i].description + "</h3>" + "<h3>" + "$" + data[i].price +"</h3><hr>";
                 $(".results").append(output);
             }
         });

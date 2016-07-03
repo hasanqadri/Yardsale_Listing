@@ -1,3 +1,4 @@
+
 @(lineItems: List[LineItem], saleId: Int, tranId: Int, message : String)
 @loggedinmain("Transaction") {
 <div class="container content">
@@ -7,9 +8,9 @@
         <div class="col-sm-5"></div>
         <div class="col-sm-3">
             <div class="input-group">
-                <form class="form-search-field" action="/sale/@saleId/searchItems" method="post">
+                <form class="form-search-field" action="/sale/@saleId/transaction/@tranId/searchItemStock" method="post">
                     <div class="input-group">
-                        <input type="text" class="form-control" name="query" placeholder="Search Items...">
+                        <input type="text" class="form-control" name="query" placeholder="Add by stock number...">
                         <span class="input-group-btn">
                             <button class="btn btn-default icon" type="submit"><i class="glyphicon glyphicon-search"></i></button>
                         </span>
@@ -17,6 +18,7 @@
                 </form>
             </div>
         </div>
+
 
         <div class="row">
             <div class="col-sm-5">
@@ -64,7 +66,7 @@
                     </div>
                     <button type="submit" class="btn btn-primary">Add Item</button>
                 </form>
-                <div class="items">
+                <div class="items verticalLine">
 
                 </div>
             </div>
@@ -72,7 +74,7 @@
         </div>
     </div>
 </div>
-    <!-- /submit -->
+<!-- /submit -->
 
 
 <script>
@@ -81,9 +83,8 @@ $.post("/getItems", { "saleId" : "@saleId" }).done(function( data ) {
     for(var i in data) {
         var output = "<form method=\"post\" class=\"hidden-form pull-left\"><input type=\"hidden\" value=\"1\" name=\"addItemQuantity\"><button class=\"btn btn-primary\" type=\"submit\" name=\"addItemId\" value=\""
                 + data[i].id + "\">ADD ITEM</button></form> <h2><a href=\"/sale/@saleId/item/"
-                + data[i].id + "\">" + data[i].name + "</a></h2>"
-                + "<h3>" + data[i].description+ "</h3>" + "<h3>"
-                + data[i].price + "</h3></div><hr>";
+                + data[i].id + "\">" + data[i].name + "</a></h2><h3" + data[i].stockNumber +
+                + "</h3><h3>" + data[i].description + "</h3><h3>$" + data[i].price + "</h3></div><hr>";
         $(".items").append(output);
     }
 });
@@ -95,7 +96,7 @@ $.post("/getLineItems", { "transactionId" : "@tranId" }).done(function( data ) {
     for(var i in data) {
         var output = "<h2><a href=\"/sale/@saleId/item/"
                 + data[i].id + "\">" + data[i].name + "</a></h2>"
-                + "<h3>" + data[i].description+ "</h3>" + "<h3>"
+                + "<h3>" + data[i].description + "</h3>" + "<h3>"
                 + data[i].price + "</h3></div><hr>";
         $(".lineItems").append(output);
     }

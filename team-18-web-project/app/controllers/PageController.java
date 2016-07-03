@@ -92,7 +92,7 @@ public class PageController extends Controller {
         }
         User u = User.findByUsername(session("username"));
         if (u.canBeAdmin(s.id)) { // If user is a sale administrator, show edit sale page
-            return ok(editSale.render(s, s.getRoles()));
+            return ok(editSale.render(s,  s.getRoles()));
         }
         return redirect("/sale/" + s.id);
     }
@@ -198,6 +198,33 @@ public class PageController extends Controller {
     }
 
     /**
+     * Display a Tag page
+     * @param saleId Id of item to display
+     * @param itemId Id of item to display
+     * @return HTTP response to tag page request
+     */
+    @Authenticated(Secured.class)
+    public Result itemTag(int saleId, int itemId) {
+        SaleItem s = Ebean.find(SaleItem.class).where().eq("id", itemId).findUnique();
+        if (s != null) { // Check if sale exists
+            return ok(itemTag.render(saleId, itemId));
+        }
+        return notFound404();
+    }
+
+    /**
+     * Display a sale items tags page
+     * @return HTTP response to tag page request
+     */
+    @Authenticated(Secured.class)
+    public Result saleTag(int saleId) {
+            return ok(saleTag.render(saleId));
+    }
+
+
+
+
+    /**
      * Display list of sales
      * @return HTTP response to sales page request
      */
@@ -206,6 +233,17 @@ public class PageController extends Controller {
         return ok(sales.render());
     }
 
+
+    /**
+     * Display a reciept page
+     * @param saleId Id of item to display
+     * @param tranId Id of transaction to display
+     * @return HTTP response to tag page request
+     */
+    @Authenticated(Secured.class)
+    public Result buy(int saleId, int tranId) {
+            return ok(buy.render(saleId, tranId));
+    }
     /**
      * Displays transaction page
      * @return HTTP response to transaction page request
@@ -227,6 +265,6 @@ public class PageController extends Controller {
      */
     @Authenticated(Secured.class)
     public Result users() {
-        return ok(users.render(User.findAll()));
+        return ok(users.render( User.findAll()));
     }
 }

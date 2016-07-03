@@ -2,13 +2,10 @@ package controllers;
 
 import com.avaje.ebean.Ebean;
 import com.avaje.ebean.Expr;
-import java.util.List;
+import models.LineItem;
 import models.Sale;
 import models.SaleItem;
 import models.User;
-import models.Transaction;
-import models.LineItem;
-import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import play.data.DynamicForm;
@@ -18,6 +15,8 @@ import play.mvc.Result;
 import play.mvc.Security;
 import views.html.loggedinNotFound;
 import views.html.notFound;
+
+import java.util.List;
 
 import static play.libs.Json.toJson;
 
@@ -62,7 +61,7 @@ public class DataController extends Controller {
      * @return JSON response of item data stored in database
      */
     @Security.Authenticated(Secured.class)
-    public Result getLineItems() {
+    public Result getLineItem() {
         DynamicForm dynamicForm = Form.form().bindFromRequest();
         int id;
         try {
@@ -72,6 +71,23 @@ public class DataController extends Controller {
         }
         LineItem item  = Ebean.find(LineItem.class).where().eq("id", id).findUnique();
         return ok(toJson(item));
+    }
+
+    /**
+     * Lists all data about Line Items
+     * @return JSON response of item data stored in database
+     */
+    @Security.Authenticated(Secured.class)
+    public Result getLineItems() {
+        DynamicForm dynamicForm = Form.form().bindFromRequest();
+        int tranId;
+        try {
+            tranId = Integer.parseInt(dynamicForm.get("tranId"));
+        } catch (NumberFormatException e) { // Null or non int string
+            return notFound404();
+        }
+        List<LineItem> items  = Ebean.find(LineItem.class).where().eq("tranId", tranId).orderBy("id desc").findList();
+        return ok(toJson(items));
     }
 
     /**
@@ -151,14 +167,14 @@ public class DataController extends Controller {
     @Security.Authenticated(Secured.class)
     public Result getSearchItems() {
         DynamicForm dynamicForm = Form.form().bindFromRequest();
-        int saleId;
-        try {
-            saleId = Integer.parseInt(dynamicForm.get("saleId"));
-        } catch (NumberFormatException e) { // Null or non int string
-            return notFound404();
-        }
-        String query = dynamicForm.get("query");
-        if (query != null) {
+        if (dynamicForm.get("saleId") != null && dynamicForm.get("query") != null) {
+            int saleId;
+            try {
+                saleId = Integer.parseInt(dynamicForm.get("saleId"));
+            } catch (NumberFormatException e) { // Null or non int string
+                return notFound404();
+            }
+            String query = dynamicForm.get("query");
             query = "%" + query + "%";
             List<SaleItem> items = Ebean.find(SaleItem.class).where().eq("saleId", saleId).or(
                     Expr.like("name", query),
@@ -168,6 +184,7 @@ public class DataController extends Controller {
         }
         return notFound404();
     }
+
 
     /**
      * Returns list of posts listed at the queried location

@@ -2,15 +2,11 @@ package models;
 
 import com.avaje.ebean.Ebean;
 import com.avaje.ebean.Model;
-import play.data.format.*;
 import play.data.validation.Constraints;
 
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Table;
-import javax.persistence.Column;
-import java.util.ArrayList;
-import java.util.List;
 /**
  * Created by nyokley on 6/28/2016.
  */

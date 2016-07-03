@@ -1,11 +1,11 @@
 package services;
 
+import javax.inject.Singleton;
 import java.util.concurrent.atomic.AtomicInteger;
-import javax.inject.*;
 
 /**
  * This class is a concrete implementation of the {@link Counter} trait.
- * It is configured for Guice dependency injection in the {@link Module}
+ * It is configured for Guice dependency injection in the
  * class.
  *
  * This class has a {@link Singleton} annotation because we need to make
