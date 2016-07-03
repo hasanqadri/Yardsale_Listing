@@ -32,7 +32,7 @@ public class SaleItem extends Model {
     @Constraints.Required
     public int userCreatedId; // Multiple sellers can exist per sale
     public int quantity; //quantity within sale
-
+    public int stockNumber;
     public SaleItem (String name, String description, float price, int saleId, int userCreatedId, int quantity) {
         this.name = name;
         this.description = description;
@@ -40,8 +40,10 @@ public class SaleItem extends Model {
         this.saleId = saleId;
         this.userCreatedId = userCreatedId;
         this.quantity = quantity;
+        stockNumber = (int) (System.currentTimeMillis() & 0xfffffff);
         this.save();
     }
+
 
     public String getName() { return name; }
 
