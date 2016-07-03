@@ -4,9 +4,12 @@ import com.avaje.ebean.Ebean;
 import com.avaje.ebean.Model;
 import play.data.validation.Constraints;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Table;
+
+import java.util.List;
 
 /**
  * Created by nathancheek on 6/24/16.

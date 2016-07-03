@@ -7,6 +7,9 @@ import play.data.validation.Constraints;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Table;
+
+import java.util.List;
+
 /**
  * Created by nyokley on 6/28/2016.
  */
