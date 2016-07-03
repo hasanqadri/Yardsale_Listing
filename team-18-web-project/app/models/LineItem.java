@@ -7,6 +7,9 @@ import play.data.validation.Constraints;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Table;
+
+import java.util.List;
+
 /**
  * Created by nyokley on 6/28/2016.
  */
@@ -16,6 +19,14 @@ public class LineItem extends Model {
 
     public static LineItem findById(int id) {
         return Ebean.find(LineItem.class).where().eq("id", id).findUnique();
+    }
+
+    public static List<LineItem> findByTransactionId(int transactionId) {
+        return Ebean.find(LineItem.class).where().eq("transactionId", transactionId).findList();
+    }
+
+    public static LineItem findByItemIdTransactionId(int itemId, int transactionId) {
+        return Ebean.find(LineItem.class).where().eq("saleItemId", itemId).eq("transactionId", transactionId).findUnique();
     }
 
     @Id
@@ -30,15 +41,38 @@ public class LineItem extends Model {
         this.saleItemId = saleItemId;
         this.transactionId= transactionId;
         this.quantity = quantity;
+        this.save();
 
     }
 
-    //returns price of item*quantity
+    public void setQuantity(int quantity) { this.quantity = quantity; }
+
+    /**
+     * Get the price of item*quantity
+     * @return item*quantity
+     */
     public float getPrice() {
 
         SaleItem item = SaleItem.findById(saleItemId);
 
         return item.price*quantity;
+    }
+
+    /**
+     * Get a formatted price of item*quantity
+     * @return item*quantity to 2 decimal places
+     */
+    public String formatPrice() {
+        float price = getPrice();
+        return String.format("%.2f", price);
+    }
+
+    /**
+     * Get the name of the item
+     * @return name of the item
+     */
+    public String getName() {
+        return SaleItem.findById(saleItemId).name;
     }
 
 }

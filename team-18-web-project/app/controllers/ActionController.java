@@ -16,6 +16,7 @@ import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.List;
 
 /**
  * Created by nathancheek on 6/25/16.
@@ -90,15 +91,25 @@ public class ActionController extends Controller {
     }
 
     /**
+     * Create a transaction
+     * @param saleId Id of sale for which to create transaction
+     * @return HTTP response to create transaction page request
+     */
+    @Authenticated(Secured.class)
+    public Result createTransaction(int saleId) {
+        User u = User.findByUsername(session("username"));
+        if (u != null && u.canBeSeller(saleId)) { // User exists and can be a seller
+            Transaction transaction = new Transaction(saleId, u.id);
+            return redirect("/sale/" + saleId + "/transaction/" + transaction.id);
+        }
+        return notFound404();
+    }
+
+    /**
      * Update a sale
      * @param saleId Id of sale to edit
      * @return HTTP response to edit sale page update request
      */
-    @Authenticated(Secured.class)
-    public Result createTransaction(int saleId) {
-        Transaction transaction = new Transaction(saleId);
-        return redirect("/sale/" + saleId + "/transaction/" + transaction.id);
-    }
     @Authenticated(Secured.class)
     public Result editSale(int saleId) {
         Sale s = Sale.findById(saleId);
@@ -341,6 +352,110 @@ public class ActionController extends Controller {
     }
 
     /**
+     * Handle edit requests to transaction
+     * @param saleId Id of sale
+     * @param tranId Id of transaction
+     * @return HTTP response to edit request
+     */
+    @Authenticated(Secured.class)
+    public Result transaction(int saleId, int tranId) {
+        Sale s = Sale.findById(saleId);
+        User u = User.findByUsername(session("username"));
+        Transaction t = Transaction.findById(tranId);
+        if (s != null && u != null && u.canBeSeller(saleId) && t != null) {
+                // Check if sale exists, user exists and can be a seller, and transaction exists
+
+            DynamicForm f = Form.form().bindFromRequest();
+
+            // Handle item add form
+            if (f.get("addItemId") != null && f.get("addItemQuantity") != null) {
+                int itemId;
+                int itemQuantity;
+                try { // Convert strings to integers
+                    itemId = Integer.parseInt(f.get("addItemId"));
+                    itemQuantity = Integer.parseInt(f.get("addItemQuantity"));
+                } catch (NumberFormatException e) {
+                    e.printStackTrace();
+                    return notFound404();
+                }
+
+                // First search to see if item exists
+                if (SaleItem.findById(itemId) == null) {
+                    return ok(transaction.render(t.getLineItems(), saleId, tranId, "No item with that Id"));
+                }
+
+                // Then search to see if item is already part of transaction
+                LineItem li = LineItem.findByItemIdTransactionId(itemId, t.id);
+                if (li != null) { // Item already part of transaction, update quantity
+                    li.setQuantity(li.quantity + itemQuantity);
+                    li.save();
+                } else { // Item not part of transaction, create new LineItem
+                    LineItem lin = new LineItem(itemId, t.id, itemQuantity);
+                }
+
+                return ok(transaction.render(t.getLineItems(), saleId, tranId, ""));
+            }
+
+            // Handle item delete form
+            if (f.get("deleteLineItemId") != null) {
+                int lineItemId;
+                try { // Convert string to integer
+                    lineItemId = Integer.parseInt(f.get("deleteLineItemId"));
+                } catch (NumberFormatException e) {
+                    e.printStackTrace();
+                    return notFound404();
+                }
+                LineItem li = LineItem.findById(lineItemId);
+                if (li != null) { // If user refreshes page after deleting, this prevents a null pointer exception
+                    li.delete();
+                }
+                return ok(transaction.render(t.getLineItems(), saleId, tranId, ""));
+            }
+
+            // Handle item update quantity form
+            if (f.get("updateLineItemId") != null && f.get("quantity") != null) {
+                int lineItemId;
+                int quantity;
+                try { // Convert strings to integers
+                    lineItemId = Integer.parseInt(f.get("lineItemId"));
+                    quantity = Integer.parseInt(f.get("quantity"));
+                } catch (NumberFormatException e) {
+                    e.printStackTrace();
+                    return notFound404();
+                }
+                LineItem li = LineItem.findById(lineItemId);
+                if (li != null) {
+                    li.setQuantity(quantity);
+                    li.save();
+                }
+                return ok(transaction.render(t.getLineItems(), saleId, tranId, ""));
+            }
+
+            // Handle transaction cancel form
+            if (f.get("cancelTransactionId") != null) {
+                int transactionId;
+                try { // Convert string to integer
+                    transactionId = Integer.parseInt(f.get("cancelTransactionId"));
+                } catch (NumberFormatException e) {
+                    e.printStackTrace();
+                    return notFound404();
+                }
+
+                // Delete line items
+                List<LineItem> list = LineItem.findByTransactionId(tranId);
+                for (LineItem li : list) {
+                    li.delete();
+                }
+
+                t.delete();
+
+                return redirect("/sale/" + saleId);
+            }
+        }
+        return notFound404();
+    }
+
+     /**
      * Search sales
      * @return HTTP response to search results request
      */
@@ -359,19 +474,6 @@ public class ActionController extends Controller {
      * @return
      */
     @Authenticated(Secured.class)
-    public Result transaction(int saleID, int tranId) {
-        Sale s = Ebean.find(Sale.class).where().eq("id", saleID).findUnique();
-        if (s != null) { // Check if sale exists
-            return ok(transaction.render(saleID, tranId, ""));
-        }
-        return notFound404();
-    }
-
-    /**
-     * @param saleID place in db
-     * @return
-     */
-    @Authenticated(Secured.class)
     public Result addLineItem(int saleID, int transactionID, int itemId) {
         Sale s = Ebean.find(Sale.class).where().eq("id", saleID).findUnique();
         if (s != null) { //check if transaction exists
@@ -380,7 +482,7 @@ public class ActionController extends Controller {
 
                 LineItem item = new LineItem(itemId, transactionID, 1);
                 item.save();
-                return ok(transaction.render(saleID, transactionID, "Item added! Add another item?"));
+                return ok(transaction.render(t.getLineItems(), saleID, transactionID, "Item added! Add another item?"));
             }
         }
         return notFound404();

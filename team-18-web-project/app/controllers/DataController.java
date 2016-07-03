@@ -161,24 +161,23 @@ public class DataController extends Controller {
     }
 
     /**
-     * Returns list of posts listed with the queried item name
+     * Returns Json array of items from a sale matching the query
      * @return items to json
      */
     @Security.Authenticated(Secured.class)
     public Result getSearchItems() {
         DynamicForm dynamicForm = Form.form().bindFromRequest();
-        int saleId;
-        try {
-            saleId = Integer.parseInt(dynamicForm.get("saleId"));
-        } catch (NumberFormatException e) { // Null or non int string
-            return notFound404();
-        }
-        String query = dynamicForm.get("query");
-        if (query != null) {
-            query = "%" + query + "%";
+        if (dynamicForm.get("saleId") != null && dynamicForm.get("query") != null) {
+            int saleId;
+            try {
+                saleId = Integer.parseInt(dynamicForm.get("saleId"));
+            } catch (NumberFormatException e) { // Null or non int string
+                return notFound404();
+            }
+            String query = "%" + dynamicForm.get("query") + "%";
             List<SaleItem> items = Ebean.find(SaleItem.class).where().eq("saleId", saleId).or(
                     Expr.like("name", query),
-                    Expr.like("stockNumber", query)
+                    Expr.like("description", query)
             ).findList();
             return ok(toJson(items));
         }

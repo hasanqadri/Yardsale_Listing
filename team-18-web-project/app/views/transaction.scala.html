@@ -1,63 +1,106 @@
-@(saleId: Int, tranId: Int, message : String)
-    @loggedinmain("Transaction") {
-        <div class="container content">
 
-            <div class="view sale" id="view-sale">
-                <div class="col-sm-4"></div>
-                <div class="col-sm-5"></div>
-                <div class="col-sm-3">
+@(lineItems: List[LineItem], saleId: Int, tranId: Int, message : String)
+@loggedinmain("Transaction") {
+<div class="container content">
+
+    <div class="view sale" id="view-sale">
+        <div class="col-sm-9">
+        </div>
+        <div class="col-sm-3">
+            <div class="input-group">
+                <form class="form-search-field" action="/sale/@saleId/transaction/@tranId/searchItemStock" method="post">
                     <div class="input-group">
-                        <form class="form-search-field" action="/sale/@saleId/transaction/@tranId/searchItemStock" method="post">
-                            <div class="input-group">
-                                <input type="text" class="form-control" name="query" placeholder="Add by stock number...">
-                                <span class="input-group-btn">
-                                    <button class="btn btn-default icon" type="submit"><i class="glyphicon glyphicon-search"></i></button>
-                                </span>
-                            </div><!-- /input-group -->
-                        </form>
-                    </div>
-                </div>
-
-                <div class="row">
-                    <div class="col-sm-4">
-                        <h2 class="text-center">Items in Cart</h2>
-                        <div class="lineItems"></div>
-                        <a href="/sale/@saleId/transaction/@tranId/buy" class="btn btn-primary">BUY</a>
-
-                    </div>
-                    <div class="col-sm-4">
-                        <h2 class="text-center">Items for Sale</h2>
-                        <div class="col-sm-8 items verticalLine"></div>
-                    </div>
-                </div>
+                        <input type="text" class="form-control" name="query" placeholder="Add by stock number...">
+                        <span class="input-group-btn">
+                            <button class="btn btn-default icon" type="submit"><i class="glyphicon glyphicon-search"></i></button>
+                        </span>
+                    </div><!-- /input-group -->
+                </form>
             </div>
         </div>
-            <!-- /submit -->
 
 
-        <script>
-                // Populate page with sale items
-                $.post("/getItems", { "saleId" : "@saleId" }).done(function( data ) {
-                    for(var i in data) {
-                        var itemId = data[i].id;
-                        var output = "<a href=\"/sale/@saleId/transaction/@tranId/addLineItem/" + itemId + "\" class=\"btn btn-primary pull-left\">ADD ITEM</a>" + "<br>" + "<br>"
-                        + "<h2>" + data[i].name + "</a></h2>"
-                        + "<h3>" + data[i].stockNumber + "</h3>"
-                        + "<h3>" + data[i].description+ "</h3>" + "<h3>"
-                        + "$" + data[i].price + "</h3></div><hr>";
-                        $(".items").append(output)
+        <div class="row">
+            <div class="col-sm-5">
+                <h2 class="text-center">Items in Cart</h2>
+                <div class="lineItems">
+                    <table class="table table-striped">
+                        <thead>
+                            <tr>
+                                <th>Item</th>
+                                <th>Quantity</th>
+                                <th>Cost</th>
+                                <th></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                        @for(index <- 0 until lineItems.size){
+                            <tr>
+                                <td>@lineItems(index).getName</td>
+                                <td>@lineItems(index).quantity</td>
+                                <td>$@lineItems(index).formatPrice</td>
+                                <td><form method="post" class="hidden-form"><button class="btn btn-sm btn-danger" type="submit" name="deleteLineItemId" value="@lineItems(index).id"><span class="glyphicon glyphicon-trash"></span></button></form></td>
+                            </tr>
+                            }
+                        </tbody>
+                    </table>
+                    @if(lineItems.size == 0){
+                    <h3 id="noResults" class="text-center">Empty cart. Add items on the right.</h3>
                     }
-                });
-                // Populate page with transaction items
-                $.post("/getLineItems", { "transactionId" : "@tranId" }).done(function( data ) {
-                    for(var i in data) {
-                        var output = "<h2><a href=\"/sale/@saleId/item/"
-                                + data[i].id + "\">" + data[i].name + "</a></h2>"
-                                + "<h3>" + data[i].description + "</h3>" + "<h3>"
-                                + data[i].price + "</h3></div><hr>";
-                        $(".lineItems").append(output)
-                    }
-                });
-        </script>
+                </div>
+            </div>
+
+            <div class="col-sm-1"></div>
+
+            <div class="col-sm-6">
+                <h2 class="text-center">Items for Sale</h2>
+                @if(message){<h3>@message</h3>}
+                <form method="post" class="form-inline">
+                    <div class="form-group">
+                        <label for="addItemId">Item Id</label>
+                        <input type="number" min="1" name="addItemId" id="addItemId" class="form-control" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="addItemQuantity">Quantity</label>
+                        <input type="number" min="1" name="addItemQuantity" id="addItemQuantity" class="form-control" value="1" required>
+                    </div>
+                    <button type="submit" class="btn btn-primary">Add Item</button>
+                </form>
+                <div class="items verticalLine">
+
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+<!-- /submit -->
+
+
+<script>
+// Populate page with sale items
+$.post("/getItems", { "saleId" : "@saleId" }).done(function( data ) {
+    for(var i in data) {
+        var output = "<form method=\"post\" class=\"hidden-form pull-left\"><input type=\"hidden\" value=\"1\" name=\"addItemQuantity\"><button class=\"btn btn-primary\" type=\"submit\" name=\"addItemId\" value=\""
+                + data[i].id + "\">ADD ITEM</button></form> <h2><a href=\"/sale/@saleId/item/"
+                + data[i].id + "\">" + data[i].name + "</a></h2><h3>" + data[i].stockNumber
+                + "</h3><h3>" + data[i].description + "</h3><h3>$" + data[i].price + "</h3><hr>";
+        $(".items").append(output);
     }
+});
 
+// This is currently not being used
+// Populate page with transaction items
+$.post("/getLineItems", { "transactionId" : "@tranId" }).done(function( data ) {
+    for(var i in data) {
+        var output = "<h2><a href=\"/sale/@saleId/item/"
+                + data[i].id + "\">" + data[i].name + "</a></h2>"
+                + "<h3>" + data[i].description + "</h3>" + "<h3>"
+                + data[i].price + "</h3></div><hr>";
+        $(".lineItems").append(output);
+    }
+});
+
+</script>
+
+}
