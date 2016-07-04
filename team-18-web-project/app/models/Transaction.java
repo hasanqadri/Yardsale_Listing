@@ -40,6 +40,14 @@ public class Transaction extends Model {
         this.save();
     }
 
+    public void setBuyerName(String buyerName) { this.buyerName = buyerName; }
+
+    public void setBuyerAddress(String buyerAddress) { this.buyerAddress = buyerAddress; }
+
+    public void setBuyerEmail(String buyerEmail) { this.buyerEmail = buyerEmail; }
+
+    public void setCompleted(int completed) { this.completed = completed; }
+
     public List<LineItem> getLineItems() {
         return LineItem.findByTransactionId(id);
     }
