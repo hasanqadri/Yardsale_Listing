@@ -38,7 +38,6 @@ public class DataController extends Controller {
 
     }
 
-
     /**
      * Lists all data about an item
      * @return JSON response of item data stored in database
@@ -105,49 +104,6 @@ public class DataController extends Controller {
         }
         List<SaleItem> items = Ebean.find(SaleItem.class).where().eq("saleId", saleId).orderBy("id desc").findList();
         return ok(toJson(items));
-    }
-
-    /**
-     * Lists data about a sale
-     * @return JSON response of sale data stored in database
-     */
-    @Security.Authenticated(Secured.class)
-    public Result getSale() {
-        DynamicForm f = Form.form().bindFromRequest();
-        int id;
-        try {
-            id = Integer.parseInt(f.get("id"));
-        } catch (NumberFormatException e) { // Null or non int string
-            return notFound404();
-        }
-        Sale sale = Ebean.find(Sale.class).where().eq("id", id).findUnique();
-        User user = null;
-        if (sale != null) {
-            user = Ebean.find(User.class).where().eq("id", sale.userCreatedId).findUnique();
-        } else { // Sale doesn't exist
-            return notFound404();
-        }
-        String createdBy = "";
-        if ( user != null) {
-            createdBy = user.getName();
-        }
-        JSONObject jo = null;
-        try {
-            jo = new JSONObject()
-                    .put("name", sale.name)
-                    .put("description", sale.description)
-                    .put("street", sale.street)
-                    .put("city", sale.city)
-                    .put("state", sale.state)
-                    .put("zip", sale.zip)
-                    .put("createdBy", createdBy)
-                    .put("startDate", sale.startDate)
-                    .put("endDate", sale.endDate);
-        } catch (JSONException e) {
-            e.printStackTrace();
-            return notFound404();
-        }
-        return ok(jo.toString()).as("application/json");
     }
 
     /**

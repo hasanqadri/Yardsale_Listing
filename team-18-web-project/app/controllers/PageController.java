@@ -254,7 +254,7 @@ public class PageController extends Controller {
      */
     @Authenticated(Secured.class)
     public Result buy(int saleId, int tranId) {
-            return ok(buy.render(saleId, tranId));
+        return ok(buy.render(saleId, tranId));
     }
 
     /**
@@ -267,7 +267,7 @@ public class PageController extends Controller {
         Transaction t = Transaction.findById(tranId);
         User u = User.findByUsername(session("username"));
         if (s != null && t != null && t.completed == 0 && u != null && u.canBeSeller(saleId)) {
-                // Check if sale exists, and transaction exists and is not completed, and user exists and can be seller
+            // Check if sale exists, and transaction exists and is not completed, and user exists and can be seller
             return ok(transaction.render(t.getLineItems(), saleId, tranId, ""));
         }
         return notFound404();
@@ -279,7 +279,6 @@ public class PageController extends Controller {
      */
     @Authenticated(Secured.class)
     public Result transactionReceipt(int saleId, int tranId) {
-
         Sale s = Sale.findById(saleId);
         Transaction t = Transaction.findById(tranId);
         User u = User.findByUsername(session("username"));

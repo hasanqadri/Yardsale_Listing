@@ -28,7 +28,6 @@ POST    /uploadProfilePicture       controllers.ActionController.uploadProfilePi
 
 
 # Background / JSON requests
-POST    /getSale                    controllers.DataController.getSale
 GET     /getSales                   controllers.DataController.getSales
 POST    /getSearchItems             controllers.DataController.getSearchItems
 POST    /getSearchSales             controllers.DataController.getSearchSales

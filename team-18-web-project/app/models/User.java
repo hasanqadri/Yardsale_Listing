@@ -3,17 +3,20 @@ package models;
 import com.avaje.ebean.Ebean;
 import com.avaje.ebean.Expr;
 import com.avaje.ebean.Model;
-import java.util.ArrayList;
-import java.util.List;
 import play.data.format.*;
 import play.data.validation.Constraints;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Table;
 import javax.persistence.Column;
 
-
+/**
+ * Represents a User
+ */
 @Entity
 @Table(name="users")
 public class User extends Model {
