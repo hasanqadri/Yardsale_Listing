@@ -91,9 +91,9 @@ public class ActionController extends Controller {
 
             Sale s = Sale.findById(saleId);
             Transaction t = Transaction.findById(tranId);
-            t.buyerName = f.get("inputName");
-            t.buyerAddress = f.get("inputAddress");
-            t.buyerEmail = f.get("inputEmail");
+            t.buyerName = f.get("name");
+            t.buyerAddress = f.get("address");
+            t.buyerEmail = f.get("email");
             t.completed = 1;
             t.save();
 
