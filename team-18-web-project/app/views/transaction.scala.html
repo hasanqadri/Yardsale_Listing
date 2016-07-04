@@ -5,8 +5,7 @@
 
     <div class="view sale" id="view-sale">
         <div class="col-sm-9">
-
-            <a href="/sale/@saleId" class="btn btn-danger" onclick = "cancelTransactionId">CANCEL TRANSACTION</a>
+            <form method="post" class="hidden-form"><button class="btn btn-danger" type="submit" name="cancelTransactionId" value="@tranId">CANCEL TRANSACTION</button></form>
             <a href="/sale/@saleId/confirmTransaction/@tranId" class="btn btn-success">CONFIRM TRANSACTION</a>
         </div>
 
@@ -70,7 +69,8 @@
                     </div>
                     <button type="submit" class="btn btn-primary">Add Item</button>
                 </form>
-                <div class="items verticalLine">
+                <br>
+                <div class="items">
 
                 </div>
             </div>
@@ -86,25 +86,11 @@
 $.post("/getItems", { "saleId" : "@saleId" }).done(function( data ) {
     for(var i in data) {
         var output = "<form method=\"post\" class=\"hidden-form pull-left\"><input type=\"hidden\" value=\"1\" name=\"addItemQuantity\"><button class=\"btn btn-primary\" type=\"submit\" name=\"addItemId\" value=\""
-                + data[i].id + "\">ADD ITEM</button></form> <h2><a href=\"/sale/@saleId/item/"
-                + data[i].id + "\">" + data[i].name + "</a></h2><h3>" + data[i].stockNumber
-                + "</h3><h3>" + data[i].description + "</h3><h3>$" + data[i].price + "</h3><hr>";
+                + data[i].id + "\">ADD ITEM</button></form><br><h2>" + data[i].name + "</a></h2><h3>Id: " + data[i].id
+                + "</h3><h3>" + data[i].description + "</h3><h3>$" + data[i].price.toFixed(2) + "</h3><hr>";
         $(".items").append(output);
     }
 });
-
-// This is currently not being used
-// Populate page with transaction items
-$.post("/getLineItems", { "transactionId" : "@tranId" }).done(function( data ) {
-    for(var i in data) {
-        var output = "<h2><a href=\"/sale/@saleId/item/"
-                + data[i].id + "\">" + data[i].name + "</a></h2>"
-                + "<h3>" + data[i].description + "</h3>" + "<h3>"
-                + data[i].price + "</h3></div><hr>";
-        $(".lineItems").append(output);
-    }
-});
-
 </script>
 
 }

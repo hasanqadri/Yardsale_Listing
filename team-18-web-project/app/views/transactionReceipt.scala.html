@@ -35,7 +35,6 @@
                         <th>Description</th>
                         <th>Quantity</th>
                         <th>Cost</th>
-                        <th></th>
                     </tr>
                     </thead>
                     <tbody>
@@ -46,20 +45,20 @@
                         <td>@lineItems(index).getDescription</td>
                         <td>@lineItems(index).quantity</td>
                         <td>$@lineItems(index).formatPrice</td>
-
                     </tr>
 
                     }
-                    <tr>
-                        <td>Total: @transaction.getTotal</td>
-                    </tr>
                     </tbody>
                 </table>
                 @if(lineItems.size == 0){
-                <h3 id="noResults" class="text-center">Empty cart. Add items on the right.</h3>
+                <h3 id="noResults" class="text-center">Empty transaction.</h3>
                 }
+                <h4 class="pull-right">Total: $@transaction.getTotal</h4>
+            </div>
+            <div class="text-center hidden-print new-transaction">
+                <a href="/createTransaction/@saleId" class="btn btn-lg btn-success">CREATE NEW TRANSACTION</a>
             </div>
         </div>
-</div>
+    </div>
 </div>
 }
