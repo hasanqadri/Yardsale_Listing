@@ -237,9 +237,6 @@ public class PageController extends Controller {
             return ok(saleTag.render(saleId));
     }
 
-
-
-
     /**
      * Display list of sales
      * @return HTTP response to sales page request
@@ -249,17 +246,17 @@ public class PageController extends Controller {
         return ok(sales.render());
     }
 
-
     /**
-     * Display a reciept page
+     * Display a receipt page
      * @param saleId Id of item to display
      * @param tranId Id of transaction to display
-     * @return HTTP response to tag page request
+     * @return HTTP response to receipt page request
      */
     @Authenticated(Secured.class)
     public Result buy(int saleId, int tranId) {
             return ok(buy.render(saleId, tranId));
     }
+
     /**
      * Displays transaction page
      * @return HTTP response to transaction page request
@@ -286,12 +283,13 @@ public class PageController extends Controller {
         Sale s = Sale.findById(saleId);
         Transaction t = Transaction.findById(tranId);
         User u = User.findByUsername(session("username"));
-        if (s != null && t != null && t.completed == 1 && u != null ) {
+        if (s != null && t != null && t.completed == 1 && u != null && u.canBeSeller(saleId)) {
             // Check if sale exists, and transaction exists and is completed, and user exists and can be seller
             return ok(transactionReceipt.render(t, t.getLineItems(), saleId, tranId, ""));
         }
         return notFound404();
     }
+    
     /**
      * Displays a list of all users
      * @return HTTP response to users list request
