@@ -55,6 +55,7 @@ create table transactions (
   buyer_address             varchar(255),
   buyer_email               varchar(255),
   completed                 tinyint default 0,
+  payment_method            varchar(255),
   constraint pk_transactions primary key (id))
 ;
 

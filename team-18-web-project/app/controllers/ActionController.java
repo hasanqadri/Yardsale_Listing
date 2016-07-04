@@ -88,24 +88,28 @@ public class ActionController extends Controller {
             }
             return redirect("/sale/" + saleId);
         }
+
+        //enters a confirmed transaction updating the buyer info using a form
         if (f.get("confirmTransaction") != null) {
 
             Sale s = Sale.findById(saleId);
             Transaction t = Transaction.findById(tranId);
-            t.setBuyerName(f.get("inputName"));
-            t.setBuyerAddress(f.get("inputAddress"));
-            t.setBuyerEmail(f.get("inputEmail"));
+            t.setBuyerName(f.get("name"));
+            t.setBuyerAddress(f.get("address"));
+            t.setBuyerEmail(f.get("email"));
             t.setCompleted(1);
+            t.setPaymentMethod(f.get("payment"));
             t.save();
 
+            //update item quantity for sale items
             List<SaleItem> saleItems = s.getItems();
             List<LineItem> lineItems = t.getLineItems();
             for (LineItem li : lineItems) {
                 for (SaleItem si: saleItems) {
 
-                    if (li.id == si.id) {
+                    if (li.getId() == si.getId()) {
 
-                        si.quantity = si.quantity - li.quantity;
+                        si.setQuantity(si.getQuantity() - li.getQuantity());
                         si.save();
                     }
                 }
