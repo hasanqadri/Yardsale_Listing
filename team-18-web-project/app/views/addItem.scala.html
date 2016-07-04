@@ -6,10 +6,12 @@
         <form class="form-createSale" id="createSale" action="/sale/@saleId/addItem" method="post">
             <label for="inputName" class="sr-only">Name</label>
             <input type="text" maxlength="255" id="inputName" name="name" class="form-control input-top" placeholder="Name" required autofocus>
-            <label for="inputStreet" class="sr-only">Description</label>
+            <label for="inputDescription" class="sr-only">Description</label>
             <input type="text" maxlength="255" id="inputDescription" name="description" class="form-control input-middle" placeholder="Description" required>
-            <label for="inputCity" class="sr-only">Price</label>
-            <input type="number" max="9999999" step="0.01" id="inputPrice" name="price" class="form-control input-bottom" placeholder="Price" required>
+            <label for="inputPrice" class="sr-only">Price</label>
+            <input type="number" max="9999999" step="0.01" id="inputPrice" name="price" class="form-control input-middle" placeholder="Price" required>
+            <label for="inputQuantity" class="sr-only">Quantity</label>
+            <input type="number" max="9999999" step="1" id="inputQuantity" name="quantity" class="form-control input-bottom" placeholder="Quantity" required>
             <div class="col-sm-4">
                 <div class="btn-toolbar pull-right">
                     <button class="btn btn-success" type="submit">Add Item</button>

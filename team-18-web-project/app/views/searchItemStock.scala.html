@@ -5,7 +5,7 @@
     <div class="view profile" id="view-profile">
       <div class="row">
         <div class="col-sm-4">
-          <a href="/createTransaction/@saleId"><h4>&#8592; Return to Transaction</h4></a>
+          <a href="/sale/@saleId/transaction/@tranId"><h4>&#8592; Return to Transaction</h4></a>
         </div>
         <div class="col-sm-5">
 
@@ -16,7 +16,7 @@
             <form class="form-search-field" action="/sale/@saleId/searchItemStock" method="post">
 
               <div class="input-group">
-                <input type="text" class="form-control" name="query" placeholder="Add by stock number..." value="@query">
+                <input type="text" class="form-control" name="query" placeholder="Search items..." value="@query">
                 <span class="input-group-btn">
                   <button class="btn btn-default icon" type="submit"><i class="glyphicon glyphicon-search"></i></button>
                 </span>
@@ -44,17 +44,19 @@
 
     <!-- script to load query results -->
   <script>
-          $.post("/getSearchItems", { "saleId" : "@saleId", "query" : "@query" })
-                  .done(function(data) {
-                    if (jQuery.isEmptyObject(data)) {
-                      $("#noResults").css("display", "block");
-                    }
-                    for(var i in data) {
-                      var output = "<a href=\"/sale/:@saleId/transaction/:@tranId/:data[i].id/addLineItem\" class=\"btn btn-primary pull-left\">ADD ITEM TO TRANSACTION</a>" + "<br>" + "<br>" +
-                              "<h2><a href=\"/sale/@saleId/item/" + data[i].id + "\">" + data[i].name + "</a></h2>" + "<h3>" + data[i].stockNumber + "<h3>" + "<h3>" + data[i].description + "</h3>" + "<h3>" + "$" + data[i].price +"</h3><hr>";
-                      $(".results").append(output);
-                    }
-                  });
+$.post("/getSearchItems", { "saleId" : "@saleId", "query" : "@query" })
+  .done(function(data) {
+    if (jQuery.isEmptyObject(data)) {
+      $("#noResults").css("display", "block");
+    }
+    for(var i in data) {
+
+      var output = "<form action=\"/sale/@saleId/transaction/@tranId\" method=\"post\" class=\"hidden-form pull-left\"><input type=\"hidden\" value=\"1\" name=\"addItemQuantity\"><button class=\"btn btn-primary\" type=\"submit\" name=\"addItemId\" value=\""
+                + data[i].id + "\">ADD ITEM</button></form><br><h2>" + data[i].name + "</a></h2><h3>Id: " + data[i].id
+                + "</h3><h3>" + data[i].description + "</h3><h3>$" + data[i].price.toFixed(2) + "</h3><hr>";
+      $(".results").append(output);
+  }
+});
   </script>
 
 }

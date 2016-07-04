@@ -73,10 +73,12 @@ public class Sale extends Model {
         return new SaleItem(name, description, price, id, userId, quantity);
     }
 
-    public SaleItem addItem(String name, String description, String priceStr, int userId, int quantity) {
+    public SaleItem addItem(String name, String description, String priceStr, int userId, String quantityStr) {
         float price = 0;
+        int quantity = 0;
         try {
             price = Float.parseFloat(priceStr);
+            quantity = Integer.parseInt(quantityStr);
         } catch (NumberFormatException e) {
             e.printStackTrace();
         }

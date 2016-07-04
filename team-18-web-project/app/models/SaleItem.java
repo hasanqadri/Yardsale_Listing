@@ -4,8 +4,12 @@ import com.avaje.ebean.Ebean;
 import com.avaje.ebean.Model;
 import play.data.validation.Constraints;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 
 
@@ -21,6 +25,9 @@ public class SaleItem extends Model {
     }
 
     @Id
+    @GeneratedValue(strategy=GenerationType.SEQUENCE, generator="seq")
+    @SequenceGenerator(name="seq", sequenceName = "local.seq_name", initialValue=1000001, allocationSize=1)
+    // ^ TODO this doesn't actually work
     public int id;
     @Constraints.Required
     public String name;
@@ -32,7 +39,6 @@ public class SaleItem extends Model {
     @Constraints.Required
     public int userCreatedId; // Multiple sellers can exist per sale
     public int quantity; //quantity within sale
-    public int stockNumber;
     public SaleItem (String name, String description, float price, int saleId, int userCreatedId, int quantity) {
         this.name = name;
         this.description = description;
@@ -40,7 +46,6 @@ public class SaleItem extends Model {
         this.saleId = saleId;
         this.userCreatedId = userCreatedId;
         this.quantity = quantity;
-        stockNumber = (int) (System.currentTimeMillis() & 0xfffffff);
         this.save();
     }
 

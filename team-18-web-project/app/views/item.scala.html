@@ -8,7 +8,8 @@
         <img class="profile-image" src="http://placehold.it/200x200" />
         <h1>@item.name</h1>
         <p class="lead">@item.description</p>
-        <p class="lead">@item.formatPrice</p>
+        <p class="lead">Price: $@item.formatPrice</p>
+        <p class="lead">Quantity: @item.quantity</p>
         <a href="/sale/@item.saleId"><h4>&#8592; Return to Sale</h4></a>
       </div>
       <div class="col-sm-6">
@@ -22,7 +23,8 @@
         <img class="profile-image" src="http://placehold.it/200x200" />
         <h1>@item.name </h1>
         <p class="lead">@item.description</p>
-        <p class="lead">@item.formatPrice</p>
+        <p class="lead">Price: $@item.formatPrice</p>
+        <p class="lead">Quantity: @item.quantity</p>
         <a href="/sale/@item.saleId"><h4>&#8592; Return to Sale</h4></a>
 
       </div>
@@ -33,7 +35,9 @@
           <label for="inputDescription" class="sr-only">Description</label>
           <input type="text" maxlength="255" id="inputDescription" name="description" class="form-control input-middle" value="@item.description" required>
           <label for="inputPrice" class="sr-only">Price</label>
-          <input type="number" max="9999999" step="0.01" id="inputPrice" name="price" class="form-control input-bottom" value="@item.formatPrice" required>
+          <input type="number" max="9999999" step="0.01" id="inputPrice" name="price" class="form-control input-middle" value="@item.formatPrice" required>
+          <label for="inputQuantity" class="sr-only">Quantity</label>
+          <input type="number" max="9999999" step="1" id="inputQuantity" name="quantity" class="form-control input-bottom" value="@item.quantity" required>
           <div class="btn-toolbar">
             <a href="#" class="btn btn-success pull-left" onclick="changeToView();">CANCEL</a>
             <button class="btn btn-success pull-right" type="submit">SAVE CHANGES</button>

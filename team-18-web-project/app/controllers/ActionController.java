@@ -32,10 +32,11 @@ public class ActionController extends Controller {
         Sale s = Sale.findById(saleId);
         if (s != null) { // Check if sale exists
             DynamicForm f = Form.form().bindFromRequest();
-            if (f.get("name") == null || f.get("description") == null || f.get("price") == null) { // Improper request
+            if (f.get("name") == null || f.get("description") == null || f.get("price") == null || f.get("quantity") == null) { // Improper request
                 return notFound404();
             }
-            s.addItem(f.get("name"), f.get("description"), f.get("price"), 0, 1);
+            User u = User.findByUsername(session("username"));
+            s.addItem(f.get("name"), f.get("description"), f.get("price"), u.id, f.get("quantity"));
             return redirect("/sale/" + saleId);
         }
         return notFound404(); // Return 404 error if sale doesn't exist
@@ -62,7 +63,7 @@ public class ActionController extends Controller {
 
     /**
      * Confirms transaction
-     * @return HTTP response to create sale request
+     * @return HTTP response to confirm transaction request
      */
     @Authenticated(Secured.class)
     public Result confirmTransaction(int saleId, int tranId) {
@@ -70,53 +71,53 @@ public class ActionController extends Controller {
         User user = User.findByUsername(session("username"));
         DynamicForm f = Form.form().bindFromRequest();
 
-        // Handle transaction cancel form
-        if (f.get("cancelTransactionId") != null) {
-            int transactionId;
-            try { // Convert string to integer
-                transactionId = Integer.parseInt(f.get("cancelTransactionId"));
-            } catch (NumberFormatException e) {
-                e.printStackTrace();
-                return notFound404();
+        if (user != null && user.canBeSeller(saleId)) {
+            // Handle transaction cancel form
+            if (f.get("cancelTransactionId") != null) {
+                int transactionId;
+                try { // Convert string to integer
+                    transactionId = Integer.parseInt(f.get("cancelTransactionId"));
+                } catch (NumberFormatException e) {
+                    e.printStackTrace();
+                    return notFound404();
+                }
+
+                // Delete line items
+                List<LineItem> list = LineItem.findByTransactionId(tranId);
+                for (LineItem li : list) {
+                    li.delete();
+                }
+                return redirect("/sale/" + saleId);
             }
 
-            // Delete line items
-            List<LineItem> list = LineItem.findByTransactionId(tranId);
-            for (LineItem li : list) {
-                li.delete();
-            }
-            return redirect("/sale/" + saleId);
-        }
+            //enters a confirmed transaction updating the buyer info using a form
+            if (f.get("confirmTransaction") != null) {
+                Sale s = Sale.findById(saleId);
+                Transaction t = Transaction.findById(tranId);
+                t.setBuyerName(f.get("name"));
+                t.setBuyerAddress(f.get("address"));
+                t.setBuyerEmail(f.get("email"));
+                t.setCompleted(1);
+                t.setPaymentMethod(f.get("payment"));
+                t.save();
 
-        //enters a confirmed transaction updating the buyer info using a form
-        if (f.get("confirmTransaction") != null) {
+                //update item quantity for sale items
+                List<SaleItem> saleItems = s.getItems();
+                List<LineItem> lineItems = t.getLineItems();
+                for (LineItem li : lineItems) {
+                    for (SaleItem si: saleItems) {
 
-            Sale s = Sale.findById(saleId);
-            Transaction t = Transaction.findById(tranId);
-            t.setBuyerName(f.get("name"));
-            t.setBuyerAddress(f.get("address"));
-            t.setBuyerEmail(f.get("email"));
-            t.setCompleted(1);
-            t.setPaymentMethod(f.get("payment"));
-            t.save();
+                        if (li.getId() == si.getId()) {
 
-            //update item quantity for sale items
-            List<SaleItem> saleItems = s.getItems();
-            List<LineItem> lineItems = t.getLineItems();
-            for (LineItem li : lineItems) {
-                for (SaleItem si: saleItems) {
-
-                    if (li.getId() == si.getId()) {
-
-                        si.setQuantity(si.getQuantity() - li.getQuantity());
-                        si.save();
+                            si.setQuantity(si.getQuantity() - li.getQuantity());
+                            si.save();
+                        }
                     }
                 }
             }
-
+            return redirect("/sale/" + saleId + "/transactionReceipt/" + tranId);
         }
-
-        return redirect("/sale/" + saleId + "/transactionReceipt/" + tranId);
+        return notFound404();
     }
     /**
      * Creates a sale
@@ -254,12 +255,14 @@ public class ActionController extends Controller {
     public Result item(int saleId, int itemId) {
         SaleItem i = SaleItem.findById(itemId);
         DynamicForm f = Form.form().bindFromRequest();
-        if (i == null || f.get("name") == null || f.get("description") == null || f.get("price") == null) {
+        if (i == null || f.get("name") == null || f.get("description") == null || f.get("price") == null || f.get("quantity") == null) {
             return notFound404();
         }
         float price;
+        int quantity;
         try {
             price = Float.parseFloat(f.get("price"));
+            quantity = Integer.parseInt(f.get("quantity"));
         } catch (NumberFormatException e) {
             return notFound404();
         }
@@ -267,6 +270,7 @@ public class ActionController extends Controller {
         i.setName(f.get("name"));
         i.setDescription(f.get("description"));
         i.setPrice(price);
+        i.setQuantity(quantity);
         i.save();
 
         return ok(item.render(i));
@@ -421,7 +425,7 @@ public class ActionController extends Controller {
         User u = User.findByUsername(session("username"));
         Transaction t = Transaction.findById(tranId);
         if (s != null && u != null && u.canBeSeller(saleId) && t != null) {
-                // Check if sale exists, user exists and can be a seller, and transaction exists
+            // Check if sale exists, user exists and can be a seller, and transaction exists
 
             DynamicForm f = Form.form().bindFromRequest();
 
@@ -547,7 +551,10 @@ public class ActionController extends Controller {
     }
 
 
-
+    /**
+     * Upload a profile picture (not working yet)
+     * @return HTTP response to upload profile picture request
+     */
     @Authenticated(Secured.class)
     public Result uploadProfilePicture() {
         MultipartFormData body = request().body().asMultipartFormData();
