@@ -32,10 +32,11 @@ public class ActionController extends Controller {
         Sale s = Sale.findById(saleId);
         if (s != null) { // Check if sale exists
             DynamicForm f = Form.form().bindFromRequest();
-            if (f.get("name") == null || f.get("description") == null || f.get("price") == null) { // Improper request
+            if (f.get("name") == null || f.get("description") == null || f.get("price") == null || f.get("quantity") == null) { // Improper request
                 return notFound404();
             }
-            s.addItem(f.get("name"), f.get("description"), f.get("price"), 0, 1);
+            User u = User.findByUsername(session("username"));
+            s.addItem(f.get("name"), f.get("description"), f.get("price"), u.id, f.get("quantity"));
             return redirect("/sale/" + saleId);
         }
         return notFound404(); // Return 404 error if sale doesn't exist
@@ -91,10 +92,10 @@ public class ActionController extends Controller {
 
             Sale s = Sale.findById(saleId);
             Transaction t = Transaction.findById(tranId);
-            t.buyerName = f.get("inputName");
-            t.buyerAddress = f.get("inputAddress");
-            t.buyerEmail = f.get("inputEmail");
-            t.completed = 1;
+            t.setBuyerName(f.get("inputName"));
+            t.setBuyerAddress(f.get("inputAddress"));
+            t.setBuyerEmail(f.get("inputEmail"));
+            t.setCompleted(1);
             t.save();
 
             List<SaleItem> saleItems = s.getItems();
@@ -112,7 +113,7 @@ public class ActionController extends Controller {
 
         }
 
-        return redirect("/sale/" + saleId + "/transactionReciept/" + tranId);
+        return redirect("/sale/" + saleId + "/transactionReceipt/" + tranId);
     }
     /**
      * Creates a sale
@@ -250,12 +251,14 @@ public class ActionController extends Controller {
     public Result item(int saleId, int itemId) {
         SaleItem i = SaleItem.findById(itemId);
         DynamicForm f = Form.form().bindFromRequest();
-        if (i == null || f.get("name") == null || f.get("description") == null || f.get("price") == null) {
+        if (i == null || f.get("name") == null || f.get("description") == null || f.get("price") == null || f.get("quantity") == null) {
             return notFound404();
         }
         float price;
+        int quantity;
         try {
             price = Float.parseFloat(f.get("price"));
+            quantity = Integer.parseInt(f.get("quantity"));
         } catch (NumberFormatException e) {
             return notFound404();
         }
@@ -263,6 +266,7 @@ public class ActionController extends Controller {
         i.setName(f.get("name"));
         i.setDescription(f.get("description"));
         i.setPrice(price);
+        i.setQuantity(quantity);
         i.save();
 
         return ok(item.render(i));
