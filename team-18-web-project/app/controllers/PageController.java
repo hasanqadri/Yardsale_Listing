@@ -288,7 +288,7 @@ public class PageController extends Controller {
         User u = User.findByUsername(session("username"));
         if (s != null && t != null && t.completed == 1 && u != null ) {
             // Check if sale exists, and transaction exists and is completed, and user exists and can be seller
-            return ok(transactionReceipt.render(t.getLineItems(), saleId, tranId, ""));
+            return ok(transactionReceipt.render(t, t.getLineItems(), saleId, tranId, ""));
         }
         return notFound404();
     }

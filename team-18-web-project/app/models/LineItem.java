@@ -75,5 +75,16 @@ public class LineItem extends Model {
         return SaleItem.findById(saleItemId).name;
     }
 
+    public String getDescription() {
+        return SaleItem.findById(saleItemId).description;
+    }
+
+    public int getQuantity() { return quantity; }
+
+    public int getId() {
+
+        return id;
+    }
+
 }
 

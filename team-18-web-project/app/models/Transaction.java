@@ -32,6 +32,7 @@ public class Transaction extends Model {
     public String buyerEmail;
     @Column(columnDefinition = "tinyint default 0") // Default not a completed transaction
     public int completed;
+    public String paymentMethod;
 
     public Transaction(int saleId, int cashierId) {
 
@@ -48,7 +49,25 @@ public class Transaction extends Model {
 
     public void setCompleted(int completed) { this.completed = completed; }
 
+    public void setPaymentMethod(String payment) { this.paymentMethod = payment; }
+
     public List<LineItem> getLineItems() {
         return LineItem.findByTransactionId(id);
+    }
+
+    /**
+     * Get the total of all the line items in a transaction
+     * @return item totals
+     */
+    public float getTotal() {
+
+        float total = 0;
+
+        List<LineItem> lineItems = getLineItems();
+        for(LineItem li: lineItems) {
+
+            total += li.getPrice()*li.getQuantity();
+        }
+        return total;
     }
 }
