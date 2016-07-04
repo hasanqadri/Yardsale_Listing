@@ -11,14 +11,16 @@
             <label for="inputName" class="sr-only">Buyer Name</label>
             <input type="text" maxlength="255" id="inputName" name="name" class="form-control input-top" placeholder="Buyer Bob" required autofocus>
             <label for="inputAddress" class="sr-only">Buyer Address</label>
-            <input type="text" maxlength="255" id="inputAddress" name="description" class="form-control input-top" placeholder="9000 3rd Street">
+            <input type="text" maxlength="255" id="inputAddress" name="address" class="form-control input-top" placeholder="9000 3rd Street">
             <label for="inputEmail" class="sr-only">Buyer Email</label>
-            <input type="text" maxlength="255" id="inputEmail" name="description" class="form-control input-top" placeholder="bob&#64gmail.com">
+            <input type="text" maxlength="255" id="inputEmail" name="email" class="form-control input-top" placeholder="bob&#64gmail.com">
+            <label for="inputPayment" class="sr-only">Payment Method</label>
+            <input type="text" maxlength="255" id="inputPayment" name="payment" class="form-control input-top" placeholder="Card or Cash">
 
             <div class="col-sm-6">
                 <div class="btn-toolbar pull-right">
                     <a href="/sale/@saleId" class="btn btn-danger" onclick = "cancelTransactionId">CANCEL TRANSACTION</a>
-                    <button class="btn btn-success" type="submit">CONFIRM TRANSACTION</button>
+                    <button class="btn btn-success" name = "confirmTransaction" type="submit">CONFIRM TRANSACTION</button>
                 </div>
             </div>
         </form>
