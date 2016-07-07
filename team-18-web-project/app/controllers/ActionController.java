@@ -287,7 +287,7 @@ public class ActionController extends Controller {
         DynamicForm f = Form.form().bindFromRequest();
         User user = User.findByUsername(f.get("username"));
         if (user != null) { // User exists
-            if (user.getPassword().equals(f.get("password"))) { // Correct password
+            if (user.getPassword().equals(User.hashPassword(f.get("password")))) { // Correct password
                 if (user.loginAttempts == 3) { // Notify that user is locked out
                     return ok(login.render("Your account has been locked"));
                 } else { // Create session
