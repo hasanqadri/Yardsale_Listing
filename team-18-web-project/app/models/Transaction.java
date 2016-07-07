@@ -27,6 +27,10 @@ public class Transaction extends Model {
         return Ebean.find(Transaction.class).where().eq("id", id).findUnique();
     }
 
+    public static List<Transaction> findBySaleId(int saleId) {
+        return Ebean.find(Transaction.class).where().eq("saleId", saleId).findList();
+    }
+
     @Id
     public int id;
     @Constraints.Required

@@ -10,6 +10,7 @@
                 @if(sale.status != 2 && user.canBeAdmin(sale.id)) {<a href="/sale/@sale.id/edit" class="btn btn-success">EDIT SALE</a>}
                 @if(sale.status == 1 && user.canBeCashier(sale.id)) {<a href="/createTransaction/@sale.id" class="btn btn-success">CREATE TRANSACTION</a>}
                 @if(sale.status != 2 && user.canBeClerk(sale.id)) {<a href="/sale/@sale.id/saleTag" class="btn btn-success">PRINT TAGS</a>}
+                @if(user.canBeBookkeeper(sale.id)) {<a href="/sale/@sale.id/financialReport" class="btn btn-success">FINANCIAL REPORT</a>}
                 @if(sale.status == 2 && user.canBeAdmin(sale.id)) {
                 <form method="post" class="hidden-form">
                     <button class="btn btn-warning" type="submit" name="unarchive" value="@sale.id">UNARCHIVE SALE</button>

@@ -110,10 +110,30 @@ public class PageController extends Controller {
         User u = User.findByUsername(session("username"));
         if (s != null && u != null && u.canBeAdmin(s.id)) { // If user is a sale administrator, show edit sale page
             if (s.status == 2) { return redirect("/sale/" + s.id); } // If sale archived, redirect back to sale page
-            return ok(editSale.render(s,  s.getRoles()));
+            return ok(editSale.render(s, s.getRoles()));
         }
         return notFound404();
     }
+
+    /**
+     * Display financial report page
+     * @return HTTP response to financial report page request
+     */
+    @Authenticated(Secured.class)
+    public Result financialReport(int saleId) {
+        Sale s = Sale.findById(saleId);
+        User u = User.findByUsername(session("username"));
+        if (s != null && u != null && u.canBeBookkeeper(s.id)) { // If user has bookkeeper permissions, show page
+            List<Transaction> transactions = Transaction.findBySaleId(saleId);
+            float total = 0;
+            for (Transaction t : transactions) {
+              total += t.getTotal();
+            }
+            return ok(financialReport.render(transactions, saleId, String.format("%.2f", total)));
+        }
+        return notFound404();
+    }
+
 
     /**
      * Display item page
@@ -125,7 +145,7 @@ public class PageController extends Controller {
         Sale s = Sale.findById(saleId);
         SaleItem i = SaleItem.findById(itemId);
         if (u != null && s != null & i != null && (s.status == 1 || Role.findByIds(u.id, saleId) != null)) {
-            return ok(item.render(s, i));
+            return ok(item.render(u, s, i));
         }
         return notFound404();
     }

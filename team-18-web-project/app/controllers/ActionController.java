@@ -252,29 +252,30 @@ public class ActionController extends Controller {
      */
     @Authenticated(Secured.class)
     public Result item(int saleId, int itemId) {
+        User u = User.findByUsername(session("username"));
         Sale s = Sale.findById(saleId);
         SaleItem i = SaleItem.findById(itemId);
         DynamicForm f = Form.form().bindFromRequest();
-        if (s == null || i == null || f.get("name") == null || f.get("description") == null || f.get("price") == null || f.get("quantity") == null) {
-            return notFound404();
-        }
-        if (s.status == 2) { return redirect("/sale/" + s.id); } // If sale archived, redirect back to sale page
-        float price;
-        int quantity;
-        try {
-            price = Float.parseFloat(f.get("price"));
-            quantity = Integer.parseInt(f.get("quantity"));
-        } catch (NumberFormatException e) {
-            return notFound404();
-        }
+        if (u != null && u.canBeSeller(saleId) && s != null && s.status != 2 && i != null &&
+                f.get("name") != null && f.get("description") != null && f.get("price") != null && f.get("quantity") != null) {
+            float price;
+            int quantity;
+            try {
+                price = Float.parseFloat(f.get("price"));
+                quantity = Integer.parseInt(f.get("quantity"));
+            } catch (NumberFormatException e) {
+                return notFound404();
+            }
 
-        i.setName(f.get("name"));
-        i.setDescription(f.get("description"));
-        i.setPrice(price);
-        i.setQuantity(quantity);
-        i.save();
+            i.setName(f.get("name"));
+            i.setDescription(f.get("description"));
+            i.setPrice(price);
+            i.setQuantity(quantity);
+            i.save();
 
-        return ok(item.render(s, i));
+            return ok(item.render(u, s, i));
+        }
+        return notFound404();
     }
 
     /**
