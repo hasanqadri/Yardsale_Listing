@@ -1,6 +1,7 @@
 @* Displays transaction confirmation page *@
 @(saleId: Int, tranId: Int, message : String)
-@loggedinmain("Create Sale") {
+
+@loggedinmain("Confirm Transaction") {
 <div class="container content">
     @if(message) {<h3 class="text-center">@message</h3>}
     <div class="col-sm-4">

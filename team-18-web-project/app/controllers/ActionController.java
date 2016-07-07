@@ -43,25 +43,6 @@ public class ActionController extends Controller {
     }
 
     /**
-     * Unlocks a user account
-     * @return Response to user account request
-     */
-    @Authenticated(Secured.class)
-    public Result admin() {
-        User u = User.findByUsername(session("username"));
-        if (u.isSuperAdmin()) { // Requestor is super admin
-            DynamicForm f = Form.form().bindFromRequest();
-            if (f.get("userId") != null) { // Username was sent in post request
-                User userReset = User.findById(f.get("userId"));
-                userReset.setLoginAttempts(0);
-                userReset.save();
-                return ok(admin.render( User.findAll()));
-            }
-        }
-        return notFound404(); // Return 404 error if user is not a super admin
-    }
-
-    /**
      * Confirms transaction
      * @return HTTP response to confirm transaction request
      */
@@ -567,5 +548,24 @@ public class ActionController extends Controller {
         }*/
         User user = Ebean.find(User.class).where().eq("username", session("username")).findUnique();
         return ok("in progress");
+    }
+
+    /**
+     * Unlocks a user account
+     * @return Response to user account request
+     */
+    @Authenticated(Secured.class)
+    public Result users() {
+        User u = User.findByUsername(session("username"));
+        if (u.isSuperAdmin()) { // Requestor is super admin
+            DynamicForm f = Form.form().bindFromRequest();
+            if (f.get("userId") != null) { // Username was sent in post request
+                User userReset = User.findById(f.get("userId"));
+                userReset.setLoginAttempts(0);
+                userReset.save();
+                return ok(admin.render(User.findAll()));
+            }
+        }
+        return notFound404(); // Return 404 error if user is not a super admin
     }
 }

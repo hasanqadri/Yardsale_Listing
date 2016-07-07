@@ -288,13 +288,18 @@ public class PageController extends Controller {
         }
         return notFound404();
     }
-    
+
     /**
      * Displays a list of all users
      * @return HTTP response to users list request
      */
     @Authenticated(Secured.class)
     public Result users() {
-        return ok(users.render( User.findAll()));
+        User u = User.findByUsername(session("username"));
+        if (u.isSuperAdmin()) { // Show supersecret admin page
+            return ok(admin.render(User.findAll()));
+        } else { // Show normal user page
+            return ok(users.render( User.findAll()));
+        }
     }
 }
