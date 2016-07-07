@@ -382,7 +382,6 @@ public class ActionController extends Controller {
         }
         //If username or email not already in use, create user
         User user = new User(f.get("firstName"), f.get("lastName"), f.get("email"), f.get("username"), f.get("password"));
-        user.save();
         return ok(postContact.render(user));
     }
 

@@ -218,7 +218,7 @@ public class Sale extends Model {
     public void setState(String state) { this.state = state; }
 
     /**
-     * Set status
+     * Set Status
      * @param status Status of sale (1 of 3 stages)
      */
     public void setStatus(int status) { this.status = status; }

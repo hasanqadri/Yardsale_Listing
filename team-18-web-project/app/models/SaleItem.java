@@ -12,14 +12,18 @@ import javax.persistence.Id;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 
-
 /**
+ * Represents a Sale Item
  * Created by portega on 6/20/2016.
  */
 @Entity
 @Table(name="saleItems")
 public class SaleItem extends Model {
-
+    /**
+     * Find SaleItem by its Id
+     * @param  id Id of SaleItem
+     * @return SaleItem if it exists
+     */
     public static SaleItem findById(int id) {
         return Ebean.find(SaleItem.class).where().eq("id", id).findUnique();
     }
@@ -39,6 +43,16 @@ public class SaleItem extends Model {
     @Constraints.Required
     public int userCreatedId; // Multiple sellers can exist per sale
     public int quantity; //quantity within sale
+
+    /**
+     * Create an instance of SaleItem and save it
+     * @param name Name of SaleItem
+     * @param description Description of SaleItem
+     * @param price Unit price of SaleItem
+     * @param saleId Sale Id of the Sale the SaleItem is associated with
+     * @param userCreatedId User Id of the User who created the SaleItem
+     * @param quantity Quantity of SaleItem in stock
+     */
     public SaleItem (String name, String description, float price, int saleId, int userCreatedId, int quantity) {
         this.name = name;
         this.description = description;
@@ -49,43 +63,98 @@ public class SaleItem extends Model {
         this.save();
     }
 
-
-    public int getId() {
-
-        return id;
+    /**
+     * Format the unit price of the SaleItem
+     * @return Unit price formatted to 2 decimal places
+     */
+    public String formatPrice() {
+        return String.format("%.2f", price);
     }
 
-    public String getName() { return name; }
-
-    public void setName(String name) { this.name = name; }
-
+    /**
+     * Get the Description of the SaleItem
+     * @return Description of the SaleItem
+     */
     public String getDescription() { return description; }
 
-    public void setDescription(String description) { this.description = description; }
+    /**
+     * Get the Id of the SaleItem
+     * @return Id of the SaleItem
+     */
+    public int getId() { return id; }
 
+    /**
+     * Get the Name of the SaleItem
+     * @return Name of the SaleItem
+     */
+    public String getName() { return name; }
+
+    /**
+     * Get the Price of the SaleItem
+     * @return Price of the SaleItem
+     */
     public float getPrice() { return price; }
 
-    public void setPrice(float price) { this.price = price; }
-
-    public int getSaleId() { return saleId; }
-
-    public void setSaleId(int saleId) { this.saleId = saleId; }
-
-    public int getUserCreatedId() { return userCreatedId; }
-
-    public void setUserCreatedId(int userCreatedId) { this.userCreatedId = userCreatedId; }
-
+    /**
+     * Get the Quantity of the SaleItem
+     * @return Quantity of the SaleItem
+     */
     public int getQuantity() { return quantity; }
 
+    /**
+     * Get the Sale Id of the Sale the SaleItem is associated with
+     * @return Sale Id of the Sale the SaleItem is associated with
+     */
+    public int getSaleId() { return saleId; }
+
+    /**
+     * Get the User Id of the User who created the SaleItem
+     * @return User Id of the User who created the SaleItem
+     */
+    public int getUserCreatedId() { return userCreatedId; }
+
+    /**
+     * Set the Description of the SaleItem
+     * @param description Description of the SaleItem
+     */
+    public void setDescription(String description) { this.description = description; }
+
+    /**
+     * Set the Name of the SaleItem
+     * @param name Name of the SaleItem
+     */
+    public void setName(String name) { this.name = name; }
+
+    /**
+     * Set the Unit Price of the SaleItem
+     * @param price Unit Price of the SaleItem
+     */
+    public void setPrice(float price) { this.price = price; }
+
+    /**
+     * Set the Quantity of the SaleItem in stock
+     * @param quantity Quantity of the SaleItem in stock
+     */
     public void setQuantity(int quantity) { this.quantity = quantity; }
 
+    /**
+     * Set the Sale Id of the Sale the SaleItem is associated with
+     * @param saleId Sale Id of the Sale the SaleItem is associated with
+     */
+    public void setSaleId(int saleId) { this.saleId = saleId; }
 
+    /**
+     * Set the User Id of the User who created the SaleItem
+     * @param userCreatedId User Id of the User who created the SaleItem
+     */
+    public void setUserCreatedId(int userCreatedId) { this.userCreatedId = userCreatedId; }
+
+    /**
+     * String representation of the SaleItem object
+     * @return SaleItem object description
+     */
     public String toString() {
         return String.format("[Name: " + name + " Description: " + description + " Price: "
                 + price);
-    }
-
-    public String formatPrice() {
-        return String.format("%.2f", price);
     }
 }
