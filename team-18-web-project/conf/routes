@@ -8,6 +8,7 @@ GET     /about                      controllers.PageController.about
 GET     /createSale                 controllers.PageController.createSale
 GET     /login                      controllers.PageController.login
 GET     /logout                     controllers.PageController.logout
+GET     /mysales                    controllers.PageController.mysales
 GET     /NewContact                 controllers.PageController.newContact
 GET     /profile                    controllers.PageController.profile
 GET     /register                   controllers.PageController.register
@@ -37,6 +38,7 @@ POST    /getLineItems               controllers.DataController.getLineItems
 
 # Map requests to /sale
 GET     /sale/:id                               controllers.PageController.sale(id: Int)
+POST    /sale/:id                               controllers.ActionController.sale(id: Int)
 GET     /sale/:id/addItem                       controllers.PageController.addItem(id: Int)
 POST    /sale/:id/addItem                       controllers.ActionController.addItem(id: Int)
 GET     /sale/:saleId/item/:itemId              controllers.PageController.item(saleId: Int, itemId: Int)

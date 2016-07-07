@@ -1,32 +1,34 @@
 @* Displays Item page *@
-@(item: SaleItem)
+@(sale: Sale, item: SaleItem)
 
 @loggedinmain("Item") {
   <div class="container content">
     <div class="view profile" id="view-profile">
       <div class="col-sm-6">
+        <a href="/sale/@item.saleId"><h4>&#8592; Return to Sale</h4></a>
         <img class="profile-image" src="http://placehold.it/200x200" />
         <h1>@item.name</h1>
         <p class="lead">@item.description</p>
         <p class="lead">Price: $@item.formatPrice</p>
         <p class="lead">Quantity: @item.quantity</p>
-        <a href="/sale/@item.saleId"><h4>&#8592; Return to Sale</h4></a>
       </div>
       <div class="col-sm-6">
+        @if(sale.status != 2){
         <a href="/sale/@item.saleId/item/@item.id/itemTag" class="btn btn-success pull-right">Print Tag</a><br><br>
         <a href="#" class="btn btn-success pull-right" onclick="changeToEdit();">Edit Item</a>
+        }
       </div>
 
     </div>
+    @if(sale.status != 2){
     <div class="edit profile" id="edit-profile">
       <div class="col-sm-4">
+        <a href="/sale/@item.saleId"><h4>&#8592; Return to Sale</h4></a>
         <img class="profile-image" src="http://placehold.it/200x200" />
         <h1>@item.name </h1>
         <p class="lead">@item.description</p>
         <p class="lead">Price: $@item.formatPrice</p>
         <p class="lead">Quantity: @item.quantity</p>
-        <a href="/sale/@item.saleId"><h4>&#8592; Return to Sale</h4></a>
-
       </div>
       <div class="col-sm-4">
         <form class="form-editprofile" id="edit-form" action="/sale/@item.saleId/item/@item.id" method="post">
@@ -44,8 +46,8 @@
           </div>
         </form>
       </div>
-
     </div>
+    }
   </div>
   <script>
           var changeToEdit = function() {

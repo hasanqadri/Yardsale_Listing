@@ -6,11 +6,15 @@
     <div class="view sale" id="view-sale">
         <div class="row">
             <div class="col-sm-9">
-                @if(user.canBeSeller(sale.id)) {<a href="/sale/@sale.id/addItem" class="btn btn-success">ADD ITEM</a>}
-                @if(user.canBeAdmin(sale.id)) {<a href="/sale/@sale.id/edit" class="btn btn-success">EDIT SALE</a>}
-                @if(user.canBeCashier(sale.id)) {<a href="/createTransaction/@sale.id" class="btn btn-success">CREATE TRANSACTION</a>}
-                <a href="/sale/@sale.id/saleTag" class="btn btn-success">PRINT TAGS</a>
-
+                @if(sale.status != 2 && user.canBeSeller(sale.id)) {<a href="/sale/@sale.id/addItem" class="btn btn-success">ADD ITEM</a>}
+                @if(sale.status != 2 && user.canBeAdmin(sale.id)) {<a href="/sale/@sale.id/edit" class="btn btn-success">EDIT SALE</a>}
+                @if(sale.status == 1 && user.canBeCashier(sale.id)) {<a href="/createTransaction/@sale.id" class="btn btn-success">CREATE TRANSACTION</a>}
+                @if(sale.status != 2 && user.canBeClerk(sale.id)) {<a href="/sale/@sale.id/saleTag" class="btn btn-success">PRINT TAGS</a>}
+                @if(sale.status == 2 && user.canBeAdmin(sale.id)) {
+                <form method="post" class="hidden-form">
+                    <button class="btn btn-warning" type="submit" name="unarchive" value="@sale.id">UNARCHIVE SALE</button>
+                </form>
+                }
             </div>
             <div class="col-sm-3">
                 <div class="input-group">

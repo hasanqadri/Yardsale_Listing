@@ -90,6 +90,21 @@
             </div>
 
         </form>
+        @if(sale.status == 1) {
+          <h3>Sale is open.</h3>
+          <form method="post" class="hidden-form">
+              <button class="btn btn-warning" type="submit" name="close" value="@sale.id">CLOSE SALE</button>
+          </form>
+
+        } else {
+          <h3>Sale is closed.</h3>
+          <form method="post" class="hidden-form">
+              <button class="btn btn-warning" type="submit" name="open" value="@sale.id">OPEN SALE</button>
+          </form>
+        }
+        <form method="post" class="hidden-form">
+            <button class="btn btn-warning" type="submit" name="archive" value="@sale.id">ARCHIVE SALE</button>
+        </form>
     </div>
 </div>
 

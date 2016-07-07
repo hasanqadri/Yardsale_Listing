@@ -55,14 +55,6 @@ public class ActionController extends Controller {
         if (user != null && user.canBeSeller(saleId)) {
             // Handle transaction cancel form
             if (f.get("cancelTransactionId") != null) {
-                int transactionId;
-                try { // Convert string to integer
-                    transactionId = Integer.parseInt(f.get("cancelTransactionId"));
-                } catch (NumberFormatException e) {
-                    e.printStackTrace();
-                    return notFound404();
-                }
-
                 // Delete line items
                 List<LineItem> list = LineItem.findByTransactionId(tranId);
                 for (LineItem li : list) {
@@ -137,8 +129,10 @@ public class ActionController extends Controller {
      */
     @Authenticated(Secured.class)
     public Result createTransaction(int saleId) {
+        Sale s = Sale.findById(saleId);
         User u = User.findByUsername(session("username"));
         if (u != null && u.canBeSeller(saleId)) { // User exists and can be a seller
+            if (s.status == 2) { return redirect("/sale/" + s.id); } // If sale archived, redirect back to sale page
             Transaction transaction = new Transaction(saleId, u.id);
             return redirect("/sale/" + saleId + "/transaction/" + transaction.id);
         }
@@ -156,6 +150,9 @@ public class ActionController extends Controller {
         User u = User.findByUsername(session("username"));
         if (!u.canBeAdmin(saleId) || s == null) {
             return notFound404(); // If user is not an administrator for the sale or sale doesn't exist, return 404 error
+        }
+        if (s.status == 2) {
+            return redirect("/sale/" + saleId);
         }
         DynamicForm f = Form.form().bindFromRequest();
 
@@ -224,7 +221,28 @@ public class ActionController extends Controller {
             return ok(editSale.render(s, s.getRoles()));
         }
 
-        return notFound404(); // If sale doesn't exist, or invalid form return 404 error
+        // Handle sale open requests
+        if (f.get("open") != null) {
+            s.setStatus(1);
+            s.save();
+            return ok(editSale.render(s, s.getRoles()));
+        }
+
+        // Handle sale close requests
+        if (f.get("close") != null) {
+            s.setStatus(0);
+            s.save();
+            return ok(editSale.render(s, s.getRoles()));
+        }
+
+        // Handle sale archive requests
+        if (f.get("archive") != null) {
+            s.setStatus(2);
+            s.save();
+            return redirect("/sale/" + saleId);
+        }
+
+        return notFound404(); // If invalid form return 404 error
 
     }
 
@@ -234,11 +252,13 @@ public class ActionController extends Controller {
      */
     @Authenticated(Secured.class)
     public Result item(int saleId, int itemId) {
+        Sale s = Sale.findById(saleId);
         SaleItem i = SaleItem.findById(itemId);
         DynamicForm f = Form.form().bindFromRequest();
-        if (i == null || f.get("name") == null || f.get("description") == null || f.get("price") == null || f.get("quantity") == null) {
+        if (s == null || i == null || f.get("name") == null || f.get("description") == null || f.get("price") == null || f.get("quantity") == null) {
             return notFound404();
         }
+        if (s.status == 2) { return redirect("/sale/" + s.id); } // If sale archived, redirect back to sale page
         float price;
         int quantity;
         try {
@@ -254,7 +274,7 @@ public class ActionController extends Controller {
         i.setQuantity(quantity);
         i.save();
 
-        return ok(item.render(i));
+        return ok(item.render(s, i));
     }
 
     /**
@@ -366,6 +386,24 @@ public class ActionController extends Controller {
     }
 
     /**
+     * Handle POST requests to sale page
+     * @param saleId Id of sale
+     * @return HTTP response to sale page request
+     */
+    @Authenticated(Secured.class)
+    public Result sale(int saleId) {
+        User u = User.findByUsername(session("username"));
+        Sale s = Sale.findById(saleId);
+        DynamicForm f = Form.form().bindFromRequest();
+        if (u != null && u.canBeAdmin(saleId) && s != null && f.get("unarchive") != null) {
+            s.setStatus(0); // Change sale to closed
+            s.save();
+            return ok(sale.render(u, s, s.getItems()));
+        }
+        return notFound404();
+    }
+
+    /**
      * Search items in a sale
      * @param saleId Id of sale to search
      * @return HTTP response to search results request
@@ -407,6 +445,8 @@ public class ActionController extends Controller {
         Transaction t = Transaction.findById(tranId);
         if (s != null && u != null && u.canBeSeller(saleId) && t != null) {
             // Check if sale exists, user exists and can be a seller, and transaction exists
+
+            if (s.status == 2) { return redirect("/sale/" + s.id); } // If sale archived, redirect back to sale page
 
             DynamicForm f = Form.form().bindFromRequest();
 
