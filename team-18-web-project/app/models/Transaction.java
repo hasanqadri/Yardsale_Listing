@@ -57,6 +57,14 @@ public class Transaction extends Model {
     }
 
     /**
+     * Formats the total of all line items in the transaction
+     * @return Total transaction cost formatted to 2 decimal places
+     */
+    public String formatTotal() {
+        return String.format("%.2f", this.getTotal());
+    }
+
+    /**
      * Get LineItems associated with the transaction
      * @return LineItems associated with the transaction
      */
@@ -66,7 +74,7 @@ public class Transaction extends Model {
 
     /**
      * Get the total of all the line items in the transaction
-     * @return item Total transaction cost
+     * @return Total transaction cost
      */
     public float getTotal() {
 

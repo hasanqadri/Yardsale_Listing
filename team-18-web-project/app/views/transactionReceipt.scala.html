@@ -54,7 +54,7 @@
                 @if(lineItems.size == 0){
                 <h3 id="noResults" class="text-center">Empty transaction.</h3>
                 }
-                <h4 class="pull-right">Total: $@transaction.getTotal</h4>
+                <h4 class="pull-right">Total: $@transaction.formatTotal</h4>
             </div>
             <div class="text-center hidden-print new-transaction">
                 <a href="/createTransaction/@saleId" class="btn btn-lg btn-success">CREATE NEW TRANSACTION</a>
