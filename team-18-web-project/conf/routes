@@ -65,6 +65,9 @@ GET   /sale/:saleId/transactionReceipt/:tranId        controllers.PageController
 # Map requests to /image
 GET     /image/:id                  controllers.DataController.getImage(id: Int)
 
+# Map requests to /barcode
+GET     /qr/:id                controllers.DataController.getQrCode(id: String)
+
 
 # Map static resources from the /public folder to the /assets URL path
 GET     /assets/*file               controllers.Assets.versioned(path="/public", file: Asset)

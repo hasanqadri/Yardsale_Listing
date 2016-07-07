@@ -281,7 +281,7 @@ public class PageController extends Controller {
     public Result saleTag(int saleId) {
         User u = User.findByUsername(session("username"));
         if (u != null && u.canBeClerk(saleId)) {
-            return ok(saleTag.render(saleId));
+            return ok(saleTag.render(SaleItem.findBySaleId(saleId), saleId));
         }
         return notFound404();
     }

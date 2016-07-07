@@ -4,6 +4,7 @@ import com.avaje.ebean.Ebean;
 import com.avaje.ebean.Model;
 import play.data.validation.Constraints;
 
+import java.util.List;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -26,6 +27,15 @@ public class SaleItem extends Model {
      */
     public static SaleItem findById(int id) {
         return Ebean.find(SaleItem.class).where().eq("id", id).findUnique();
+    }
+
+    /**
+     * Find SaleItems by sale Id
+     * @param  id Id of Sale
+     * @return SaleItems associated with a sale
+     */
+    public static List<SaleItem> findBySaleId(int saleId) {
+        return Ebean.find(SaleItem.class).where().eq("saleId", saleId).findList();
     }
 
     @Id
