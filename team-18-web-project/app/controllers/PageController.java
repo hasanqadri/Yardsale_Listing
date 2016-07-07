@@ -124,7 +124,7 @@ public class PageController extends Controller {
         Sale s = Sale.findById(saleId);
         User u = User.findByUsername(session("username"));
         if (s != null && u != null && u.canBeBookkeeper(s.id)) { // If user has bookkeeper permissions, show page
-            List<Transaction> transactions = Transaction.findBySaleId(saleId);
+            List<Transaction> transactions = Transaction.findCompletedBySaleId(saleId);
             float total = 0;
             for (Transaction t : transactions) {
               total += t.getTotal();
