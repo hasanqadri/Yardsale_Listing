@@ -1,6 +1,7 @@
-
+@* Displays Transaction receipt *@
 @(transaction: Transaction, lineItems: List[LineItem], saleId: Int, tranId: Int, message : String)
-@loggedinmain("Transaction") {
+
+@loggedinmain("Receipt") {
 <div class="container content">
 
     <div class="row">
@@ -40,10 +41,10 @@
                     <tbody>
                     @for(index <- 0 until lineItems.size){
                     <tr>
-                        <td>@lineItems(index).getId</td>
+                        <td>@lineItems(index).getSaleItemId</td>
                         <td>@lineItems(index).getName</td>
                         <td>@lineItems(index).getDescription</td>
-                        <td>@lineItems(index).quantity</td>
+                        <td>@lineItems(index).getQuantity</td>
                         <td>$@lineItems(index).formatPrice</td>
                     </tr>
 
@@ -53,7 +54,7 @@
                 @if(lineItems.size == 0){
                 <h3 id="noResults" class="text-center">Empty transaction.</h3>
                 }
-                <h4 class="pull-right">Total: $@transaction.getTotal</h4>
+                <h4 class="pull-right">Total: $@transaction.formatTotal</h4>
             </div>
             <div class="text-center hidden-print new-transaction">
                 <a href="/createTransaction/@saleId" class="btn btn-lg btn-success">CREATE NEW TRANSACTION</a>

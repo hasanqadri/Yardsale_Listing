@@ -1,0 +1,36 @@
+@* Displays Financial Report page *@
+@(transactions: List[Transaction], saleId: Int, total: String)
+
+@loggedinmain("Financial Report") {
+<div class="container content">
+    <div class="col-md-3">
+        <a href="/sale/@saleId" class="hidden-print"><h4>&#8592; Return to Sale</h4></a>
+    </div>
+    <div class="col-md-6">
+        <h2 class="text-center">Financial Report</h2>
+        <table class="table table-striped">
+            <thead>
+            <tr>
+                <th>Transaction</th>
+                <th>Buyer</th>
+                <th>Email</th>
+                <th>Payment method</th>
+                <th>Total</th>
+            </tr>
+            </thead>
+            <tbody>
+              @for(index <- 0 until transactions.size) {
+              <tr>
+                  <td>@transactions(index).id</td>
+                  <td>@transactions(index).buyerName</td>
+                  <td>@transactions(index).buyerEmail</td>
+                  <td>@transactions(index).paymentMethod</td>
+                  <td>$@transactions(index).getTotal</td>
+              </tr>
+              }
+            </tbody>
+        </table>
+        <h4 class="pull-right">Total: $@total</h4>
+    </div>
+</div>
+}

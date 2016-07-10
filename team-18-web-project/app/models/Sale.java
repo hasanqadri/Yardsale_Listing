@@ -26,6 +26,14 @@ import javax.persistence.Table;
 public class Sale extends Model {
 
     /**
+     * Find all open sales
+     * @return List of all open sales
+     */
+    public static List<Sale> findAllOpen() {
+        return Ebean.find(Sale.class).where().eq("status", 1).orderBy("id desc").findList();
+    }
+
+    /**
      * Find sale by its Id
      * @param id Id of sale
      * @return Sale if it exists
@@ -47,8 +55,8 @@ public class Sale extends Model {
     public Timestamp endDate;
     @Constraints.Required
     public int userCreatedId;
-    @Column(columnDefinition = "integer default 0") // New sales default to inactive
-    public int isActive; // Use int because boolean isn't a type in mysql
+    @Column(columnDefinition = "integer default 0") // New sales are not open for transactions
+    public int status; // 0 : sale is being built, 1: sale is open for transactions, 2: sale is closed and archived
 
     /**
      * Create an instance of Sale and set the creating user as a sale admin
@@ -208,6 +216,12 @@ public class Sale extends Model {
      * @param state State address of sale
      */
     public void setState(String state) { this.state = state; }
+
+    /**
+     * Set Status
+     * @param status Status of sale (1 of 3 stages)
+     */
+    public void setStatus(int status) { this.status = status; }
 
     /**
      * Set Street

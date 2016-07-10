@@ -27,6 +27,15 @@ public class Transaction extends Model {
         return Ebean.find(Transaction.class).where().eq("id", id).findUnique();
     }
 
+    /**
+     * Find all completed transactions by Sale Id
+     * @param  saleId Id of sale
+     * @return Completed transactions associated with a Sale
+     */
+    public static List<Transaction> findCompletedBySaleId(int saleId) {
+        return Ebean.find(Transaction.class).where().eq("saleId", saleId).eq("completed", 1).findList();
+    }
+
     @Id
     public int id;
     @Constraints.Required
@@ -41,7 +50,7 @@ public class Transaction extends Model {
     public String paymentMethod;
 
     /**
-     * Create an instance of Transaction
+     * Create an instance of Transaction and save it
      * @param saleId Id of Sale
      * @param cashierId Id of Cashier user
      */
@@ -50,6 +59,14 @@ public class Transaction extends Model {
         this.saleId = saleId;
         this.cashierId = cashierId;
         this.save();
+    }
+
+    /**
+     * Format the total of all line items in the transaction
+     * @return Total transaction cost formatted to 2 decimal places
+     */
+    public String formatTotal() {
+        return String.format("%.2f", this.getTotal());
     }
 
     /**
@@ -62,7 +79,7 @@ public class Transaction extends Model {
 
     /**
      * Get the total of all the line items in the transaction
-     * @return item Total transaction cost
+     * @return Total transaction cost
      */
     public float getTotal() {
 

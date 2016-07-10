@@ -17,7 +17,6 @@ import java.util.List;
 @Entity
 @Table(name="lineItems")
 public class LineItem extends Model {
-
     /**
      * Find LineItem by its Id
      * @param id Id of LineItem
@@ -67,10 +66,35 @@ public class LineItem extends Model {
     }
 
     /**
-     * Set Quantity
-     * @param quantity Quantity of SaleItem
+     * Get a formatted price of item*quantity
+     * @return item*quantity to 2 decimal places
      */
-    public void setQuantity(int quantity) { this.quantity = quantity; }
+    public String formatPrice() {
+        float price = getPrice();
+        return String.format("%.2f", price);
+    }
+
+    /**
+     * Get the description of the SaleItem
+     * @return description of the SaleItem
+     */
+    public String getDescription() {
+        return SaleItem.findById(saleItemId).description;
+    }
+
+    /**
+     * Get the id of this LineItem
+     * @return id of this LineItem
+     */
+    public int getId() { return id; }
+
+    /**
+     * Get the name of the SaleItem
+     * @return name of the SaleItem
+     */
+    public String getName() {
+        return SaleItem.findById(saleItemId).name;
+    }
 
     /**
      * Get the price of item*quantity
@@ -82,29 +106,10 @@ public class LineItem extends Model {
     }
 
     /**
-     * Get a formatted price of item*quantity
-     * @return item*quantity to 2 decimal places
+     * Get the quantity of this LineItem
+     * @return quantity of this LineItem
      */
-    public String formatPrice() {
-        float price = getPrice();
-        return String.format("%.2f", price);
-    }
-
-    /**
-     * Get the name of the SaleItem
-     * @return name of the SaleItem
-     */
-    public String getName() {
-        return SaleItem.findById(saleItemId).name;
-    }
-
-    /**
-     * Get the description of the SaleItem
-     * @return description of the SaleItem
-     */
-    public String getDescription() {
-        return SaleItem.findById(saleItemId).description;
-    }
+    public int getQuantity() { return quantity; }
 
     /**
      * Get the saleItemId of this LineItem
@@ -119,15 +124,8 @@ public class LineItem extends Model {
     public int getTransactionId() { return transactionId; }
 
     /**
-     * Get the quantity of this LineItem
-     * @return quantity of this LineItem
+     * Set Quantity
+     * @param quantity Quantity of SaleItem
      */
-    public int getQuantity() { return quantity; }
-
-    /**
-     * Get the id of this LineItem
-     * @return id of this LineItem
-     */
-    public int getId() { return id; }
+    public void setQuantity(int quantity) { this.quantity = quantity; }
 }
-

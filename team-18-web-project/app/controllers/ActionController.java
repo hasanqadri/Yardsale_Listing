@@ -43,25 +43,6 @@ public class ActionController extends Controller {
     }
 
     /**
-     * Unlocks a user account
-     * @return Response to user account request
-     */
-    @Authenticated(Secured.class)
-    public Result admin() {
-        User u = User.findByUsername(session("username"));
-        if (u.isSuperAdmin()) { // Requestor is super admin
-            DynamicForm f = Form.form().bindFromRequest();
-            if (f.get("userId") != null) { // Username was sent in post request
-                User userReset = User.findById(f.get("userId"));
-                userReset.setLoginAttempts(0);
-                userReset.save();
-                return ok(admin.render( User.findAll()));
-            }
-        }
-        return notFound404(); // Return 404 error if user is not a super admin
-    }
-
-    /**
      * Confirms transaction
      * @return HTTP response to confirm transaction request
      */
@@ -74,14 +55,6 @@ public class ActionController extends Controller {
         if (user != null && user.canBeSeller(saleId)) {
             // Handle transaction cancel form
             if (f.get("cancelTransactionId") != null) {
-                int transactionId;
-                try { // Convert string to integer
-                    transactionId = Integer.parseInt(f.get("cancelTransactionId"));
-                } catch (NumberFormatException e) {
-                    e.printStackTrace();
-                    return notFound404();
-                }
-
                 // Delete line items
                 List<LineItem> list = LineItem.findByTransactionId(tranId);
                 for (LineItem li : list) {
@@ -156,8 +129,10 @@ public class ActionController extends Controller {
      */
     @Authenticated(Secured.class)
     public Result createTransaction(int saleId) {
+        Sale s = Sale.findById(saleId);
         User u = User.findByUsername(session("username"));
         if (u != null && u.canBeSeller(saleId)) { // User exists and can be a seller
+            if (s.status == 2) { return redirect("/sale/" + s.id); } // If sale archived, redirect back to sale page
             Transaction transaction = new Transaction(saleId, u.id);
             return redirect("/sale/" + saleId + "/transaction/" + transaction.id);
         }
@@ -175,6 +150,9 @@ public class ActionController extends Controller {
         User u = User.findByUsername(session("username"));
         if (!u.canBeAdmin(saleId) || s == null) {
             return notFound404(); // If user is not an administrator for the sale or sale doesn't exist, return 404 error
+        }
+        if (s.status == 2) {
+            return redirect("/sale/" + saleId);
         }
         DynamicForm f = Form.form().bindFromRequest();
 
@@ -243,7 +221,28 @@ public class ActionController extends Controller {
             return ok(editSale.render(s, s.getRoles()));
         }
 
-        return notFound404(); // If sale doesn't exist, or invalid form return 404 error
+        // Handle sale open requests
+        if (f.get("open") != null) {
+            s.setStatus(1);
+            s.save();
+            return ok(editSale.render(s, s.getRoles()));
+        }
+
+        // Handle sale close requests
+        if (f.get("close") != null) {
+            s.setStatus(0);
+            s.save();
+            return ok(editSale.render(s, s.getRoles()));
+        }
+
+        // Handle sale archive requests
+        if (f.get("archive") != null) {
+            s.setStatus(2);
+            s.save();
+            return redirect("/sale/" + saleId);
+        }
+
+        return notFound404(); // If invalid form return 404 error
 
     }
 
@@ -253,27 +252,30 @@ public class ActionController extends Controller {
      */
     @Authenticated(Secured.class)
     public Result item(int saleId, int itemId) {
+        User u = User.findByUsername(session("username"));
+        Sale s = Sale.findById(saleId);
         SaleItem i = SaleItem.findById(itemId);
         DynamicForm f = Form.form().bindFromRequest();
-        if (i == null || f.get("name") == null || f.get("description") == null || f.get("price") == null || f.get("quantity") == null) {
-            return notFound404();
-        }
-        float price;
-        int quantity;
-        try {
-            price = Float.parseFloat(f.get("price"));
-            quantity = Integer.parseInt(f.get("quantity"));
-        } catch (NumberFormatException e) {
-            return notFound404();
-        }
+        if (u != null && u.canBeSeller(saleId) && s != null && s.status != 2 && i != null &&
+                f.get("name") != null && f.get("description") != null && f.get("price") != null && f.get("quantity") != null) {
+            float price;
+            int quantity;
+            try {
+                price = Float.parseFloat(f.get("price"));
+                quantity = Integer.parseInt(f.get("quantity"));
+            } catch (NumberFormatException e) {
+                return notFound404();
+            }
 
-        i.setName(f.get("name"));
-        i.setDescription(f.get("description"));
-        i.setPrice(price);
-        i.setQuantity(quantity);
-        i.save();
+            i.setName(f.get("name"));
+            i.setDescription(f.get("description"));
+            i.setPrice(price);
+            i.setQuantity(quantity);
+            i.save();
 
-        return ok(item.render(i));
+            return ok(item.render(u, s, i));
+        }
+        return notFound404();
     }
 
     /**
@@ -380,8 +382,25 @@ public class ActionController extends Controller {
         }
         //If username or email not already in use, create user
         User user = new User(f.get("firstName"), f.get("lastName"), f.get("email"), f.get("username"), f.get("password"));
-        user.save();
         return ok(postContact.render(user));
+    }
+
+    /**
+     * Handle POST requests to sale page
+     * @param saleId Id of sale
+     * @return HTTP response to sale page request
+     */
+    @Authenticated(Secured.class)
+    public Result sale(int saleId) {
+        User u = User.findByUsername(session("username"));
+        Sale s = Sale.findById(saleId);
+        DynamicForm f = Form.form().bindFromRequest();
+        if (u != null && u.canBeAdmin(saleId) && s != null && f.get("unarchive") != null) {
+            s.setStatus(0); // Change sale to closed
+            s.save();
+            return ok(sale.render(u, s, s.getItems()));
+        }
+        return notFound404();
     }
 
     /**
@@ -426,6 +445,8 @@ public class ActionController extends Controller {
         Transaction t = Transaction.findById(tranId);
         if (s != null && u != null && u.canBeSeller(saleId) && t != null) {
             // Check if sale exists, user exists and can be a seller, and transaction exists
+
+            if (s.status == 2) { return redirect("/sale/" + s.id); } // If sale archived, redirect back to sale page
 
             DynamicForm f = Form.form().bindFromRequest();
 
@@ -567,5 +588,24 @@ public class ActionController extends Controller {
         }*/
         User user = Ebean.find(User.class).where().eq("username", session("username")).findUnique();
         return ok("in progress");
+    }
+
+    /**
+     * Unlocks a user account
+     * @return Response to user account request
+     */
+    @Authenticated(Secured.class)
+    public Result users() {
+        User u = User.findByUsername(session("username"));
+        if (u.isSuperAdmin()) { // Requestor is super admin
+            DynamicForm f = Form.form().bindFromRequest();
+            if (f.get("userId") != null) { // Username was sent in post request
+                User userReset = User.findById(f.get("userId"));
+                userReset.setLoginAttempts(0);
+                userReset.save();
+                return ok(admin.render(User.findAll()));
+            }
+        }
+        return notFound404(); // Return 404 error if user is not a super admin
     }
 }
