@@ -161,7 +161,7 @@ public class PageController extends Controller {
         User u = User.findByUsername(session("username"));
         SaleItem si = Ebean.find(SaleItem.class).where().eq("id", itemId).findUnique();
         if (si != null && u != null && u.canBeClerk(saleId)) { // Check if sale exists and user has clerk permissions
-            return ok(itemTag.render(saleId, itemId));
+            return ok(itemTag.render(si, saleId));
         }
         return notFound404();
     }

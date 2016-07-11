@@ -1,5 +1,5 @@
 @* Displays Tag page *@
-@(saleId: Int, itemId: Int)
+@(item: SaleItem, saleId: Int)
 
 @loggedinmain("Printable Tag for Item") {
 <div class="container content">
@@ -16,25 +16,24 @@
     <ul class="itemTags">
     <h2 class="text-center">Item Tag</h2>
     <div class="row">
-        <a href="/sale/@saleId/item/@itemId"><h4>&#8592; Return to Item</h4></a>
+        <a href="/sale/@saleId/item/@item.id"><h4>&#8592; Return to Item</h4></a>
         <div class="col-sm-2"></div>
-        <div class="col-sm-8 items saleItem"></div>
+        <div class="col-sm-8 items saleItem">
+          @for(index <- 0 until item.quantity) {
+            <div class="row">
+              <div class="col-md-6">
+                <h2>Name: @item.name</h2>
+                <h3>Stock Number: @item.id</h3>
+                <h3>Description: @item.description</h3>
+                <h3>Price: @item.formatPrice</h3>
+              </div>
+              <div class="col-md-6">
+                <img src="/qr?value=http://db.cheek.us:8080/mobileScanRedirect/@item.id">
+              </div>
+            </div>
+          }
+        </div>
     </div>
     </ul>
 </div>
-
-
-<!-- script to add item info from database -->
-<script>
-// Populate page with sale items
-$.post("/getItem", { "id" : "@itemId" }).done(function( data ) {
-    for (i = 0; i < data.quantity; i++) {
-        var output = "<h2>Name: " + data.name + "</a></h2><h3>Stock Number: "
-                + data.id + "</h3><h3>Description: " + data.description
-                + "</h3><h3>Price: $" + data.price.toFixed(2) + "</h3></div><hr>";
-        $(".items").append(output);
-    }
-});
-</script>
-
 }
