@@ -319,13 +319,14 @@ public class ActionController extends Controller {
             return ok(mobileFailure.render("Error: Device not registered to Transaction"));
         }
 
-        SaleItem i = SaleItem.findById(itemId);
-        if (i == null) {
-            return ok(mobileFailure.render("Error: Invalid Item"));
-        }
-
         if (t.completed == 1) {
             return ok(mobileFailure.render("Error: Transaction completed"));
+        }
+
+        // First search to see if item exists and is part of sale
+        SaleItem i = SaleItem.findById(itemId);
+        if (i == null && i.saleId == saleId) {
+            return ok(mobileFailure.render("Error: Invalid Item"));
         }
 
         // Search to see if item is already part of transaction
@@ -513,8 +514,9 @@ public class ActionController extends Controller {
                     return notFound404();
                 }
 
-                // First search to see if item exists
-                if (SaleItem.findById(itemId) == null) {
+                // First search to see if item exists and is part of sale
+                SaleItem i = SaleItem.findById(itemId);
+                if (i == null && i.saleId == saleId) {
                     return ok(transaction.render(t, t.getLineItems(), "No item with that Id"));
                 }
 
