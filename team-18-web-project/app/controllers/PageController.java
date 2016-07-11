@@ -134,6 +134,14 @@ public class PageController extends Controller {
         return notFound404();
     }
 
+    /**
+     * Display help page
+     * @return HTTP response to help page request
+     */
+    @Authenticated(Secured.class)
+    public Result help() {
+      return ok(help.render());
+    }
 
     /**
      * Display item page

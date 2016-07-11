@@ -6,6 +6,7 @@
 GET     /                           controllers.PageController.home
 GET     /about                      controllers.PageController.about
 GET     /createSale                 controllers.PageController.createSale
+GET     /help                       controllers.PageController.help
 GET     /login                      controllers.PageController.login
 GET     /logout                     controllers.PageController.logout
 GET     /mysales                    controllers.PageController.mysales
