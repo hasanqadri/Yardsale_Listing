@@ -31,7 +31,7 @@
         <p class="lead">Quantity: @item.quantity</p>
       </div>
       <div class="col-sm-4">
-        <form class="form-editprofile" id="edit-form" action="/sale/@item.saleId/item/@item.id" method="post">
+        <form class="form-editprofile" id="edit-form" method="post">
           <label for="inputName" class="sr-only">Name</label>
           <input type="text" maxlength="255" id="inputName" name="name" class="form-control input-top" value="@item.name" required autofocus>
           <label for="inputDescription" class="sr-only">Description</label>
@@ -44,6 +44,9 @@
             <a href="#" class="btn btn-success pull-left" onclick="changeToView();">CANCEL</a>
             <button class="btn btn-success pull-right" type="submit">SAVE CHANGES</button>
           </div>
+        </form>
+        <form method="post" class="hidden-form">
+            <button class="btn btn-danger" type="submit" name="delete" value="@item.id">DELETE ITEM</button>
         </form>
       </div>
     </div>

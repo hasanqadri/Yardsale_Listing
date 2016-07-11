@@ -51,17 +51,26 @@ public class LineItem extends Model {
     public int saleItemId; // References specific Sale
     public int transactionId; //References specific Transaction
     public int quantity; //item quantity with transaction
+    public float unitPrice; // Store unit price in case someone modifies the SaleItem in the future
+    public String name; // Store item name in case someone modifies the SaleItem in the future
+    public int userCreatedId; // Store user created id in case someone deletes the SaleItem in the future
 
     /**
      * Create an instance of LineItem
      * @param saleItemId Id of SaleItem
      * @param transactionId Id of Transaction
      * @param quantity Quantity of SaleItem
+     * @param unitPrice Unit price of SaleItem
+     * @param name Name of SaleItem
+     * @param userCreatedId Id of User who added the SaleItem to Sale
      */
-    public LineItem (int saleItemId, int transactionId, int quantity) {
+    public LineItem (int saleItemId, int transactionId, int quantity, float unitPrice, String name, int userCreatedId) {
         this.saleItemId = saleItemId;
         this.transactionId= transactionId;
         this.quantity = quantity;
+        this.unitPrice = unitPrice;
+        this.name = name;
+        this.userCreatedId = userCreatedId;
         this.save();
     }
 
@@ -98,29 +107,27 @@ public class LineItem extends Model {
     public int getId() { return id; }
 
     /**
-     * Get the name of the SaleItem
-     * @return name of the SaleItem
+     * Get the name of the item when it was sold
+     * @return name of the item when it was sold
      */
     public String getName() {
-        return SaleItem.findById(saleItemId).name;
+        return name;
     }
 
     /**
-     * Get the price of item*quantity
-     * @return item*quantity
+     * Get the total price when it was sold
+     * @return unitPrice*quantity
      */
     public float getTotalPrice() {
-        SaleItem item = SaleItem.findById(saleItemId);
-        return item.price*quantity;
+        return unitPrice*quantity;
     }
 
     /**
-     * Get the price of item
-     * @return item
+     * Get the unit price of item when it was sold
+     * @return unitPrice
      */
     public float getUnitPrice() {
-        SaleItem item = SaleItem.findById(saleItemId);
-        return item.price;
+        return unitPrice;
     }
 
     /**

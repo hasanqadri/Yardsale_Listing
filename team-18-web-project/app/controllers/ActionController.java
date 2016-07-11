@@ -255,25 +255,36 @@ public class ActionController extends Controller {
         Sale s = Sale.findById(saleId);
         SaleItem i = SaleItem.findById(itemId);
         DynamicForm f = Form.form().bindFromRequest();
-        if (u != null && u.canBeSeller(saleId) && s != null && s.status != 2 && i != null &&
-                f.get("name") != null && f.get("description") != null && f.get("price") != null && f.get("quantity") != null) {
-            float price;
-            int quantity;
-            try {
-                price = Float.parseFloat(f.get("price"));
-                quantity = Integer.parseInt(f.get("quantity"));
-            } catch (NumberFormatException e) {
-                return notFound404();
+
+        //Check that user exists and is authorized, check that sale exists and is open, check that item exists and is part of the sale
+        if (u != null && u.canBeSeller(saleId) && s != null && s.status != 2 && i != null && i.saleId == s.id) {
+            //Handle item update requests
+            if (f.get("name") != null && f.get("description") != null && f.get("price") != null && f.get("quantity") != null) {
+                float price;
+                int quantity;
+                try {
+                    price = Float.parseFloat(f.get("price"));
+                    quantity = Integer.parseInt(f.get("quantity"));
+                } catch (NumberFormatException e) {
+                    return notFound404();
+                }
+
+                i.setName(f.get("name"));
+                i.setDescription(f.get("description"));
+                i.setPrice(price);
+                i.setQuantity(quantity);
+                i.save();
+
+                return ok(item.render(u, s, i));
             }
 
-            i.setName(f.get("name"));
-            i.setDescription(f.get("description"));
-            i.setPrice(price);
-            i.setQuantity(quantity);
-            i.save();
-
-            return ok(item.render(u, s, i));
+            //Handle item delete requests
+            if (f.get("delete") != null) {
+                i.delete();
+                return redirect("/sale/" + saleId);
+            }
         }
+
         return notFound404();
     }
 
@@ -338,7 +349,7 @@ public class ActionController extends Controller {
             li.setQuantity(li.quantity + 1);
             li.save();
         } else { // Item not part of transaction, create new LineItem
-            LineItem lin = new LineItem(itemId, t.id, 1);
+            LineItem lin = new LineItem(itemId, t.id, 1, i.price, i.name, i.userCreatedId);
         }
 
         return ok(mobileSuccess.render("Item added"));
@@ -529,7 +540,7 @@ public class ActionController extends Controller {
                     li.setQuantity(li.quantity + itemQuantity);
                     li.save();
                 } else { // Item not part of transaction, create new LineItem
-                    LineItem lin = new LineItem(itemId, t.id, itemQuantity);
+                    LineItem lin = new LineItem(itemId, t.id, itemQuantity, i.price, i.name, i.userCreatedId);
                 }
 
                 return ok(transaction.render(t, t.getLineItems(), ""));

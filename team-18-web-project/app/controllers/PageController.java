@@ -61,20 +61,6 @@ public class PageController extends Controller {
     }
 
     /**
-     * Displays admin console
-     * @return HTTP response to admin console page request
-     */
-    @Authenticated(Secured.class)
-    public Result admin() {
-        User u = User.findByUsername(session("username"));
-        if (u.isSuperAdmin()) { // Show supersecret admin page
-            return ok(admin.render(User.findAll()));
-        } else { // Return 404
-            return notFound404();
-        }
-    }
-
-    /**
      * Displays transaction page
      * @return HTTP response to transaction page request
      */
@@ -349,7 +335,7 @@ public class PageController extends Controller {
     @Authenticated(Secured.class)
     public Result users() {
         User u = User.findByUsername(session("username"));
-        if (u.isSuperAdmin()) { // Show supersecret admin page
+        if (u != null && u.isSuperAdmin()) { // Show supersecret admin page
             return ok(admin.render(User.findAll()));
         } else { // Show normal user page
             return ok(users.render( User.findAll()));
