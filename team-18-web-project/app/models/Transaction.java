@@ -5,6 +5,9 @@ import com.avaje.ebean.Model;
 import play.data.validation.Constraints;
 
 import java.security.SecureRandom;
+import java.sql.Timestamp;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 import java.util.Random;
 
@@ -65,7 +68,8 @@ public class Transaction extends Model {
     @Column(columnDefinition = "tinyint default 0") // Default not a completed transaction
     public int completed;
     public String paymentMethod;
-    public int randomNonce;
+    public int randomNonce; // Used to authorize a mobile device to scan items
+    public Timestamp date; // Date when transaction was completed
 
     /**
      * Create an instance of Transaction and save it
@@ -88,6 +92,15 @@ public class Transaction extends Model {
           e.printStackTrace();
       }
       return this.randomNonce == nonce;
+    }
+
+    /**
+     * Get a formatted string of the transaction date/time
+     * @return Get a formatted string of the transaction date/time
+     */
+    public String formatDate() {
+        SimpleDateFormat f = new SimpleDateFormat("MM/dd/yyyy H:m:s");
+        return f.format(this.date);
     }
 
     /**
@@ -144,7 +157,11 @@ public class Transaction extends Model {
      * Set if sale is completed
      * @param completed Is sale completed
      */
-    public void setCompleted(int completed) { this.completed = completed; }
+    public void setCompleted(int completed) {
+      this.completed = completed;
+      Date date = new Date();
+      this.date = new Timestamp(date.getTime());
+    }
 
     /**
      * Set payment method
