@@ -16,6 +16,7 @@ import org.json.JSONObject;
 import play.data.DynamicForm;
 import play.data.Form;
 import play.mvc.Controller;
+import play.mvc.Http.Request;
 import play.mvc.Result;
 import play.mvc.Security;
 import views.html.loggedinNotFound;
@@ -119,6 +120,7 @@ public class DataController extends Controller {
     }
 
     public Result getQrCode(String content) {
+      content = "http://" + request().host() + content;
       QRCodeWriter qr = new QRCodeWriter();
       BitMatrix bm;
       try {

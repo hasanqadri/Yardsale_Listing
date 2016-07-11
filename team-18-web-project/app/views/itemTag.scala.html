@@ -25,10 +25,10 @@
                 <h2>Name: @item.name</h2>
                 <h3>Stock Number: @item.id</h3>
                 <h3>Description: @item.description</h3>
-                <h3>Price: @item.formatPrice</h3>
+                <h3>Price: $@item.formatPrice</h3>
               </div>
               <div class="col-md-6">
-                <img src="/qr?value=http://db.cheek.us:8080/mobileScanRedirect/@item.id">
+                <img src="/qr?value=/mobileScanRedirect/@item.id">
               </div>
             </div>
           }
