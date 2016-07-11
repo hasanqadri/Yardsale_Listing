@@ -325,7 +325,7 @@ public class ActionController extends Controller {
 
         // First search to see if item exists and is part of sale
         SaleItem i = SaleItem.findById(itemId);
-        if (i == null && i.saleId == t.saleId) {
+        if (i == null || i.saleId != t.saleId) {
             return ok(mobileFailure.render("Error: Invalid Item"));
         }
 
@@ -516,7 +516,7 @@ public class ActionController extends Controller {
 
                 // First search to see if item exists and is part of sale
                 SaleItem i = SaleItem.findById(itemId);
-                if (i == null && i.saleId == saleId) {
+                if (i == null || i.saleId != saleId) {
                     return ok(transaction.render(t, t.getLineItems(), "No item with that Id"));
                 }
 
