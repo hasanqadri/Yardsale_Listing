@@ -44,7 +44,7 @@
                             <tr>
                                 <td>@lineItems(index).getName</td>
                                 <td>@lineItems(index).quantity</td>
-                                <td>$@lineItems(index).formatPrice</td>
+                                <td>$@lineItems(index).formatTotalPrice</td>
                                 <td><form method="post" class="hidden-form"><button class="btn btn-sm btn-danger" type="submit" name="deleteLineItemId" value="@lineItems(index).id"><span class="glyphicon glyphicon-trash"></span></button></form></td>
                             </tr>
                             }

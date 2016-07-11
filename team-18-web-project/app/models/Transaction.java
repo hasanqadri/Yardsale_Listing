@@ -117,7 +117,7 @@ public class Transaction extends Model {
         List<LineItem> lineItems = getLineItems();
         for(LineItem li: lineItems) {
 
-            total += li.getPrice();
+            total += li.getTotalPrice();
         }
         return total;
     }

@@ -69,8 +69,17 @@ public class LineItem extends Model {
      * Get a formatted price of item*quantity
      * @return item*quantity to 2 decimal places
      */
-    public String formatPrice() {
-        float price = getPrice();
+    public String formatTotalPrice() {
+        float price = getTotalPrice();
+        return String.format("%.2f", price);
+    }
+
+    /**
+     * Get a formatted price of item
+     * @return item to 2 decimal places
+     */
+    public String formatUnitPrice() {
+        float price = getUnitPrice();
         return String.format("%.2f", price);
     }
 
@@ -100,9 +109,18 @@ public class LineItem extends Model {
      * Get the price of item*quantity
      * @return item*quantity
      */
-    public float getPrice() {
+    public float getTotalPrice() {
         SaleItem item = SaleItem.findById(saleItemId);
         return item.price*quantity;
+    }
+
+    /**
+     * Get the price of item
+     * @return item
+     */
+    public float getUnitPrice() {
+        SaleItem item = SaleItem.findById(saleItemId);
+        return item.price;
     }
 
     /**
