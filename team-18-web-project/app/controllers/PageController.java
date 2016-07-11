@@ -115,6 +115,15 @@ public class PageController extends Controller {
     }
 
     /**
+     * Display Features page
+     * @return HTTP response to features page request
+     */
+    @Authenticated(Secured.class)
+    public Result features() {
+        return ok(features.render());
+    }
+
+    /**
      * Display financial report page
      * @return HTTP response to financial report page request
      */
