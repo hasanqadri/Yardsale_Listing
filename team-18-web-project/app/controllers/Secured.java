@@ -10,11 +10,21 @@ import play.mvc.Result;
  */
 public class Secured extends Authenticator {
     @Override
+    /**
+     * Get Username of User
+     * @param ctx Context
+     * @return Username of User
+     */
     public String getUsername(Context ctx) {
         return ctx.session().get("username");
     }
 
     @Override
+    /**
+     * HTTP Result to non-logged in User
+     * @param ctx Context
+     * @return Redirect to login page
+     */
     public Result onUnauthorized(Context ctx) {
         return redirect(routes.PageController.login());
     }

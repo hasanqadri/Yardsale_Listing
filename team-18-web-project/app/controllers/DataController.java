@@ -64,7 +64,7 @@ public class DataController extends Controller {
         } catch (NumberFormatException e) { // Null or non int string
             return notFound404();
         }
-        SaleItem item  = Ebean.find(SaleItem.class).where().eq("id", id).findUnique();
+        SaleItem item  = SaleItem.findById(id);
         return ok(toJson(item));
     }
 
@@ -81,7 +81,7 @@ public class DataController extends Controller {
         } catch (NumberFormatException e) { // Null or non int string
             return notFound404();
         }
-        LineItem item  = Ebean.find(LineItem.class).where().eq("id", id).findUnique();
+        LineItem item  = LineItem.findById(id);
         return ok(toJson(item));
     }
 
@@ -98,7 +98,7 @@ public class DataController extends Controller {
         } catch (NumberFormatException e) { // Null or non int string
             return notFound404();
         }
-        List<LineItem> items  = Ebean.find(LineItem.class).where().eq("tranId", tranId).orderBy("id desc").findList();
+        List<LineItem> items  = LineItem.findByTransactionId(tranId);
         return ok(toJson(items));
     }
 
@@ -115,10 +115,15 @@ public class DataController extends Controller {
         } catch (NumberFormatException e) { // Null or non int string
             return notFound404();
         }
-        List<SaleItem> items = Ebean.find(SaleItem.class).where().eq("saleId", saleId).orderBy("id desc").findList();
+        List<SaleItem> items = SaleItem.findBySaleId(saleId);
         return ok(toJson(items));
     }
 
+    /**
+     * Get a QR Code image
+     * @param content url the QR code should point to
+     * @return QR Code
+     */
     public Result getQrCode(String content) {
       content = "http://" + request().host() + content;
       QRCodeWriter qr = new QRCodeWriter();
@@ -149,7 +154,7 @@ public class DataController extends Controller {
      */
     @Security.Authenticated(Secured.class)
     public Result getSales() {
-        List<Sale> sales = Ebean.find(Sale.class).orderBy("id desc").findList();
+        List<Sale> sales = Sale.findAllOpen();
         return ok(toJson(sales));
     }
 

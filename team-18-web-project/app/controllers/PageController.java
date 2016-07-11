@@ -1,6 +1,5 @@
 package controllers;
 
-import com.avaje.ebean.Ebean;
 import models.Role;
 import models.Sale;
 import models.SaleItem;
@@ -167,7 +166,7 @@ public class PageController extends Controller {
     @Authenticated(Secured.class)
     public Result itemTag(int saleId, int itemId) {
         User u = User.findByUsername(session("username"));
-        SaleItem si = Ebean.find(SaleItem.class).where().eq("id", itemId).findUnique();
+        SaleItem si = SaleItem.findById(itemId);
         if (si != null && u != null && u.canBeClerk(saleId)) { // Check if sale exists and user has clerk permissions
             return ok(itemTag.render(si, saleId));
         }

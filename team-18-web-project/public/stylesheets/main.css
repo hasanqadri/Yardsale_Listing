@@ -40,6 +40,12 @@ body{
     margin-bottom: 20px;
 }
 
+@media print {
+  .content {
+    margin-top: 10px;
+  }
+}
+
 .container .text-muted {
   margin: 20px 0;
 }
@@ -142,6 +148,7 @@ form .input-bottom {
 }
 
 .saleItem {
+    position: relative;
     background-color: slategrey;
     color: white;
     margin: 20px 0 20px 0;
@@ -161,4 +168,14 @@ form .input-bottom {
 
 .new-transaction {
     margin-top: 90px;
+}
+
+.tag-row {
+  -webkit-column-break-inside: avoid;
+            page-break-inside: avoid;
+                 break-inside: avoid;
+}
+
+.tag-qr {
+  margin-top: 30px;
 }

@@ -1,6 +1,5 @@
 package controllers;
 
-import com.avaje.ebean.Ebean;
 import models.*;
 import play.data.DynamicForm;
 import play.data.Form;
@@ -623,7 +622,7 @@ public class ActionController extends Controller {
         } else {
             redirect("/profile");
         }*/
-        User user = Ebean.find(User.class).where().eq("username", session("username")).findUnique();
+        User u = User.findByUsername(session("username"));
         return ok("in progress");
     }
 

@@ -3,37 +3,23 @@
 
 @loggedinmain("Printable Tag for Item") {
 <div class="container content">
-    <div class="view profile" id="view-profile">
-        <div class="row">
-            <div class="col-sm-4">
-            </div>
-            <div class="col-sm-5"></div>
-            <div class="col-sm-3">
-            </div>
+  <h2 class="text-center">Item Tag</h2>
+  <h4 class="hidden-print"><a href="/sale/@saleId/item/@item.id">&#8592; Return to Item</a></h4>
+  <div class="col-sm-2"></div>
+  <div class="col-sm-8 items saleItem">
+    @for(index <- 0 until item.quantity) {
+      <div class="row tag-row">
+        <div class="col-xs-8">
+          <h2>Name: @item.name</h2>
+          <h3>Stock Number: @item.id</h3>
+          <h3>Description: @item.description</h3>
+          <h3>Price: $@item.formatPrice</h3>
         </div>
-    </div>
-
-    <ul class="itemTags">
-    <h2 class="text-center">Item Tag</h2>
-    <div class="row">
-        <a href="/sale/@saleId/item/@item.id"><h4>&#8592; Return to Item</h4></a>
-        <div class="col-sm-2"></div>
-        <div class="col-sm-8 items saleItem">
-          @for(index <- 0 until item.quantity) {
-            <div class="row">
-              <div class="col-md-6">
-                <h2>Name: @item.name</h2>
-                <h3>Stock Number: @item.id</h3>
-                <h3>Description: @item.description</h3>
-                <h3>Price: $@item.formatPrice</h3>
-              </div>
-              <div class="col-md-6">
-                <img src="/qr?value=/mobileScanRedirect/@item.id">
-              </div>
-            </div>
-          }
+        <div class="col-xs-4">
+          <img class="tag-qr" src="/qr?value=/mobileScanRedirect/@item.id">
         </div>
-    </div>
-    </ul>
+      </div>
+    }
+  </div>
 </div>
 }

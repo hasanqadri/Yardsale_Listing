@@ -14,8 +14,8 @@
       </div>
       <div class="col-sm-6">
         @if(user.canBeSeller(sale.id) && sale.status != 2) {
-        <a href="/sale/@item.saleId/item/@item.id/itemTag" class="btn btn-success pull-right">Print Tag</a><br><br>
-        <a href="#" class="btn btn-success pull-right" onclick="changeToEdit();">Edit Item</a>
+        <a href="/sale/@item.saleId/item/@item.id/itemTag" class="btn btn-primary pull-right">Print Tag</a><br><br>
+        <a href="#" class="btn btn-primary pull-right" onclick="changeToEdit();">Edit Item</a>
         }
       </div>
 
