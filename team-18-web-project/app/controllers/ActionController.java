@@ -464,7 +464,7 @@ public class ActionController extends Controller {
 
                 // First search to see if item exists
                 if (SaleItem.findById(itemId) == null) {
-                    return ok(transaction.render(t.getLineItems(), saleId, tranId, "No item with that Id"));
+                    return ok(transaction.render(t, t.getLineItems(), "No item with that Id"));
                 }
 
                 // Then search to see if item is already part of transaction
@@ -476,7 +476,7 @@ public class ActionController extends Controller {
                     LineItem lin = new LineItem(itemId, t.id, itemQuantity);
                 }
 
-                return ok(transaction.render(t.getLineItems(), saleId, tranId, ""));
+                return ok(transaction.render(t, t.getLineItems(), ""));
             }
 
             // Handle item delete form
@@ -492,7 +492,7 @@ public class ActionController extends Controller {
                 if (li != null) { // If user refreshes page after deleting, this prevents a null pointer exception
                     li.delete();
                 }
-                return ok(transaction.render(t.getLineItems(), saleId, tranId, ""));
+                return ok(transaction.render(t, t.getLineItems(), ""));
             }
 
             // Handle item update quantity form
@@ -511,7 +511,7 @@ public class ActionController extends Controller {
                     li.setQuantity(quantity);
                     li.save();
                 }
-                return ok(transaction.render(t.getLineItems(), saleId, tranId, ""));
+                return ok(transaction.render(t, t.getLineItems(), ""));
             }
 
             // Handle transaction cancel form
@@ -551,26 +551,6 @@ public class ActionController extends Controller {
         }
         return notFound404();
     }
-
-    /**
-     * @param saleID place in db
-     * @return
-     */
-    @Authenticated(Secured.class)
-    public Result addLineItem(int saleID, int transactionID, int itemId) {
-        Sale s = Ebean.find(Sale.class).where().eq("id", saleID).findUnique();
-        if (s != null) { //check if transaction exists
-            Transaction t = Ebean.find(Transaction.class).where().eq("id", transactionID).findUnique();
-            if (t != null) {
-
-                LineItem item = new LineItem(itemId, transactionID, 1);
-                item.save();
-                return ok(transaction.render(t.getLineItems(), saleID, transactionID, "Item added! Add another item?"));
-            }
-        }
-        return notFound404();
-    }
-
 
     /**
      * Upload a profile picture (not working yet)

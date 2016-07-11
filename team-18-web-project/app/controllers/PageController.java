@@ -151,6 +151,22 @@ public class PageController extends Controller {
     }
 
     /**
+     * Display a Tag page
+     * @param saleId Id of item to display
+     * @param itemId Id of item to display
+     * @return HTTP response to tag page request
+     */
+    @Authenticated(Secured.class)
+    public Result itemTag(int saleId, int itemId) {
+        User u = User.findByUsername(session("username"));
+        SaleItem si = Ebean.find(SaleItem.class).where().eq("id", itemId).findUnique();
+        if (si != null && u != null && u.canBeClerk(saleId)) { // Check if sale exists and user has clerk permissions
+            return ok(itemTag.render(saleId, itemId));
+        }
+        return notFound404();
+    }
+
+    /**
      * Display login page
      * @return Login page
      */
@@ -233,11 +249,21 @@ public class PageController extends Controller {
      * @return HTTP response to registration page request
      */
     public Result register() {
-        String username = session("username");
-        if (username != null) {
+        if (session("username") != null) {
             return redirect("/");
         }
         return ok(register.render(""));
+    }
+
+    public Result registerMobileTransaction(int saleId, int tranId, int tranNonce) {
+        Sale s = Sale.findById(saleId);
+        Transaction t = Transaction.findById(tranId);
+        if (s != null && t != null && t.completed == 0 && tranNonce == t.randomNonce) {
+            // Save cookie on mobile device so it can scan items into this transaction
+            session("transactionId", Integer.toString(tranNonce));
+            return ok(mobileSuccess.render("Registered to transaction " + tranId));
+        }
+        return ok(mobileFailure.render("Failed to register"));
     }
 
     /**
@@ -253,22 +279,6 @@ public class PageController extends Controller {
             if (s.status == 1 || (Role.findByIds(u.id, s.id) != null)) { // If sale is open to public, or user has a role on the sale
                 return ok(sale.render(u, s, s.getItems()));
             }
-        }
-        return notFound404();
-    }
-
-    /**
-     * Display a Tag page
-     * @param saleId Id of item to display
-     * @param itemId Id of item to display
-     * @return HTTP response to tag page request
-     */
-    @Authenticated(Secured.class)
-    public Result itemTag(int saleId, int itemId) {
-        User u = User.findByUsername(session("username"));
-        SaleItem si = Ebean.find(SaleItem.class).where().eq("id", itemId).findUnique();
-        if (si != null && u != null && u.canBeClerk(saleId)) { // Check if sale exists and user has clerk permissions
-            return ok(itemTag.render(saleId, itemId));
         }
         return notFound404();
     }
@@ -296,17 +306,6 @@ public class PageController extends Controller {
     }
 
     /**
-     * Display a receipt page
-     * @param saleId Id of item to display
-     * @param tranId Id of transaction to display
-     * @return HTTP response to receipt page request
-     */
-    @Authenticated(Secured.class)
-    public Result buy(int saleId, int tranId) {
-        return ok(buy.render(saleId, tranId));
-    }
-
-    /**
      * Displays transaction page
      * @return HTTP response to transaction page request
      */
@@ -317,7 +316,7 @@ public class PageController extends Controller {
         User u = User.findByUsername(session("username"));
         if (s != null && s.status == 1 && t != null && t.completed == 0 && u != null && u.canBeSeller(saleId)) {
             // Check if sale exists, and transaction exists and is not completed, and user exists and can be seller
-            return ok(transaction.render(t.getLineItems(), saleId, tranId, ""));
+            return ok(transaction.render(t, t.getLineItems(), ""));
         }
         return notFound404();
     }

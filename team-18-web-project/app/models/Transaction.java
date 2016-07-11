@@ -4,7 +4,9 @@ import com.avaje.ebean.Ebean;
 import com.avaje.ebean.Model;
 import play.data.validation.Constraints;
 
+import java.security.SecureRandom;
 import java.util.List;
+import java.util.Random;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -48,6 +50,7 @@ public class Transaction extends Model {
     @Column(columnDefinition = "tinyint default 0") // Default not a completed transaction
     public int completed;
     public String paymentMethod;
+    public int randomNonce;
 
     /**
      * Create an instance of Transaction and save it
@@ -58,6 +61,8 @@ public class Transaction extends Model {
 
         this.saleId = saleId;
         this.cashierId = cashierId;
+        Random r = new SecureRandom();
+        this.randomNonce = r.nextInt();
         this.save();
     }
 
