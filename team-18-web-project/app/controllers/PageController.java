@@ -255,17 +255,6 @@ public class PageController extends Controller {
         return ok(register.render(""));
     }
 
-    public Result registerMobileTransaction(int saleId, int tranId, int tranNonce) {
-        Sale s = Sale.findById(saleId);
-        Transaction t = Transaction.findById(tranId);
-        if (s != null && t != null && t.completed == 0 && tranNonce == t.randomNonce) {
-            // Save cookie on mobile device so it can scan items into this transaction
-            session("transactionId", Integer.toString(tranNonce));
-            return ok(mobileSuccess.render("Registered to transaction " + tranId));
-        }
-        return ok(mobileFailure.render("Failed to register"));
-    }
-
     /**
      * Display a sale page
      * @param id Id of sale to display

@@ -30,6 +30,21 @@ public class SaleItem extends Model {
     }
 
     /**
+     * Find SaleItem by its Id
+     * @param  id Id of SaleItem
+     * @return SaleItem if it exists
+     */
+    public static SaleItem findById(String idStr) {
+        int id = 0;
+        try {
+          id = Integer.parseInt(idStr);
+        } catch (NumberFormatException e) {
+            e.printStackTrace();
+        }
+        return findById(id);
+    }
+
+    /**
      * Find SaleItems by sale Id
      * @param  id Id of Sale
      * @return SaleItems associated with a sale

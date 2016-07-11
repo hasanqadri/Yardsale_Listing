@@ -30,6 +30,21 @@ public class Transaction extends Model {
     }
 
     /**
+     * Find transaction by its Id
+     * @param id Id of transaction
+     * @return Transaction if it exists
+     */
+    public static Transaction findById(String idStr) {
+        int id = 0;
+        try {
+          id = Integer.parseInt(idStr);
+        } catch (NumberFormatException e) {
+            e.printStackTrace();
+        }
+        return findById(id);
+    }
+
+    /**
      * Find all completed transactions by Sale Id
      * @param  saleId Id of sale
      * @return Completed transactions associated with a Sale
@@ -58,12 +73,21 @@ public class Transaction extends Model {
      * @param cashierId Id of Cashier user
      */
     public Transaction(int saleId, int cashierId) {
-
         this.saleId = saleId;
         this.cashierId = cashierId;
         Random r = new SecureRandom();
         this.randomNonce = r.nextInt();
         this.save();
+    }
+
+    public boolean checkNonce(String nonceStr) {
+      int nonce = 0;
+      try {
+          nonce = Integer.parseInt(nonceStr);
+      } catch (NumberFormatException e) {
+          e.printStackTrace();
+      }
+      return this.randomNonce == nonce;
     }
 
     /**

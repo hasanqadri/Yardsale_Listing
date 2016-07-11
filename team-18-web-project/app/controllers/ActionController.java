@@ -309,6 +309,38 @@ public class ActionController extends Controller {
     }
 
     /**
+     * Scan an item in via qr code
+     * @param  itemId Id of item
+     * @return Success or Failure page
+     */
+    public Result mobileScan(int itemId) {
+        Transaction t = Transaction.findById(session("transactionId"));
+        if (t == null || !t.checkNonce(session("transactionNonce"))) {
+            return ok(mobileFailure.render("Error: Device not registered to Transaction"));
+        }
+
+        SaleItem i = SaleItem.findById(itemId);
+        if (i == null) {
+            return ok(mobileFailure.render("Error: Invalid Item"));
+        }
+
+        if (t.completed == 1) {
+            return ok(mobileFailure.render("Error: Transaction completed"));
+        }
+
+        // Search to see if item is already part of transaction
+        LineItem li = LineItem.findByItemIdTransactionId(itemId, t.id);
+        if (li != null) { // Item already part of transaction, update quantity
+            li.setQuantity(li.quantity + 1);
+            li.save();
+        } else { // Item not part of transaction, create new LineItem
+            LineItem lin = new LineItem(itemId, t.id, 1);
+        }
+
+        return ok(mobileSuccess.render("Item added"));
+    }
+
+    /**
      * Displays a 404 error page
      * @return HTTP response to a nonexistant page
      */
@@ -383,6 +415,25 @@ public class ActionController extends Controller {
         //If username or email not already in use, create user
         User user = new User(f.get("firstName"), f.get("lastName"), f.get("email"), f.get("username"), f.get("password"));
         return ok(postContact.render(user));
+    }
+
+    /**
+     * Register a mobile device to a transaction so it can be used as an item scanner
+     * @param saleId Id of Sale
+     * @param tranId Id of Transaction
+     * @param tranNonce Id of Transaction Nonce
+     * @return Success or Failure page
+     */
+    public Result registerMobileTransaction(int saleId, int tranId, int tranNonce) {
+        Sale s = Sale.findById(saleId);
+        Transaction t = Transaction.findById(tranId);
+        if (s != null && t != null && t.completed == 0 && tranNonce == t.randomNonce) {
+            // Save cookie on mobile device so it can scan items into this transaction
+            session("transactionNonce", Integer.toString(tranNonce));
+            session("transactionId", Integer.toString(tranId));
+            return ok(mobileSuccess.render("Registered to transaction " + tranId));
+        }
+        return ok(mobileFailure.render("Failed to register"));
     }
 
     /**
