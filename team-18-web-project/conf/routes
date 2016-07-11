@@ -59,7 +59,8 @@ POST   /sale/:saleID/transaction/:tranId/searchItemStock            controllers.
 GET    /sale/:saleId/confirmTransaction/:tranId                     controllers.PageController.confirmTransaction(saleId: Int, tranId: Int)
 POST   /sale/:saleId/confirmTransaction/:tranId                     controllers.ActionController.confirmTransaction(saleId: Int, tranId: Int)
 GET    /sale/:saleId/transactionReceipt/:tranId                     controllers.PageController.transactionReceipt(saleId: Int, tranId: Int)
-GET    /sale/:saleId/registerMobileTransaction/:tranId/:tranNonce   controllers.PageController.registerMobileTransaction(saleId: Int, tranId: Int, tranNonce: Int)
+GET    /sale/:saleId/registerMobileTransaction/:tranId/:tranNonce   controllers.ActionController.registerMobileTransaction(saleId: Int, tranId: Int, tranNonce: Int)
+GET    /mobileScan/:itemId                                          controllers.ActionController.mobileScan(itemId: Int)
 
 
 # Map requests to /image
@@ -67,7 +68,6 @@ GET     /image/:id                  controllers.DataController.getImage(id: Int)
 
 # Map requests to /barcode
 GET     /qr                         controllers.DataController.getQrCode(value: String ?="")
-
 
 # Map static resources from the /public folder to the /assets URL path
 GET     /assets/*file               controllers.Assets.versioned(path="/public", file: Asset)
