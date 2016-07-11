@@ -1,0 +1,15 @@
+@* Displays mobile redirect to item scan page              *@
+@* Most QR code readers load the page twice.               *@
+@* This redirect keeps actions from being registered twice *@
+
+@(url: String)
+<html>
+  <head>
+    <title>Redirecting...</title>
+  </head>
+  <body>
+    <script>
+      window.location.assign(@url);
+    </script>
+  </body>
+</html>

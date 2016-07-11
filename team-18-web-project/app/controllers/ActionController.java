@@ -308,6 +308,10 @@ public class ActionController extends Controller {
         return ok(login.render("Login failed"));
     }
 
+    public Result mobileScanRedirect(int itemId) {
+        return ok(mobileScanRedirect.render("/mobileScan/" + itemId));
+    }
+
     /**
      * Scan an item in via qr code
      * @param  itemId Id of item

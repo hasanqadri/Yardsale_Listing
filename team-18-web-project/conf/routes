@@ -61,6 +61,7 @@ POST   /sale/:saleId/confirmTransaction/:tranId                     controllers.
 GET    /sale/:saleId/transactionReceipt/:tranId                     controllers.PageController.transactionReceipt(saleId: Int, tranId: Int)
 GET    /sale/:saleId/registerMobileTransaction/:tranId/:tranNonce   controllers.ActionController.registerMobileTransaction(saleId: Int, tranId: Int, tranNonce: Int)
 GET    /mobileScan/:itemId                                          controllers.ActionController.mobileScan(itemId: Int)
+GET    /mobileScanRedirect/:itemId                                  controllers.ActionController.mobileScanRedirect(itemId: Int)
 
 
 # Map requests to /image
