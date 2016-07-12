@@ -13,7 +13,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Represents a Picture
+ * Represents a Picture - Work in progress
  * Created by nathancheek on 6/24/16.
  */
 //@Entity

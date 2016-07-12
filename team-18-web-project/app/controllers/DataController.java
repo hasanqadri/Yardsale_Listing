@@ -44,10 +44,10 @@ public class DataController extends Controller {
      * @return Image with given Id
      */
     @Security.Authenticated(Secured.class)
-    public Result getImage(int id) { // This method is currently being used for testing random stuff
-        //Picture picture = User.find.where().eq("id", dynamicForm.get("username")).findUnique();
+    public Result getImage(int id) {
+        // This method is currently being used for testing random stuff
         //Sale sale2 = Sale.find.where().eq("id", 1).findUnique();
-        return ok();
+        return notFound404();
 
     }
 
@@ -165,7 +165,8 @@ public class DataController extends Controller {
     @Security.Authenticated(Secured.class)
     public Result getSearchItems() {
         DynamicForm dynamicForm = Form.form().bindFromRequest();
-        if (dynamicForm.get("saleId") != null && dynamicForm.get("query") != null) {
+        if (dynamicForm.get("saleId") != null &&
+                dynamicForm.get("query") != null) {
             int saleId;
             try {
                 saleId = Integer.parseInt(dynamicForm.get("saleId"));
@@ -173,7 +174,8 @@ public class DataController extends Controller {
                 return notFound404();
             }
             String query = "%" + dynamicForm.get("query") + "%";
-            List<SaleItem> items = Ebean.find(SaleItem.class).where().eq("saleId", saleId).or(
+            List<SaleItem> items =
+                    Ebean.find(SaleItem.class).where().eq("saleId", saleId).or(
                     Expr.like("name", query),
                     Expr.like("description", query)
             ).findList();

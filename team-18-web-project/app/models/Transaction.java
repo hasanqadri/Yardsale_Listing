@@ -53,7 +53,8 @@ public class Transaction extends Model {
      * @return Completed transactions associated with a Sale
      */
     public static List<Transaction> findCompletedBySaleId(int saleId) {
-        return Ebean.find(Transaction.class).where().eq("saleId", saleId).eq("completed", 1).findList();
+        return Ebean.find(Transaction.class).where().eq("saleId", saleId)
+                .eq("completed", 1).findList();
     }
 
     @Id
@@ -65,7 +66,8 @@ public class Transaction extends Model {
     public String buyerName; //buyers name
     public String buyerAddress;
     public String buyerEmail;
-    @Column(columnDefinition = "tinyint default 0") // Default not a completed transaction
+    // Default not a completed transaction
+    @Column(columnDefinition = "tinyint default 0")
     public int completed;
     public String paymentMethod;
     public int randomNonce; // Used to authorize a mobile device to scan items
@@ -145,13 +147,17 @@ public class Transaction extends Model {
      * Set buyerAddress
      * @param buyerAddress Address of Buyer
      */
-    public void setBuyerAddress(String buyerAddress) { this.buyerAddress = buyerAddress; }
+    public void setBuyerAddress(String buyerAddress) {
+      this.buyerAddress = buyerAddress;
+    }
 
     /**
      * Set buyerEmail
      * @param buyerEmail Email of Buyer
      */
-    public void setBuyerEmail(String buyerEmail) { this.buyerEmail = buyerEmail; }
+    public void setBuyerEmail(String buyerEmail) {
+      this.buyerEmail = buyerEmail;
+    }
 
     /**
      * Set if sale is completed
@@ -167,5 +173,7 @@ public class Transaction extends Model {
      * Set payment method
      * @param payment Payment method
      */
-    public void setPaymentMethod(String payment) { this.paymentMethod = payment; }
+    public void setPaymentMethod(String payment) {
+      this.paymentMethod = payment;
+    }
 }

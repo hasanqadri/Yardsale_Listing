@@ -50,12 +50,14 @@ public class SaleItem extends Model {
      * @return SaleItems associated with a sale
      */
     public static List<SaleItem> findBySaleId(int saleId) {
-        return Ebean.find(SaleItem.class).where().eq("saleId", saleId).findList();
+        return Ebean.find(SaleItem.class).where().
+                eq("saleId", saleId).findList();
     }
 
     @Id
     @GeneratedValue(strategy=GenerationType.SEQUENCE, generator="seq")
-    @SequenceGenerator(name="seq", sequenceName = "local.seq_name", initialValue=1000001, allocationSize=1)
+    @SequenceGenerator(name="seq", sequenceName = "local.seq_name",
+            initialValue=1000001, allocationSize=1)
     // ^ TODO this doesn't actually work
     public int id;
     @Constraints.Required
@@ -78,7 +80,8 @@ public class SaleItem extends Model {
      * @param userCreatedId User Id of the User who created the SaleItem
      * @param quantity Quantity of SaleItem in stock
      */
-    public SaleItem (String name, String description, float price, int saleId, int userCreatedId, int quantity) {
+    public SaleItem (String name, String description, float price, int saleId,
+            int userCreatedId, int quantity) {
         this.name = name;
         this.description = description;
         this.price = price;
@@ -142,7 +145,9 @@ public class SaleItem extends Model {
      * Set the Description of the SaleItem
      * @param description Description of the SaleItem
      */
-    public void setDescription(String description) { this.description = description; }
+    public void setDescription(String description) {
+        this.description = description;
+    }
 
     /**
      * Set the Name of the SaleItem
@@ -172,14 +177,16 @@ public class SaleItem extends Model {
      * Set the User Id of the User who created the SaleItem
      * @param userCreatedId User Id of the User who created the SaleItem
      */
-    public void setUserCreatedId(int userCreatedId) { this.userCreatedId = userCreatedId; }
+    public void setUserCreatedId(int userCreatedId) {
+        this.userCreatedId = userCreatedId;
+    }
 
     /**
      * String representation of the SaleItem object
      * @return SaleItem object description
      */
     public String toString() {
-        return String.format("[Name: " + name + " Description: " + description + " Price: "
-                + price);
+        return String.format("[Name: " + name + " Description: " + description +
+                " Price: " + price);
     }
 }

@@ -11,7 +11,6 @@ GET     /help                       controllers.PageController.help
 GET     /login                      controllers.PageController.login
 GET     /logout                     controllers.PageController.logout
 GET     /mysales                    controllers.PageController.mysales
-GET     /NewContact                 controllers.PageController.newContact
 GET     /profile                    controllers.PageController.profile
 GET     /register                   controllers.PageController.register
 GET     /sales                      controllers.PageController.sales
@@ -21,7 +20,6 @@ GET     /users                      controllers.PageController.users
 # Action page requests
 POST    /createSale                 controllers.ActionController.createSale
 POST    /login                      controllers.ActionController.login
-POST    /NewContact                 controllers.ActionController.postContact
 POST    /profile                    controllers.ActionController.profile
 POST    /register                   controllers.ActionController.register
 POST    /searchSales                controllers.ActionController.searchSales

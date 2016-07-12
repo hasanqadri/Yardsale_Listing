@@ -31,11 +31,14 @@ public class ActionController extends Controller {
         Sale s = Sale.findById(saleId);
         if (s != null) { // Check if sale exists
             DynamicForm f = Form.form().bindFromRequest();
-            if (f.get("name") == null || f.get("description") == null || f.get("price") == null || f.get("quantity") == null) { // Improper request
+            // If improper request, give 404 error
+            if (f.get("name") == null || f.get("description") == null ||
+                    f.get("price") == null || f.get("quantity") == null) {
                 return notFound404();
             }
             User u = User.findByUsername(session("username"));
-            s.addItem(f.get("name"), f.get("description"), f.get("price"), u.id, f.get("quantity"));
+            s.addItem(f.get("name"), f.get("description"), f.get("price"),
+                    u.id, f.get("quantity"));
             return redirect("/sale/" + saleId);
         }
         return notFound404(); // Return 404 error if sale doesn't exist
@@ -62,7 +65,7 @@ public class ActionController extends Controller {
                 return redirect("/sale/" + saleId);
             }
 
-            //enters a confirmed transaction updating the buyer info using a form
+            // Handle transaction confirmation form
             if (f.get("confirmTransaction") != null) {
                 Sale s = Sale.findById(saleId);
                 Transaction t = Transaction.findById(tranId);
@@ -87,7 +90,8 @@ public class ActionController extends Controller {
                     }
                 }
             }
-            return redirect("/sale/" + saleId + "/transactionReceipt/" + tranId);
+            return redirect("/sale/" + saleId + "/transactionReceipt/"
+                    + tranId);
         }
         return notFound404();
     }
@@ -116,8 +120,9 @@ public class ActionController extends Controller {
             e.printStackTrace();
             return notFound404();
         }
-        Sale sale = new Sale(f.get("name"), f.get("description"), f.get("street"), f.get("city"), f.get("state"),
-                zip, startDate, endDate, user.id);
+        Sale sale = new Sale(f.get("name"), f.get("description"),
+                f.get("street"), f.get("city"), f.get("state"), zip, startDate,
+                endDate, user.id);
         return redirect("/sale/" + sale.id);
     }
 
@@ -130,10 +135,13 @@ public class ActionController extends Controller {
     public Result createTransaction(int saleId) {
         Sale s = Sale.findById(saleId);
         User u = User.findByUsername(session("username"));
-        if (u != null && u.canBeSeller(saleId)) { // User exists and can be a seller
-            if (s.status == 2) { return redirect("/sale/" + s.id); } // If sale archived, redirect back to sale page
+        // If User exists and can be a seller
+        if (u != null && u.canBeSeller(saleId)) {
+            // If sale archived, redirect back to sale page
+            if (s.status == 2) { return redirect("/sale/" + s.id); }
             Transaction transaction = new Transaction(saleId, u.id);
-            return redirect("/sale/" + saleId + "/transaction/" + transaction.id);
+            return redirect("/sale/" + saleId + "/transaction/"
+                    + transaction.id);
         }
         return notFound404();
     }
@@ -147,9 +155,11 @@ public class ActionController extends Controller {
     public Result editSale(int saleId) {
         Sale s = Sale.findById(saleId);
         User u = User.findByUsername(session("username"));
+        // If user is not a sale admin or sale doesn't exist, return 404 error
         if (!u.canBeAdmin(saleId) || s == null) {
-            return notFound404(); // If user is not an administrator for the sale or sale doesn't exist, return 404 error
+            return notFound404();
         }
+        // If sale is archived, redirect back to sale page
         if (s.status == 2) {
             return redirect("/sale/" + saleId);
         }
@@ -161,7 +171,7 @@ public class ActionController extends Controller {
             User ua = User.findByUsername(f.get("addRoleUsername"));
             if (ua != null) {
                 Role r = Role.findByIds(ua.id, s.id);
-                if (r != null) { // There's already a role for this user; modify it
+                if (r != null) { // This user already has a role; modify it
                     r.setName(f.get("addRoleUsername"));
                     r.save();
                 }
@@ -188,9 +198,10 @@ public class ActionController extends Controller {
         }
 
         // Handle sale info update requests
-        if (f.get("name") != null && f.get("description") != null && f.get("street") != null && f.get("city") != null &&
-                f.get("state") != null && f.get("zip") != null && f.get("startDate") != null &&
-                f.get("endDate") != null) {
+        if (f.get("name") != null && f.get("description") != null &&
+                f.get("street") != null && f.get("city") != null &&
+                f.get("state") != null && f.get("zip") != null &&
+                f.get("startDate") != null && f.get("endDate") != null) {
             s.setName(f.get("name"));
             s.setDescription(f.get("description"));
             s.setStreet(f.get("street"));
@@ -256,10 +267,13 @@ public class ActionController extends Controller {
         SaleItem i = SaleItem.findById(itemId);
         DynamicForm f = Form.form().bindFromRequest();
 
-        //Check that user exists and is authorized, check that sale exists and is open, check that item exists and is part of the sale
-        if (u != null && u.canBeSeller(saleId) && s != null && s.status != 2 && i != null && i.saleId == s.id) {
+        // Check that user exists and is authorized, sale exists and is open,
+        // item exists and is part of the sale
+        if (u != null && u.canBeSeller(saleId) && s != null && s.status != 2 &&
+                i != null && i.saleId == s.id) {
             //Handle item update requests
-            if (f.get("name") != null && f.get("description") != null && f.get("price") != null && f.get("quantity") != null) {
+            if (f.get("name") != null && f.get("description") != null &&
+                    f.get("price") != null && f.get("quantity") != null) {
                 float price;
                 int quantity;
                 try {
@@ -299,18 +313,23 @@ public class ActionController extends Controller {
         DynamicForm f = Form.form().bindFromRequest();
         User user = User.findByUsername(f.get("username"));
         if (user != null) { // User exists
-            if (user.getPassword().equals(User.hashPassword(f.get("password")))) { // Correct password
-                if (user.loginAttempts == 3) { // Notify that user is locked out
+            if (user.getPassword().equals(
+                    User.hashPassword(f.get("password")))) {
+                // Correct password
+                if (user.loginAttempts == 3) {
+                    // Notify that user is locked out
                     return ok(login.render("Your account has been locked"));
                 } else { // Create session
-                    if (user.loginAttempts != 0) { // Reset loginAttempts if != 0
+                    if (user.loginAttempts != 0) {
+                        // Reset loginAttempts if != 0
                         user.setLoginAttempts(0);
                         user.save();
                     }
                     session("username", f.get("username"));
                     return redirect("/");
                 }
-            } else if (user.loginAttempts < 3) { // Incorrect password - increment lockout counter up to 3
+            } else if (user.loginAttempts < 3) {
+                // Incorrect password - increment lockout counter up to 3
                 user.setLoginAttempts(user.loginAttempts + 1);
                 user.save();
             }
@@ -330,7 +349,8 @@ public class ActionController extends Controller {
     public Result mobileScan(int itemId) {
         Transaction t = Transaction.findById(session("transactionId"));
         if (t == null || !t.checkNonce(session("transactionNonce"))) {
-            return ok(mobileFailure.render("Error: Device not registered to Transaction"));
+            return ok(mobileFailure.render(
+                    "Error: Device not registered to Transaction"));
         }
 
         if (t.completed == 1) {
@@ -349,7 +369,8 @@ public class ActionController extends Controller {
             li.setQuantity(li.quantity + 1);
             li.save();
         } else { // Item not part of transaction, create new LineItem
-            LineItem lin = new LineItem(itemId, t.id, 1, i.price, i.name, i.userCreatedId);
+            LineItem lin = new LineItem(itemId, t.id, 1, i.price, i.name,
+                    i.userCreatedId);
         }
 
         return ok(mobileSuccess.render("Item added"));
@@ -365,18 +386,6 @@ public class ActionController extends Controller {
         } else {
             return notFound(notFound.render());
         }
-    }
-
-    /**
-     * Page after registering, adds form data to user json
-     * @return HTTP response after successful user registration
-     */
-    public Result postContact() {
-        Form<userdata> formdata = Form.form(userdata.class).bindFromRequest();
-        userdata data = formdata.get();
-        User user = new User(data.firstName, data.lastName, data.email, data.username, data.password);
-        user.save();
-        return ok(postContact.render(user));
     }
 
     /**
@@ -405,7 +414,8 @@ public class ActionController extends Controller {
         user.setUsername(f.get("username"));
         user.setPassword(f.get("password"));
         user.save();
-        session("username", f.get("username")); //Set new cookie in case username was changed
+        //Set new cookie in case username was changed
+        session("username", f.get("username"));
 
         return ok(profile.render(user, ""));
     }
@@ -428,25 +438,29 @@ public class ActionController extends Controller {
             return ok(register.render("Error: email already in use"));
         }
         //If username or email not already in use, create user
-        User user = new User(f.get("firstName"), f.get("lastName"), f.get("email"), f.get("username"), f.get("password"));
-        return ok(postContact.render(user));
+        User user = new User(f.get("firstName"), f.get("lastName"),
+                f.get("email"), f.get("username"), f.get("password"));
+        return ok(registrationSuccess.render(user));
     }
 
     /**
-     * Register a mobile device to a transaction so it can be used as an item scanner
+     * Register a mobile device to a transaction so it can scan items
      * @param saleId Id of Sale
      * @param tranId Id of Transaction
      * @param tranNonce Id of Transaction Nonce
      * @return Success or Failure page
      */
-    public Result registerMobileTransaction(int saleId, int tranId, int tranNonce) {
+    public Result registerMobileTransaction(int saleId, int tranId,
+            int tranNonce) {
         Sale s = Sale.findById(saleId);
         Transaction t = Transaction.findById(tranId);
-        if (s != null && t != null && t.completed == 0 && tranNonce == t.randomNonce) {
-            // Save cookie on mobile device so it can scan items into this transaction
+        if (s != null && t != null && t.completed == 0 &&
+                tranNonce == t.randomNonce) {
+            // Save cookie on device so it can scan items into this transaction
             session("transactionNonce", Integer.toString(tranNonce));
             session("transactionId", Integer.toString(tranId));
-            return ok(mobileSuccess.render("Registered to transaction " + tranId));
+            return ok(mobileSuccess.render("Registered to transaction " +
+                    tranId));
         }
         return ok(mobileFailure.render("Failed to register"));
     }
@@ -461,7 +475,8 @@ public class ActionController extends Controller {
         User u = User.findByUsername(session("username"));
         Sale s = Sale.findById(saleId);
         DynamicForm f = Form.form().bindFromRequest();
-        if (u != null && u.canBeAdmin(saleId) && s != null && f.get("unarchive") != null) {
+        if (u != null && u.canBeAdmin(saleId) && s != null &&
+                f.get("unarchive") != null) {
             s.setStatus(0); // Change sale to closed
             s.save();
             return ok(sale.render(u, s, s.getItems()));
@@ -510,14 +525,19 @@ public class ActionController extends Controller {
         User u = User.findByUsername(session("username"));
         Transaction t = Transaction.findById(tranId);
         if (s != null && u != null && u.canBeSeller(saleId) && t != null) {
-            // Check if sale exists, user exists and can be a seller, and transaction exists
+            // Check if sale exists, user exists and can be a seller,
+            // and transaction exists
 
-            if (s.status == 2) { return redirect("/sale/" + s.id); } // If sale archived, redirect back to sale page
+            if (s.status == 2) {
+                // If sale archived, redirect back to sale page
+                return redirect("/sale/" + s.id);
+            }
 
             DynamicForm f = Form.form().bindFromRequest();
 
             // Handle item add form
-            if (f.get("addItemId") != null && f.get("addItemQuantity") != null) {
+            if (f.get("addItemId") != null &&
+                    f.get("addItemQuantity") != null) {
                 int itemId;
                 int itemQuantity;
                 try { // Convert strings to integers
@@ -531,16 +551,19 @@ public class ActionController extends Controller {
                 // First search to see if item exists and is part of sale
                 SaleItem i = SaleItem.findById(itemId);
                 if (i == null || i.saleId != saleId) {
-                    return ok(transaction.render(t, t.getLineItems(), "No item with that Id"));
+                    return ok(transaction.render(t, t.getLineItems(),
+                            "No item with that Id"));
                 }
 
                 // Then search to see if item is already part of transaction
                 LineItem li = LineItem.findByItemIdTransactionId(itemId, t.id);
-                if (li != null) { // Item already part of transaction, update quantity
+                if (li != null) {
+                    // Item already part of transaction, update quantity
                     li.setQuantity(li.quantity + itemQuantity);
                     li.save();
                 } else { // Item not part of transaction, create new LineItem
-                    LineItem lin = new LineItem(itemId, t.id, itemQuantity, i.price, i.name, i.userCreatedId);
+                    LineItem lin = new LineItem(itemId, t.id, itemQuantity,
+                            i.price, i.name, i.userCreatedId);
                 }
 
                 return ok(transaction.render(t, t.getLineItems(), ""));
@@ -556,14 +579,17 @@ public class ActionController extends Controller {
                     return notFound404();
                 }
                 LineItem li = LineItem.findById(lineItemId);
-                if (li != null) { // If user refreshes page after deleting, this prevents a null pointer exception
+                if (li != null) {
+                    // If user refreshes page after deleting,
+                    // this prevents a null pointer exception
                     li.delete();
                 }
                 return ok(transaction.render(t, t.getLineItems(), ""));
             }
 
             // Handle item update quantity form
-            if (f.get("updateLineItemId") != null && f.get("quantity") != null) {
+            if (f.get("updateLineItemId") != null &&
+                    f.get("quantity") != null) {
                 int lineItemId;
                 int quantity;
                 try { // Convert strings to integers
@@ -585,7 +611,8 @@ public class ActionController extends Controller {
             if (f.get("cancelTransactionId") != null) {
                 int transactionId;
                 try { // Convert string to integer
-                    transactionId = Integer.parseInt(f.get("cancelTransactionId"));
+                    transactionId = Integer.parseInt(
+                            f.get("cancelTransactionId"));
                 } catch (NumberFormatException e) {
                     e.printStackTrace();
                     return notFound404();

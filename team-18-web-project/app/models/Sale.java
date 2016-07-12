@@ -30,7 +30,8 @@ public class Sale extends Model {
      * @return List of all open sales
      */
     public static List<Sale> findAllOpen() {
-        return Ebean.find(Sale.class).where().eq("status", 1).orderBy("id desc").findList();
+        return Ebean.find(Sale.class).where().eq("status", 1)
+                .orderBy("id desc").findList();
     }
 
     /**
@@ -55,8 +56,12 @@ public class Sale extends Model {
     public Timestamp endDate;
     @Constraints.Required
     public int userCreatedId;
-    @Column(columnDefinition = "integer default 0") // New sales are not open for transactions
-    public int status; // 0 : sale is being built, 1: sale is open for transactions, 2: sale is closed and archived
+    // New sales are not open for transactions
+    @Column(columnDefinition = "integer default 0")
+    // 0 : sale is being built
+    // 1: sale is open for transactions
+    // 2: sale is closed and archived
+    public int status;
 
     /**
      * Create an instance of Sale and set the creating user as a sale admin
@@ -70,8 +75,9 @@ public class Sale extends Model {
      * @param endDate Ending date and time of sale
      * @param userCreatedId Id of user who created the sale
      */
-    public Sale(String name, String description, String street, String city, String state, int zip, Timestamp startDate,
-                Timestamp endDate, int userCreatedId) {
+    public Sale(String name, String description, String street, String city,
+                String state, int zip, Timestamp startDate, Timestamp endDate,
+                int userCreatedId) {
         this.name = name;
         this.description = description;
         this.street = street;
@@ -94,7 +100,8 @@ public class Sale extends Model {
      * @param quantity Quantity of item
      * @return
      */
-    public SaleItem addItem(String name, String description, float price, int userId, int quantity) {
+    public SaleItem addItem(String name, String description, float price,
+            int userId, int quantity) {
         return new SaleItem(name, description, price, id, userId, quantity);
     }
 
@@ -107,7 +114,8 @@ public class Sale extends Model {
      * @param quantityStr Quantity of item as string (for handling form inputs)
      * @return
      */
-    public SaleItem addItem(String name, String description, String priceStr, int userId, String quantityStr) {
+    public SaleItem addItem(String name, String description, String priceStr,
+            int userId, String quantityStr) {
         float price = 0;
         int quantity = 0;
         try {
@@ -191,7 +199,9 @@ public class Sale extends Model {
      * Set Description
      * @param description Description of sale
      */
-    public void setDescription(String description) { this.description = description; }
+    public void setDescription(String description) {
+      this.description = description;
+    }
 
     /**
      * Set endDate
@@ -209,7 +219,9 @@ public class Sale extends Model {
      * Set startDate
      * @param startDate Starting time and date of Sale
      */
-    public void setStartDate(Timestamp startDate) { this.startDate = startDate; }
+    public void setStartDate(Timestamp startDate) {
+      this.startDate = startDate;
+    }
 
     /**
      * Set State
@@ -233,7 +245,9 @@ public class Sale extends Model {
      * Set userCreatedId
      * @param userCreatedId Set Id of user who created the sale
      */
-    public void setUserCreatedId(int userCreatedId) { this.userCreatedId = userCreatedId; }
+    public void setUserCreatedId(int userCreatedId) {
+      this.userCreatedId = userCreatedId;
+    }
 
     /**
      * Set Zip

@@ -32,7 +32,8 @@ public class LineItem extends Model {
      * @return LineItems associated with a Transaction
      */
     public static List<LineItem> findByTransactionId(int transactionId) {
-        return Ebean.find(LineItem.class).where().eq("transactionId", transactionId).findList();
+        return Ebean.find(LineItem.class).where().eq("transactionId",
+                transactionId).findList();
     }
 
     /**
@@ -41,8 +42,10 @@ public class LineItem extends Model {
      * @param transactionId Id of Transaction
      * @return LineItem associated with a SaleItem and a Transaction
      */
-    public static LineItem findByItemIdTransactionId(int itemId, int transactionId) {
-        return Ebean.find(LineItem.class).where().eq("saleItemId", itemId).eq("transactionId", transactionId).findUnique();
+    public static LineItem findByItemIdTransactionId(int itemId,
+            int transactionId) {
+        return Ebean.find(LineItem.class).where().eq("saleItemId", itemId).
+                eq("transactionId", transactionId).findUnique();
     }
 
     @Id
@@ -51,9 +54,9 @@ public class LineItem extends Model {
     public int saleItemId; // References specific Sale
     public int transactionId; //References specific Transaction
     public int quantity; //item quantity with transaction
-    public float unitPrice; // Store unit price in case someone modifies the SaleItem in the future
-    public String name; // Store item name in case someone modifies the SaleItem in the future
-    public int userCreatedId; // Store user created id in case someone deletes the SaleItem in the future
+    public float unitPrice; // Store unit price in case of SaleItem modification
+    public String name; // Store item name in case of SaleItem modification
+    public int userCreatedId; // Store user id in case of SaleItem deletion
 
     /**
      * Create an instance of LineItem
@@ -64,7 +67,8 @@ public class LineItem extends Model {
      * @param name Name of SaleItem
      * @param userCreatedId Id of User who added the SaleItem to Sale
      */
-    public LineItem (int saleItemId, int transactionId, int quantity, float unitPrice, String name, int userCreatedId) {
+    public LineItem (int saleItemId, int transactionId, int quantity,
+            float unitPrice, String name, int userCreatedId) {
         this.saleItemId = saleItemId;
         this.transactionId= transactionId;
         this.quantity = quantity;

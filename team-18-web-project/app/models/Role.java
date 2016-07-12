@@ -33,7 +33,8 @@ public class Role extends Model {
      * @return Role if it exists
      */
     public static Role findByIds(int userId, int saleId) {
-        return Ebean.find(Role.class).where().eq("userId", userId).eq("saleId", saleId).findUnique();
+        return Ebean.find(Role.class).where().eq("userId", userId).eq("saleId",
+                saleId).findUnique();
     }
 
     /**

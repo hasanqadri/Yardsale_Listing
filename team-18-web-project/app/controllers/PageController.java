@@ -24,44 +24,50 @@ import java.util.List;
 public class PageController extends Controller {
 
     /**
-     * An action that renders an HTML page with a welcome message.
+     * Display home page
      * @return HTTP response to home page request
      */
     public Result home() {
-        if (session("username") != null) { //Temporarily redirect all logged in users to /profile
+        if (session("username") != null) {
+            // Redirect all logged in users to /sales
             return redirect("/sales");
         }
         return ok(home.render());
     }
 
     /**
-     * Renders about page
+     * Display about page
      * @return HTTP response to about page request
      */
     public Result about() {
-        if (session("username") != null) { //Temporarily redirect all logged in users to /profile
+        if (session("username") != null) {
+            // Redirect all logged in users to /
             return redirect("/");
         }
         return ok(about.render());
     }
 
     /**
-     * Displays addItem page
+     * Display addItem page
      * @return HTTP response to addItem page request
      */
     @Authenticated(Secured.class)
     public Result addItem(int saleId) {
         Sale s = Sale.findById(saleId);
         User u = User.findByUsername(session("username"));
-        if (s != null && u != null && u.canBeSeller(saleId)) { // Check if sale exists and user can act as seller
-            if (s.status == 2) { return redirect("/sale/" + s.id); } // If sale archived, redirect back to sale page
+        if (s != null && u != null && u.canBeSeller(saleId)) {
+            // Check if sale exists and user can act as seller
+            if (s.status == 2) {
+                // If sale archived, redirect back to sale page
+                return redirect("/sale/" + s.id);
+            }
             return ok(addItem.render(saleId));
         }
         return notFound404();
     }
 
     /**
-     * Displays transaction page
+     * Display transaction page
      * @return HTTP response to transaction page request
      */
     @Authenticated(Secured.class)
@@ -69,8 +75,10 @@ public class PageController extends Controller {
         Sale s = Sale.findById(saleId);
         Transaction t = Transaction.findById(tranId);
         User u = User.findByUsername(session("username"));
-        if (s != null && t != null && t.completed == 0 && u != null && u.canBeSeller(saleId)) {
-            // Check if sale exists, and transaction exists and is not completed, and user exists and can be seller
+        if (s != null && t != null && t.completed == 0 && u != null &&
+                u.canBeSeller(saleId)) {
+            // Check if sale exists, and transaction exists
+            // and is not completed, and user exists and can be seller
             return ok(confirmTransaction.render(saleId, tranId, ""));
         }
         return notFound404();
@@ -93,8 +101,12 @@ public class PageController extends Controller {
     public Result editSale(int saleId) {
         Sale s = Sale.findById(saleId);
         User u = User.findByUsername(session("username"));
-        if (s != null && u != null && u.canBeAdmin(s.id)) { // If user is a sale administrator, show edit sale page
-            if (s.status == 2) { return redirect("/sale/" + s.id); } // If sale archived, redirect back to sale page
+        if (s != null && u != null && u.canBeAdmin(s.id)) {
+            // If user is a sale administrator, show edit sale page
+            if (s.status == 2) {
+                return redirect("/sale/" + s.id);
+            }
+            // If sale archived, redirect back to sale page
             return ok(editSale.render(s, s.getRoles()));
         }
         return notFound404();
@@ -117,13 +129,16 @@ public class PageController extends Controller {
     public Result financialReport(int saleId) {
         Sale s = Sale.findById(saleId);
         User u = User.findByUsername(session("username"));
-        if (s != null && u != null && u.canBeBookkeeper(s.id)) { // If user has bookkeeper permissions, show page
-            List<Transaction> transactions = Transaction.findCompletedBySaleId(saleId);
+        if (s != null && u != null && u.canBeBookkeeper(s.id)) {
+            // If user has bookkeeper permissions, show page
+            List<Transaction> transactions =
+                    Transaction.findCompletedBySaleId(saleId);
             float total = 0;
             for (Transaction t : transactions) {
               total += t.getTotal();
             }
-            return ok(financialReport.render(transactions, saleId, String.format("%.2f", total)));
+            return ok(financialReport.render(transactions, saleId,
+                    String.format("%.2f", total)));
         }
         return notFound404();
     }
@@ -146,7 +161,8 @@ public class PageController extends Controller {
         User u = User.findByUsername(session("username"));
         Sale s = Sale.findById(saleId);
         SaleItem i = SaleItem.findById(itemId);
-        if (u != null && s != null & i != null && (s.status == 1 || Role.findByIds(u.id, saleId) != null)) {
+        if (u != null && s != null & i != null && (s.status == 1 ||
+                Role.findByIds(u.id, saleId) != null)) {
             return ok(item.render(u, s, i));
         }
         return notFound404();
@@ -161,9 +177,10 @@ public class PageController extends Controller {
     @Authenticated(Secured.class)
     public Result itemTag(int saleId, int itemId) {
         User u = User.findByUsername(session("username"));
-        SaleItem si = SaleItem.findById(itemId);
-        if (si != null && u != null && u.canBeClerk(saleId)) { // Check if sale exists and user has clerk permissions
-            return ok(itemTag.render(si, saleId));
+        SaleItem i = SaleItem.findById(itemId);
+        if (i != null && u != null && u.canBeClerk(saleId)) {
+            // Check if sale exists and user has clerk permissions
+            return ok(itemTag.render(i, saleId));
         }
         return notFound404();
     }
@@ -196,20 +213,11 @@ public class PageController extends Controller {
     public Result mysales() {
         User u = User.findByUsername(session("username"));
         List<Role> roles = Role.findByUserId(u.id);
-        List<Sale> sales = new ArrayList(); // This should be a set but it works because only 1 role per user/sale pair
+        List<Sale> sales = new ArrayList();
         for (Role r : roles) {
             sales.add(Sale.findById(r.saleId));
         }
         return ok(mysales.render(sales));
-    }
-
-    /**
-     * Registration page that takes in the form info and then send the user to postContact
-     * @return HTTP response to newContact request
-     */
-    public Result newContact() {
-        Form<userdata> formdata = Form.form(userdata.class);
-        return ok(NewContact.render(formdata));
     }
 
     /**
@@ -267,7 +275,8 @@ public class PageController extends Controller {
         Sale s = Sale.findById(id);
         User u = User.findByUsername(session("username"));
         if (s != null) { // Check if sale exists
-            if (s.status == 1 || (Role.findByIds(u.id, s.id) != null)) { // If sale is open to public, or user has a role on the sale
+            // If sale is open to public, or user has a role on the sale
+            if (s.status == 1 || (Role.findByIds(u.id, s.id) != null)) {
                 return ok(sale.render(u, s, s.getItems()));
             }
         }
@@ -305,8 +314,10 @@ public class PageController extends Controller {
         Sale s = Sale.findById(saleId);
         Transaction t = Transaction.findById(tranId);
         User u = User.findByUsername(session("username"));
-        if (s != null && s.status == 1 && t != null && t.completed == 0 && u != null && u.canBeSeller(saleId)) {
-            // Check if sale exists, and transaction exists and is not completed, and user exists and can be seller
+        if (s != null && s.status == 1 && t != null && t.completed == 0 &&
+                u != null && u.canBeSeller(saleId)) {
+            // Check if sale exists, and transaction exists
+            // and is not completed, and user exists and can be seller
             return ok(transaction.render(t, t.getLineItems(), ""));
         }
         return notFound404();
@@ -321,9 +332,12 @@ public class PageController extends Controller {
         Sale s = Sale.findById(saleId);
         Transaction t = Transaction.findById(tranId);
         User u = User.findByUsername(session("username"));
-        if (s != null && s.status == 1 && t != null && t.completed == 1 && u != null && u.canBeSeller(saleId)) {
-            // Check if sale exists, and transaction exists and is completed, and user exists and can be seller
-            return ok(transactionReceipt.render(t, t.getLineItems(), saleId, tranId, ""));
+        if (s != null && s.status == 1 && t != null && t.completed == 1 &&
+                u != null && u.canBeSeller(saleId)) {
+            // Check if sale exists, and transaction exists and is completed,
+            // and user exists and can be seller
+            return ok(transactionReceipt.render(t, t.getLineItems(), saleId,
+                    tranId, ""));
         }
         return notFound404();
     }
