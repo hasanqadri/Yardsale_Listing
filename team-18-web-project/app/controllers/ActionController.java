@@ -1,21 +1,39 @@
 package controllers;
 
-import models.*;
-import play.data.DynamicForm;
-import play.data.Form;
-import play.mvc.Controller;
-import play.mvc.Http.MultipartFormData;
-import play.mvc.Result;
-import play.mvc.Security.Authenticated;
-import views.formdata.userdata;
-import views.html.*;
-
 import java.sql.Timestamp;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
+import models.LineItem;
+import models.Role;
+import models.Sale;
+import models.SaleItem;
+import models.Transaction;
+import models.User;
+import play.data.DynamicForm;
+import play.data.Form;
+import play.mvc.Controller;
+import play.mvc.Http.MultipartFormData;
+import play.mvc.Result;
+import play.mvc.Security.Authenticated;
+import views.html.admin;
+import views.html.editSale;
+import views.html.item;
+import views.html.loggedinNotFound;
+import views.html.login;
+import views.html.mobileFailure;
+import views.html.mobileSuccess;
+import views.html.notFound;
+import views.html.profile;
+import views.html.register;
+import views.html.registrationSuccess;
+import views.html.sale;
+import views.html.searchItems;
+import views.html.searchSales;
+import views.html.searchItemStock;
+import views.html.transaction;
 
 /**
  * Created by nathancheek on 6/25/16.
@@ -32,8 +50,8 @@ public class ActionController extends Controller {
         if (s != null) { // Check if sale exists
             DynamicForm f = Form.form().bindFromRequest();
             // If improper request, give 404 error
-            if (f.get("name") == null || f.get("description") == null ||
-                    f.get("price") == null || f.get("quantity") == null) {
+            if (f.get("name") == null || f.get("description") == null
+                    || f.get("price") == null || f.get("quantity") == null) {
                 return notFound404();
             }
             User u = User.findByUsername(session("username"));
@@ -116,7 +134,7 @@ public class ActionController extends Controller {
             Date endingDate = dateFormat.parse(f.get("endDate"));
             long endTime = endingDate.getTime();
             endDate = new Timestamp(endTime);
-        } catch(ParseException|NumberFormatException e) {
+        } catch (ParseException | NumberFormatException e) {
             e.printStackTrace();
             return notFound404();
         }
@@ -138,7 +156,9 @@ public class ActionController extends Controller {
         // If User exists and can be a seller
         if (u != null && u.canBeSeller(saleId)) {
             // If sale archived, redirect back to sale page
-            if (s.status == 2) { return redirect("/sale/" + s.id); }
+            if (s.status == 2) {
+                return redirect("/sale/" + s.id);
+            }
             Transaction transaction = new Transaction(saleId, u.id);
             return redirect("/sale/" + saleId + "/transaction/"
                     + transaction.id);
@@ -166,8 +186,8 @@ public class ActionController extends Controller {
         DynamicForm f = Form.form().bindFromRequest();
 
         // Handle role creation requests
-        if (f.get("addRoleUsername") != null && f.get("addRoleName") != null &&
-                Role.validRoles.contains(f.get("addRoleName"))) {
+        if (f.get("addRoleUsername") != null && f.get("addRoleName") != null
+                && Role.VALIDROLES.contains(f.get("addRoleName"))) {
             User ua = User.findByUsername(f.get("addRoleUsername"));
             if (ua != null) {
                 Role r = Role.findByIds(ua.id, s.id);
@@ -198,10 +218,10 @@ public class ActionController extends Controller {
         }
 
         // Handle sale info update requests
-        if (f.get("name") != null && f.get("description") != null &&
-                f.get("street") != null && f.get("city") != null &&
-                f.get("state") != null && f.get("zip") != null &&
-                f.get("startDate") != null && f.get("endDate") != null) {
+        if (f.get("name") != null && f.get("description") != null
+                && f.get("street") != null && f.get("city") != null
+                && f.get("state") != null && f.get("zip") != null
+                && f.get("startDate") != null && f.get("endDate") != null) {
             s.setName(f.get("name"));
             s.setDescription(f.get("description"));
             s.setStreet(f.get("street"));
@@ -269,11 +289,11 @@ public class ActionController extends Controller {
 
         // Check that user exists and is authorized, sale exists and is open,
         // item exists and is part of the sale
-        if (u != null && u.canBeSeller(saleId) && s != null && s.status != 2 &&
-                i != null && i.saleId == s.id) {
+        if (u != null && u.canBeSeller(saleId) && s != null && s.status != 2
+                && i != null && i.saleId == s.id) {
             //Handle item update requests
-            if (f.get("name") != null && f.get("description") != null &&
-                    f.get("price") != null && f.get("quantity") != null) {
+            if (f.get("name") != null && f.get("description") != null
+                    && f.get("price") != null && f.get("quantity") != null) {
                 float price;
                 int quantity;
                 try {
@@ -335,10 +355,6 @@ public class ActionController extends Controller {
             }
         }
         return ok(login.render("Login failed"));
-    }
-
-    public Result mobileScanRedirect(int itemId) {
-        return ok(mobileScanRedirect.render("/mobileScan/" + itemId));
     }
 
     /**
@@ -454,13 +470,13 @@ public class ActionController extends Controller {
             int tranNonce) {
         Sale s = Sale.findById(saleId);
         Transaction t = Transaction.findById(tranId);
-        if (s != null && t != null && t.completed == 0 &&
-                tranNonce == t.randomNonce) {
+        if (s != null && t != null && t.completed == 0
+                && tranNonce == t.randomNonce) {
             // Save cookie on device so it can scan items into this transaction
             session("transactionNonce", Integer.toString(tranNonce));
             session("transactionId", Integer.toString(tranId));
-            return ok(mobileSuccess.render("Registered to transaction " +
-                    tranId));
+            return ok(mobileSuccess.render("Registered to transaction "
+                    + tranId));
         }
         return ok(mobileFailure.render("Failed to register"));
     }
@@ -475,8 +491,8 @@ public class ActionController extends Controller {
         User u = User.findByUsername(session("username"));
         Sale s = Sale.findById(saleId);
         DynamicForm f = Form.form().bindFromRequest();
-        if (u != null && u.canBeAdmin(saleId) && s != null &&
-                f.get("unarchive") != null) {
+        if (u != null && u.canBeAdmin(saleId) && s != null
+                && f.get("unarchive") != null) {
             s.setStatus(0); // Change sale to closed
             s.save();
             return ok(sale.render(u, s, s.getItems()));
@@ -536,8 +552,8 @@ public class ActionController extends Controller {
             DynamicForm f = Form.form().bindFromRequest();
 
             // Handle item add form
-            if (f.get("addItemId") != null &&
-                    f.get("addItemQuantity") != null) {
+            if (f.get("addItemId") != null
+                    && f.get("addItemQuantity") != null) {
                 int itemId;
                 int itemQuantity;
                 try { // Convert strings to integers
@@ -588,8 +604,8 @@ public class ActionController extends Controller {
             }
 
             // Handle item update quantity form
-            if (f.get("updateLineItemId") != null &&
-                    f.get("quantity") != null) {
+            if (f.get("updateLineItemId") != null
+                    && f.get("quantity") != null) {
                 int lineItemId;
                 int quantity;
                 try { // Convert strings to integers

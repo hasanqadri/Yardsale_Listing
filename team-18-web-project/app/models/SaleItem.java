@@ -2,23 +2,21 @@ package models;
 
 import com.avaje.ebean.Ebean;
 import com.avaje.ebean.Model;
-import play.data.validation.Constraints;
-
 import java.util.List;
-import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
+import play.data.validation.Constraints;
 
 /**
  * Represents a Sale Item
  * Created by portega on 6/20/2016.
  */
 @Entity
-@Table(name="saleItems")
+@Table(name = "saleItems")
 public class SaleItem extends Model {
     /**
      * Find SaleItem by its Id
@@ -37,7 +35,7 @@ public class SaleItem extends Model {
     public static SaleItem findById(String idStr) {
         int id = 0;
         try {
-          id = Integer.parseInt(idStr);
+            id = Integer.parseInt(idStr);
         } catch (NumberFormatException e) {
             e.printStackTrace();
         }
@@ -55,9 +53,9 @@ public class SaleItem extends Model {
     }
 
     @Id
-    @GeneratedValue(strategy=GenerationType.SEQUENCE, generator="seq")
-    @SequenceGenerator(name="seq", sequenceName = "local.seq_name",
-            initialValue=1000001, allocationSize=1)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "seq")
+    @SequenceGenerator(name = "seq", sequenceName = "local.seq_name",
+            initialValue = 1000001, allocationSize = 1)
     // ^ TODO this doesn't actually work
     public int id;
     @Constraints.Required
@@ -80,7 +78,7 @@ public class SaleItem extends Model {
      * @param userCreatedId User Id of the User who created the SaleItem
      * @param quantity Quantity of SaleItem in stock
      */
-    public SaleItem (String name, String description, float price, int saleId,
+    public SaleItem(String name, String description, float price, int saleId,
             int userCreatedId, int quantity) {
         this.name = name;
         this.description = description;
@@ -103,43 +101,57 @@ public class SaleItem extends Model {
      * Get the Description of the SaleItem
      * @return Description of the SaleItem
      */
-    public String getDescription() { return description; }
+    public String getDescription() {
+        return description;
+    }
 
     /**
      * Get the Id of the SaleItem
      * @return Id of the SaleItem
      */
-    public int getId() { return id; }
+    public int getId() {
+        return id;
+    }
 
     /**
      * Get the Name of the SaleItem
      * @return Name of the SaleItem
      */
-    public String getName() { return name; }
+    public String getName() {
+        return name;
+    }
 
     /**
      * Get the Price of the SaleItem
      * @return Price of the SaleItem
      */
-    public float getPrice() { return price; }
+    public float getPrice() {
+        return price;
+    }
 
     /**
      * Get the Quantity of the SaleItem
      * @return Quantity of the SaleItem
      */
-    public int getQuantity() { return quantity; }
+    public int getQuantity() {
+        return quantity;
+    }
 
     /**
      * Get the Sale Id of the Sale the SaleItem is associated with
      * @return Sale Id of the Sale the SaleItem is associated with
      */
-    public int getSaleId() { return saleId; }
+    public int getSaleId() {
+        return saleId;
+    }
 
     /**
      * Get the User Id of the User who created the SaleItem
      * @return User Id of the User who created the SaleItem
      */
-    public int getUserCreatedId() { return userCreatedId; }
+    public int getUserCreatedId() {
+        return userCreatedId;
+    }
 
     /**
      * Set the Description of the SaleItem
@@ -153,25 +165,33 @@ public class SaleItem extends Model {
      * Set the Name of the SaleItem
      * @param name Name of the SaleItem
      */
-    public void setName(String name) { this.name = name; }
+    public void setName(String name) {
+        this.name = name;
+    }
 
     /**
      * Set the Unit Price of the SaleItem
      * @param price Unit Price of the SaleItem
      */
-    public void setPrice(float price) { this.price = price; }
+    public void setPrice(float price) {
+        this.price = price;
+    }
 
     /**
      * Set the Quantity of the SaleItem in stock
      * @param quantity Quantity of the SaleItem in stock
      */
-    public void setQuantity(int quantity) { this.quantity = quantity; }
+    public void setQuantity(int quantity) {
+        this.quantity = quantity;
+    }
 
     /**
      * Set the Sale Id of the Sale the SaleItem is associated with
      * @param saleId Sale Id of the Sale the SaleItem is associated with
      */
-    public void setSaleId(int saleId) { this.saleId = saleId; }
+    public void setSaleId(int saleId) {
+        this.saleId = saleId;
+    }
 
     /**
      * Set the User Id of the User who created the SaleItem
@@ -186,7 +206,7 @@ public class SaleItem extends Model {
      * @return SaleItem object description
      */
     public String toString() {
-        return String.format("[Name: " + name + " Description: " + description +
-                " Price: " + price);
+        return String.format("[Name: " + name + " Description: " + description
+                + " Price: " + price);
     }
 }

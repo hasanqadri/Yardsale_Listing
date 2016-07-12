@@ -2,26 +2,24 @@ package models;
 
 import com.avaje.ebean.Ebean;
 import com.avaje.ebean.Model;
-import play.data.validation.Constraints;
-
 import java.security.SecureRandom;
 import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 import java.util.Random;
-
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Table;
+import play.data.validation.Constraints;
 
 /**
  * Represents a Transaction
  * Created by nathancheek on 6/24/16.
  */
 @Entity
-@Table(name="transactions")
+@Table(name = "transactions")
 public class Transaction extends Model {
     /**
      * Find transaction by its Id
@@ -40,7 +38,7 @@ public class Transaction extends Model {
     public static Transaction findById(String idStr) {
         int id = 0;
         try {
-          id = Integer.parseInt(idStr);
+            id = Integer.parseInt(idStr);
         } catch (NumberFormatException e) {
             e.printStackTrace();
         }
@@ -87,13 +85,13 @@ public class Transaction extends Model {
     }
 
     public boolean checkNonce(String nonceStr) {
-      int nonce = 0;
-      try {
-          nonce = Integer.parseInt(nonceStr);
-      } catch (NumberFormatException e) {
-          e.printStackTrace();
-      }
-      return this.randomNonce == nonce;
+        int nonce = 0;
+        try {
+            nonce = Integer.parseInt(nonceStr);
+        } catch (NumberFormatException e) {
+            e.printStackTrace();
+        }
+        return this.randomNonce == nonce;
     }
 
     /**
@@ -130,8 +128,7 @@ public class Transaction extends Model {
         float total = 0;
 
         List<LineItem> lineItems = getLineItems();
-        for(LineItem li: lineItems) {
-
+        for (LineItem li: lineItems) {
             total += li.getTotalPrice();
         }
         return total;
@@ -141,14 +138,16 @@ public class Transaction extends Model {
      * Set buyerName
      * @param buyerName Name of Buyer
      */
-    public void setBuyerName(String buyerName) { this.buyerName = buyerName; }
+    public void setBuyerName(String buyerName) {
+        this.buyerName = buyerName;
+    }
 
     /**
      * Set buyerAddress
      * @param buyerAddress Address of Buyer
      */
     public void setBuyerAddress(String buyerAddress) {
-      this.buyerAddress = buyerAddress;
+        this.buyerAddress = buyerAddress;
     }
 
     /**
@@ -156,7 +155,7 @@ public class Transaction extends Model {
      * @param buyerEmail Email of Buyer
      */
     public void setBuyerEmail(String buyerEmail) {
-      this.buyerEmail = buyerEmail;
+        this.buyerEmail = buyerEmail;
     }
 
     /**
@@ -164,9 +163,9 @@ public class Transaction extends Model {
      * @param completed Is sale completed
      */
     public void setCompleted(int completed) {
-      this.completed = completed;
-      Date date = new Date();
-      this.date = new Timestamp(date.getTime());
+        this.completed = completed;
+        Date date = new Date();
+        this.date = new Timestamp(date.getTime());
     }
 
     /**
@@ -174,6 +173,6 @@ public class Transaction extends Model {
      * @param payment Payment method
      */
     public void setPaymentMethod(String payment) {
-      this.paymentMethod = payment;
+        this.paymentMethod = payment;
     }
 }

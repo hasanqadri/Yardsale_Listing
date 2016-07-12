@@ -3,22 +3,19 @@ package models;
 import com.avaje.ebean.Ebean;
 import com.avaje.ebean.Expr;
 import com.avaje.ebean.Model;
-import play.data.validation.Constraints;
-
 import java.util.Arrays;
 import java.util.List;
-
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Table;
 import javax.persistence.Column;
-
+import play.data.validation.Constraints;
 
 /**
  * Represents a User
  */
 @Entity
-@Table(name="users")
+@Table(name = "users")
 public class User extends Model {
     /**
      * Find all Users
@@ -99,7 +96,7 @@ public class User extends Model {
      * @param username Username of User
      * @param password Password of User
      */
-    public User (String firstName, String lastName, String email,
+    public User(String firstName, String lastName, String email,
             String username, String password) {
         this.firstName = firstName;
         this.lastName = lastName;
@@ -117,7 +114,7 @@ public class User extends Model {
      * @param username Username of User
      * @param password Password of User
      */
-    public User (String name, String email, String username, String password) {
+    public User(String name, String email, String username, String password) {
         this.setName(name);
         this.email = email;
         this.username = username;
@@ -132,10 +129,14 @@ public class User extends Model {
      * @return Whether the user can act as an administrator
      */
     public boolean canBeAdmin(int saleId) {
-        if (superAdmin == 1) { return true; }
+        if (superAdmin == 1) {
+            return true;
+        }
         Role role = Ebean.find(Role.class).where().eq("userId", id).
                 eq("saleId", saleId).eq("name", "admin").findUnique();
-        if (role == null) { return false; }
+        if (role == null) {
+            return false;
+        }
         return true;
     }
 
@@ -146,7 +147,9 @@ public class User extends Model {
      * @return Whether the user can act as a bookkeeper
      */
     public boolean canBeBookkeeper(int saleId) {
-        if (superAdmin == 1) { return true; }
+        if (superAdmin == 1) {
+            return true;
+        }
         Role role = Ebean.find(Role.class).where().eq("userId", id).
                 eq("saleId", saleId).or(
                     Expr.eq("name", "admin"),
@@ -155,7 +158,9 @@ public class User extends Model {
                         Expr.eq("name", "seller")
                     )
                 ).findUnique();
-        if (role == null) { return false; }
+        if (role == null) {
+            return false;
+        }
         return true;
     }
 
@@ -166,7 +171,9 @@ public class User extends Model {
      * @return Whether the user can act as a cashier
      */
     public boolean canBeCashier(int saleId) {
-        if (superAdmin == 1) { return true; }
+        if (superAdmin == 1) {
+            return true;
+        }
         Role role = Ebean.find(Role.class).where().eq("userId", id).
                 eq("saleId", saleId).or(
                     Expr.eq("name", "admin"),
@@ -175,7 +182,9 @@ public class User extends Model {
                         Expr.eq("name", "seller")
                     )
                 ).findUnique();
-        if (role == null) { return false; }
+        if (role == null) {
+            return false;
+        }
         return true;
     }
 
@@ -186,7 +195,9 @@ public class User extends Model {
      * @return Whether the user can act as a clerk
      */
     public boolean canBeClerk(int saleId) {
-        if (superAdmin == 1) { return true; }
+        if (superAdmin == 1) {
+            return true;
+        }
         Role role = Ebean.find(Role.class).where().eq("userId", id).
                 eq("saleId", saleId).or(
                     Expr.eq("name", "admin"),
@@ -195,7 +206,9 @@ public class User extends Model {
                         Expr.eq("name", "seller")
                     )
                 ).findUnique();
-        if (role == null) { return false; }
+        if (role == null) {
+            return false;
+        }
         return true;
     }
 
@@ -206,13 +219,17 @@ public class User extends Model {
      * @return Whether the user can act as a seller
      */
     public boolean canBeSeller(int saleId) {
-        if (superAdmin == 1) { return true; }
+        if (superAdmin == 1) {
+            return true;
+        }
         Role role = Ebean.find(Role.class).where().eq("userId", id).
                 eq("saleId", saleId).or(
                     Expr.eq("name", "admin"),
                     Expr.eq("name", "seller")
                 ).findUnique();
-        if (role == null) { return false; }
+        if (role == null) {
+            return false;
+        }
         return true;
     }
 
@@ -220,86 +237,114 @@ public class User extends Model {
      * Get the Email address of the User
      * @return Email address of the User
      */
-    public String getEmail() { return email; }
+    public String getEmail() {
+        return email;
+    }
 
     /**
      * Get the First Name of the User
      * @return First Name of the User
      */
-    public String getFirstName() { return firstName; }
+    public String getFirstName() {
+        return firstName;
+    }
 
     /**
      * Get the Id of the User
      * @return Id of the User
      */
-    public int getId() { return id; }
+    public int getId() {
+        return id;
+    }
 
     /**
      * Get the Last Name of the User
      * @return Last Name of the User
      */
-    public String getLastName() { return lastName; }
+    public String getLastName() {
+        return lastName;
+    }
 
     /**
      * Get the Login Attempts of the User
      * @return Login Attempts of the User
      */
-    public int getLoginAttempts() { return loginAttempts; }
+    public int getLoginAttempts() {
+        return loginAttempts;
+    }
 
     /**
      * Get the Name of the User
      * @return Name of the User
      */
-    public String getName() { return firstName + " " + lastName; }
+    public String getName() {
+        return firstName + " " + lastName;
+    }
 
     /**
      * Get the Password of the User
      * @return Password of the User
      */
-    public String getPassword() { return password; }
+    public String getPassword() {
+        return password;
+    }
 
     /**
      * Get the Profile Picture Id of the User
      * @return Profile Picture Id of the User
      */
-    public int getProfilePictureId() { return profilePictureId; }
+    public int getProfilePictureId() {
+        return profilePictureId;
+    }
 
     /**
      * Get the Super Admin value of the User
      * (1 == is Super Admin, 0 == is not Super Admin)
      * @return Super Admin value of the User
      */
-    public int getSuperAdmin() { return superAdmin; }
+    public int getSuperAdmin() {
+        return superAdmin;
+    }
 
     /**
      * Get the Username of the User
      * @return Username of the User
      */
-    public String getUsername() { return username; }
+    public String getUsername() {
+        return username;
+    }
 
     /**
      * Returns whether the user is a super admin
      * @return Whether the user is a super admin
      */
-    public boolean isSuperAdmin() { return superAdmin == 1; }
+    public boolean isSuperAdmin() {
+        return superAdmin == 1;
+    }
 
     /**
      * Set the Email address of the user
      * @param email Email address of the user
      */
-    public void setEmail(String email) { this.email = email; }
+    public void setEmail(String email) {
+        this.email = email;
+    }
 
     /**
      * Set the First Name of the user
      * @param firstName First Name of the user
      */
-    public void setFirstName(String firstName) { this.firstName = firstName; }
+    public void setFirstName(String firstName) {
+        this.firstName = firstName;
+    }
 
     /**
      * Set the Last Name of the user
      * @param lastName Last Name of the user
      */
-    public void setLastName(String lastName) { this.lastName = lastName; }
+    public void setLastName(String lastName) {
+        this.lastName = lastName;
+    }
 
     /**
      * Set the Login Attempts of the user
@@ -343,13 +388,17 @@ public class User extends Model {
      * Set the Super Admin value of the user
      * @param superAdmin Super Admin value of the user
      */
-    public void setSuperAdmin(int superAdmin) { this.superAdmin = superAdmin; }
+    public void setSuperAdmin(int superAdmin) {
+        this.superAdmin = superAdmin;
+    }
 
     /**
      * Set the Username of the user
      * @param username Username of the user
      */
-    public void setUsername(String username) { this.username = username; }
+    public void setUsername(String username) {
+        this.username = username;
+    }
 
     /**
      * String representation of the user object

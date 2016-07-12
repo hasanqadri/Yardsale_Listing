@@ -2,27 +2,21 @@ package models;
 
 import com.avaje.ebean.Ebean;
 import com.avaje.ebean.Model;
-import play.data.format.*;
-import play.data.validation.Constraints;
-
 import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
-
 import javax.persistence.Entity;
 import javax.persistence.Column;
 import javax.persistence.Id;
-import javax.persistence.OneToMany;
 import javax.persistence.Table;
+import play.data.validation.Constraints;
 
 /**
  * Represents a sale
  * Created by portega on 6/20/2016.
  */
 @Entity
-@Table(name="sales")
+@Table(name = "sales")
 public class Sale extends Model {
 
     /**
@@ -98,7 +92,7 @@ public class Sale extends Model {
      * @param price Price of item
      * @param userId User Id adding the item
      * @param quantity Quantity of item
-     * @return
+     * @return SaleItem that was created
      */
     public SaleItem addItem(String name, String description, float price,
             int userId, int quantity) {
@@ -112,7 +106,7 @@ public class Sale extends Model {
      * @param priceStr Price of item as string (for handling form inputs)
      * @param userId User Id adding the item
      * @param quantityStr Quantity of item as string (for handling form inputs)
-     * @return
+     * @return SaleItem that was created
      */
     public SaleItem addItem(String name, String description, String priceStr,
             int userId, String quantityStr) {
@@ -142,7 +136,9 @@ public class Sale extends Model {
      */
     public String getCreatedBy() {
         User u = User.findById(userCreatedId);
-        if (u == null) { return "Deleted user"; }
+        if (u == null) {
+            return "Deleted user";
+        }
         return u.getName();
     }
 
@@ -193,65 +189,79 @@ public class Sale extends Model {
      * Set City
      * @param city City address of sale
      */
-    public void setCity(String city) { this.city = city; }
+    public void setCity(String city) {
+        this.city = city;
+    }
 
     /**
      * Set Description
      * @param description Description of sale
      */
     public void setDescription(String description) {
-      this.description = description;
+        this.description = description;
     }
 
     /**
      * Set endDate
      * @param endDate Ending time and date of Sale
      */
-    public void setEndDate(Timestamp endDate) { this.endDate = endDate; }
+    public void setEndDate(Timestamp endDate) {
+        this.endDate = endDate;
+    }
 
     /**
      * Set Name
      * @param name Name of sale
      */
-    public void setName(String name) { this.name = name; }
+    public void setName(String name) {
+        this.name = name;
+    }
 
     /**
      * Set startDate
      * @param startDate Starting time and date of Sale
      */
     public void setStartDate(Timestamp startDate) {
-      this.startDate = startDate;
+        this.startDate = startDate;
     }
 
     /**
      * Set State
      * @param state State address of sale
      */
-    public void setState(String state) { this.state = state; }
+    public void setState(String state) {
+        this.state = state;
+    }
 
     /**
      * Set Status
      * @param status Status of sale (1 of 3 stages)
      */
-    public void setStatus(int status) { this.status = status; }
+    public void setStatus(int status) {
+        this.status = status;
+    }
 
     /**
      * Set Street
      * @param street Street address of sale
      */
-    public void setStreet(String street) { this.street = street; }
+    public void setStreet(String street) {
+        this.street = street;
+    }
 
     /**
      * Set userCreatedId
      * @param userCreatedId Set Id of user who created the sale
      */
     public void setUserCreatedId(int userCreatedId) {
-      this.userCreatedId = userCreatedId;
+        this.userCreatedId = userCreatedId;
     }
 
     /**
      * Set Zip
      * @param zip Zip code address of sale
      */
-    public void setZip(int zip) { this.zip = zip; }
+    public void setZip(int zip) {
+        this.zip = zip;
+    }
 }

@@ -7,29 +7,23 @@ import com.google.zxing.client.j2se.MatrixToImageWriter;
 import com.google.zxing.common.BitMatrix;
 import com.google.zxing.qrcode.QRCodeWriter;
 import com.google.zxing.WriterException;
-import models.LineItem;
-import models.Sale;
-import models.SaleItem;
-import models.User;
-import org.json.JSONException;
-import org.json.JSONObject;
-import play.data.DynamicForm;
-import play.data.Form;
-import play.mvc.Controller;
-import play.mvc.Http.Request;
-import play.mvc.Result;
-import play.mvc.Security;
-import views.html.loggedinNotFound;
-import views.html.notFound;
-
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.InputStream;
 import java.io.IOException;
-import java.io.OutputStream;
 import java.util.List;
 import javax.imageio.ImageIO;
+import models.LineItem;
+import models.Sale;
+import models.SaleItem;
+import play.data.DynamicForm;
+import play.data.Form;
+import play.mvc.Controller;
+import play.mvc.Result;
+import play.mvc.Security;
+import views.html.loggedinNotFound;
+import views.html.notFound;
 
 import static play.libs.Json.toJson;
 
@@ -125,27 +119,27 @@ public class DataController extends Controller {
      * @return QR Code
      */
     public Result getQrCode(String content) {
-      content = "http://" + request().host() + content;
-      QRCodeWriter qr = new QRCodeWriter();
-      BitMatrix bm;
-      try {
-          bm = qr.encode(content, BarcodeFormat.QR_CODE, 150, 150);
-      } catch (WriterException e) {
-          return notFound404();
-      }
-      BufferedImage bi = MatrixToImageWriter.toBufferedImage(bm);
-      ByteArrayOutputStream os = new ByteArrayOutputStream();
+        content = "http://" + request().host() + content;
+        QRCodeWriter qr = new QRCodeWriter();
+        BitMatrix bm;
+        try {
+            bm = qr.encode(content, BarcodeFormat.QR_CODE, 150, 150);
+        } catch (WriterException e) {
+            return notFound404();
+        }
+        BufferedImage bi = MatrixToImageWriter.toBufferedImage(bm);
+        ByteArrayOutputStream os = new ByteArrayOutputStream();
 
-      try {
-          ImageIO.write(bi, "png", os);
-      } catch (IOException e) {
-          return notFound404();
-      }
+        try {
+            ImageIO.write(bi, "png", os);
+        } catch (IOException e) {
+            return notFound404();
+        }
 
-      InputStream is = new ByteArrayInputStream(os.toByteArray());
+        InputStream is = new ByteArrayInputStream(os.toByteArray());
 
-      //ByteArrayInputStream output = null;
-      return ok(is).as("image/png");
+        //ByteArrayInputStream output = null;
+        return ok(is).as("image/png");
     }
 
     /**
@@ -165,8 +159,8 @@ public class DataController extends Controller {
     @Security.Authenticated(Secured.class)
     public Result getSearchItems() {
         DynamicForm dynamicForm = Form.form().bindFromRequest();
-        if (dynamicForm.get("saleId") != null &&
-                dynamicForm.get("query") != null) {
+        if (dynamicForm.get("saleId") != null
+                && dynamicForm.get("query") != null) {
             int saleId;
             try {
                 saleId = Integer.parseInt(dynamicForm.get("saleId"));
@@ -187,7 +181,7 @@ public class DataController extends Controller {
 
     /**
      * Returns list of posts listed at the queried location
-     * @return
+     * @return sales to json
      */
     @Security.Authenticated(Secured.class)
     public Result getSearchSales() {

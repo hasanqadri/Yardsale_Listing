@@ -1,20 +1,40 @@
 package controllers;
 
+import java.util.ArrayList;
+import java.util.List;
 import models.Role;
 import models.Sale;
 import models.SaleItem;
 import models.User;
 import models.Transaction;
-import models.LineItem;
-import play.data.Form;
 import play.mvc.Controller;
 import play.mvc.Result;
 import play.mvc.Security.Authenticated;
-import views.formdata.userdata;
-import views.html.*;
-
-import java.util.ArrayList;
-import java.util.List;
+import views.html.about;
+import views.html.addItem;
+import views.html.admin;
+import views.html.confirmTransaction;
+import views.html.createSale;
+import views.html.editSale;
+import views.html.features;
+import views.html.financialReport;
+import views.html.help;
+import views.html.home;
+import views.html.item;
+import views.html.itemTag;
+import views.html.loggedinNotFound;
+import views.html.login;
+import views.html.mobileScanRedirect;
+import views.html.mysales;
+import views.html.notFound;
+import views.html.profile;
+import views.html.register;
+import views.html.sale;
+import views.html.sales;
+import views.html.saleTag;
+import views.html.transaction;
+import views.html.transactionReceipt;
+import views.html.users;
 
 /**
  * @author Nathan Cheek, Pablo Ortega, Hasan Qadri, Nick Yokley
@@ -75,8 +95,8 @@ public class PageController extends Controller {
         Sale s = Sale.findById(saleId);
         Transaction t = Transaction.findById(tranId);
         User u = User.findByUsername(session("username"));
-        if (s != null && t != null && t.completed == 0 && u != null &&
-                u.canBeSeller(saleId)) {
+        if (s != null && t != null && t.completed == 0 && u != null
+                && u.canBeSeller(saleId)) {
             // Check if sale exists, and transaction exists
             // and is not completed, and user exists and can be seller
             return ok(confirmTransaction.render(saleId, tranId, ""));
@@ -135,7 +155,7 @@ public class PageController extends Controller {
                     Transaction.findCompletedBySaleId(saleId);
             float total = 0;
             for (Transaction t : transactions) {
-              total += t.getTotal();
+                total += t.getTotal();
             }
             return ok(financialReport.render(transactions, saleId,
                     String.format("%.2f", total)));
@@ -149,7 +169,7 @@ public class PageController extends Controller {
      */
     @Authenticated(Secured.class)
     public Result help() {
-      return ok(help.render());
+        return ok(help.render());
     }
 
     /**
@@ -161,8 +181,8 @@ public class PageController extends Controller {
         User u = User.findByUsername(session("username"));
         Sale s = Sale.findById(saleId);
         SaleItem i = SaleItem.findById(itemId);
-        if (u != null && s != null & i != null && (s.status == 1 ||
-                Role.findByIds(u.id, saleId) != null)) {
+        if (u != null && s != null & i != null && (s.status == 1
+                || Role.findByIds(u.id, saleId) != null)) {
             return ok(item.render(u, s, i));
         }
         return notFound404();
@@ -203,6 +223,16 @@ public class PageController extends Controller {
     public Result logout() {
         session().clear();
         return redirect("/");
+    }
+
+    /**
+     * Get page that redirects to mobile scanner page
+     * Otherwise, QR code reader would scan each item twice
+     * @param itemId Id of Item
+     * @return HTTP response to mobile scan redirect page
+     */
+    public Result mobileScanRedirect(int itemId) {
+        return ok(mobileScanRedirect.render("/mobileScan/" + itemId));
     }
 
     /**
@@ -284,6 +314,15 @@ public class PageController extends Controller {
     }
 
     /**
+     * Display list of sales
+     * @return HTTP response to sales page request
+     */
+    @Authenticated(Secured.class)
+    public Result sales() {
+        return ok(sales.render(Sale.findAllOpen()));
+    }
+
+    /**
      * Display a sale items tags page
      * @return HTTP response to tag page request
      */
@@ -297,15 +336,6 @@ public class PageController extends Controller {
     }
 
     /**
-     * Display list of sales
-     * @return HTTP response to sales page request
-     */
-    @Authenticated(Secured.class)
-    public Result sales() {
-        return ok(sales.render(Sale.findAllOpen()));
-    }
-
-    /**
      * Displays transaction page
      * @return HTTP response to transaction page request
      */
@@ -314,8 +344,8 @@ public class PageController extends Controller {
         Sale s = Sale.findById(saleId);
         Transaction t = Transaction.findById(tranId);
         User u = User.findByUsername(session("username"));
-        if (s != null && s.status == 1 && t != null && t.completed == 0 &&
-                u != null && u.canBeSeller(saleId)) {
+        if (s != null && s.status == 1 && t != null && t.completed == 0
+                && u != null && u.canBeSeller(saleId)) {
             // Check if sale exists, and transaction exists
             // and is not completed, and user exists and can be seller
             return ok(transaction.render(t, t.getLineItems(), ""));
@@ -332,8 +362,8 @@ public class PageController extends Controller {
         Sale s = Sale.findById(saleId);
         Transaction t = Transaction.findById(tranId);
         User u = User.findByUsername(session("username"));
-        if (s != null && s.status == 1 && t != null && t.completed == 1 &&
-                u != null && u.canBeSeller(saleId)) {
+        if (s != null && s.status == 1 && t != null && t.completed == 1
+                && u != null && u.canBeSeller(saleId)) {
             // Check if sale exists, and transaction exists and is completed,
             // and user exists and can be seller
             return ok(transactionReceipt.render(t, t.getLineItems(), saleId,
@@ -352,7 +382,7 @@ public class PageController extends Controller {
         if (u != null && u.isSuperAdmin()) { // Show supersecret admin page
             return ok(admin.render(User.findAll()));
         } else { // Show normal user page
-            return ok(users.render( User.findAll()));
+            return ok(users.render(User.findAll()));
         }
     }
 }
