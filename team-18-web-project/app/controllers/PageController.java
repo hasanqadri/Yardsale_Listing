@@ -304,9 +304,11 @@ public class PageController extends Controller {
     public Result sale(int id) {
         Sale s = Sale.findById(id);
         User u = User.findByUsername(session("username"));
-        if (s != null) { // Check if sale exists
+        if (s != null && u != null) { // Check if sale and user exist
             // If sale is open to public, or user has a role on the sale
-            if (s.status == 1 || (Role.findByIds(u.id, s.id) != null)) {
+            // or user is Super Admin
+            if (s.status == 1 || (Role.findByIds(u.id, s.id) != null)
+                    || u.superAdmin == 1) {
                 return ok(sale.render(u, s, s.getItems()));
             }
         }
