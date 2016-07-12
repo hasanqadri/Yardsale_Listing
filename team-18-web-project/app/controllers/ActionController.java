@@ -99,9 +99,7 @@ public class ActionController extends Controller {
                 List<LineItem> lineItems = t.getLineItems();
                 for (LineItem li : lineItems) {
                     for (SaleItem si: saleItems) {
-
-                        if (li.getId() == si.getId()) {
-
+                        if (li.getSaleItemId() == si.getId()) {
                             si.setQuantity(si.getQuantity() - li.getQuantity());
                             si.save();
                         }

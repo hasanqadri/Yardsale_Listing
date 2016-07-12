@@ -855,7 +855,7 @@ public class User extends Model {
             Arrays.fill(data, (byte)0);
             w.NESSIEinit();
             w.NESSIEfinalize(digest);
-            System.out.println("This is Team 18's hash function for password: " + unhashedPassword + "\n" + display(digest) + "\n");
+            //System.out.println("This is Team 18's hash function for password: " + unhashedPassword + "\n" + display(digest) + "\n");
             return display(digest);
         }
         /**
