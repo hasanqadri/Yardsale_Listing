@@ -3,40 +3,25 @@
 
 @loggedinmain("Printable Tags for Items") {
 <div class="container content">
-  <div class="view profile" id="view-profile">
-    <div class="row">
-      <div class="col-sm-4">
-      </div>
-      <div class="col-sm-5"></div>
-      <div class="col-sm-3">
-      </div>
-    </div>
-  </div>
-
-  <ul class="itemTags">
-      <h2 class="text-center">Item Tags</h2>
-      <div class="row">
-          <a href="/sale/@saleId"><h4>&#8592; Return to Sale</h4></a>
-
-          <div class="col-sm-2"></div>
-        <div class="col-sm-8 items saleItem">
-          @for(index <- 0 until items.size) {
-            @for(index2 <- 0 until items(index).quantity) {
-              <div class="row">
-                <div class="col-md-6">
-                  <h2>Name: @items(index).name</h2>
-                  <h3>Stock Number: @items(index).id</h3>
-                  <h3>Description: @items(index).description</h3>
-                  <h3>Price: @items(index).formatPrice</h3>
-                </div>
-                <div class="col-md-6">
-                  <img src="/qr/@items(index).id">
-                </div>
-              </div>
-            }
-          }
+  <h2 class="text-center">Item Tags</h2>
+  <h4 class="hidden-print"><a href="/sale/@saleId">&#8592; Return to Sale</a></h4>
+  <div class="col-sm-2"></div>
+  <div class="col-sm-8 items saleItem">
+    @for(index <- 0 until items.size) {
+      @for(index2 <- 0 until items(index).quantity) {
+        <div class="row tag-row">
+          <div class="col-xs-8">
+            <h2>Name: @items(index).name</h2>
+            <h3>Stock Number: @items(index).id</h3>
+            <h3>Description: @items(index).description</h3>
+            <h3>Price: $@items(index).formatPrice</h3>
+          </div>
+          <div class="col-xs-4">
+            <img class="tag-qr" src="/qr?value=/mobileScanRedirect/@items(index).id">
+          </div>
         </div>
-      </div>
-  </ul>
+      }
+    }
+  </div>
 </div>
 }

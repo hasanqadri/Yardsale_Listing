@@ -1,18 +1,18 @@
 @* Displays Transaction page *@
-@(lineItems: List[LineItem], saleId: Int, tranId: Int, message : String)
+@(transaction: Transaction, lineItems: List[LineItem], message: String)
 
 @loggedinmain("Transaction") {
 <div class="container content">
 
     <div class="view sale" id="view-sale">
         <div class="col-sm-9">
-            <form method="post" class="hidden-form"><button class="btn btn-danger" type="submit" name="cancelTransactionId" value="@tranId">CANCEL TRANSACTION</button></form>
-            <a href="/sale/@saleId/confirmTransaction/@tranId" class="btn btn-success">CONFIRM TRANSACTION</a>
+            <form method="post" class="hidden-form"><button class="btn btn-danger" type="submit" name="cancelTransactionId" value="@transaction.id">CANCEL TRANSACTION</button></form>
+            <a href="/sale/@transaction.saleId/confirmTransaction/@transaction.id" class="btn btn-success">CONFIRM TRANSACTION</a>
         </div>
 
         <div class="col-sm-3">
             <div class="input-group">
-                <form class="form-search-field" action="/sale/@saleId/transaction/@tranId/searchItemStock" method="post">
+                <form class="form-search-field" action="/sale/@transaction.saleId/transaction/@transaction.id/searchItemStock" method="post">
                     <div class="input-group">
                         <input type="text" class="form-control" name="query" placeholder="Search items...">
                         <span class="input-group-btn">
@@ -26,6 +26,8 @@
 
         <div class="row">
             <div class="col-sm-5">
+                <img class="center-block" src="/qr?value=/sale/@transaction.saleId/registerMobileTransaction/@transaction.id/@transaction.randomNonce">
+                <p class="text-center lead">Scan with device to use as mobile scanner</p>
                 <h2 class="text-center">Items in Cart</h2>
                 <div class="lineItems">
                     <table class="table table-striped">
@@ -33,7 +35,7 @@
                             <tr>
                                 <th>Item</th>
                                 <th>Quantity</th>
-                                <th>Cost</th>
+                                <th>Total Cost</th>
                                 <th></th>
                             </tr>
                         </thead>
@@ -42,7 +44,7 @@
                             <tr>
                                 <td>@lineItems(index).getName</td>
                                 <td>@lineItems(index).quantity</td>
-                                <td>$@lineItems(index).formatPrice</td>
+                                <td>$@lineItems(index).formatTotalPrice</td>
                                 <td><form method="post" class="hidden-form"><button class="btn btn-sm btn-danger" type="submit" name="deleteLineItemId" value="@lineItems(index).id"><span class="glyphicon glyphicon-trash"></span></button></form></td>
                             </tr>
                             }
@@ -84,7 +86,7 @@
 
 <script>
 // Populate page with sale items
-$.post("/getItems", { "saleId" : "@saleId" }).done(function( data ) {
+$.post("/getItems", { "saleId" : "@transaction.saleId" }).done(function( data ) {
     for(var i in data) {
         var output = "<form method=\"post\" class=\"hidden-form pull-left\"><input type=\"hidden\" value=\"1\" name=\"addItemQuantity\"><button class=\"btn btn-primary\" type=\"submit\" name=\"addItemId\" value=\""
                 + data[i].id + "\">ADD ITEM</button></form><br><h2>" + data[i].name + "</a></h2><h3>Id: " + data[i].id
@@ -92,6 +94,8 @@ $.post("/getItems", { "saleId" : "@saleId" }).done(function( data ) {
         $(".items").append(output);
     }
 });
+
+//Check for mobile added items
 </script>
 
 }
