@@ -2,9 +2,12 @@ package controllers;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+
 import models.Role;
 import models.Sale;
 import models.SaleItem;
+import models.LineItem;
 import models.User;
 import models.Transaction;
 import play.mvc.Controller;
@@ -18,6 +21,7 @@ import views.html.createSale;
 import views.html.editSale;
 import views.html.features;
 import views.html.financialReport;
+import views.html.financialReportBySeller;
 import views.html.help;
 import views.html.home;
 import views.html.item;
@@ -159,6 +163,27 @@ public class PageController extends Controller {
             }
             return ok(financialReport.render(transactions, saleId,
                     String.format("%.2f", total)));
+        }
+        return notFound404();
+    }
+
+    /**
+     * Display financial report page in grouped by seller format
+     * @return HTTP response to financial report page request
+     */
+
+    @Authenticated(Secured.class)
+    public Result financialReportBySeller(int saleId) {
+        Sale s = Sale.findById(saleId);
+        User u = User.findByUsername(session("username"));
+
+        if (s != null && u != null && u.canBeBookkeeper(s.id)) {
+            // If user has bookkeeper permissions, show page
+            Map<User,List<LineItem>> items = LineItem.getLineItemsBySeller(s);
+           //Map<User,List<LineItem>> totals = LineItem.findAllLineItems(s).get(1);
+
+
+            return ok(financialReportBySeller.render(items, saleId));
         }
         return notFound404();
     }

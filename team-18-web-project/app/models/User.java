@@ -16,7 +16,7 @@ import play.data.validation.Constraints;
  */
 @Entity
 @Table(name = "users")
-public class User extends Model {
+public class User extends Model implements Comparable<User>{
     /**
      * Find all Users
      * @return List of all Users
@@ -233,6 +233,22 @@ public class User extends Model {
         return true;
     }
 
+    /**
+     * Compares two users by id to distinguish them
+     * @return int that is 0 if users are the same, pos 1 if current user is greater, and -1 otherwise
+     */
+    public int compareTo(User user) {
+
+        if(this.id == user.id) {
+
+            return 0;
+        } else if(this.id > user.id) {
+
+            return 1;
+        }
+
+        return -1;
+    }
     /**
      * Get the Email address of the User
      * @return Email address of the User
