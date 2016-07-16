@@ -2,14 +2,10 @@ package models;
 
 import com.avaje.ebean.Ebean;
 import com.avaje.ebean.Model;
-import java.util.List;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.SequenceGenerator;
-import javax.persistence.Table;
 import play.data.validation.Constraints;
+
+import javax.persistence.*;
+import java.util.List;
 
 /**
  * Represents a Sale Item
@@ -29,7 +25,7 @@ public class SaleItem extends Model {
 
     /**
      * Find SaleItem by its Id
-     * @param  id Id of SaleItem
+     * @param  idStr Id of SaleItem
      * @return SaleItem if it exists
      */
     public static SaleItem findById(String idStr) {
@@ -44,7 +40,7 @@ public class SaleItem extends Model {
 
     /**
      * Find SaleItems by sale Id
-     * @param  id Id of Sale
+     * @param  saleId Id of Sale
      * @return SaleItems associated with a sale
      */
     public static List<SaleItem> findBySaleId(int saleId) {

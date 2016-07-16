@@ -1,40 +1,20 @@
 package controllers;
 
-import java.sql.Timestamp;
-import java.text.DateFormat;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.List;
-import models.LineItem;
-import models.Role;
-import models.Sale;
-import models.SaleItem;
-import models.Transaction;
-import models.User;
+import models.*;
 import play.data.DynamicForm;
 import play.data.Form;
 import play.mvc.Controller;
 import play.mvc.Http.MultipartFormData;
 import play.mvc.Result;
 import play.mvc.Security.Authenticated;
-import views.html.admin;
-import views.html.editSale;
-import views.html.item;
-import views.html.loggedinNotFound;
-import views.html.login;
-import views.html.mobileFailure;
-import views.html.mobileSuccess;
-import views.html.notFound;
-import views.html.profile;
-import views.html.register;
-import views.html.registrationSuccess;
-import views.html.sale;
-import views.html.searchItems;
-import views.html.searchSales;
-import views.html.searchItemStock;
-import views.html.transaction;
+import views.html.*;
 
+import java.sql.Timestamp;
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.List;
 /**
  * Created by nathancheek on 6/25/16.
  */

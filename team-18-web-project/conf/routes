@@ -73,6 +73,8 @@ GET     /qr                         controllers.DataController.getQrCode(value: 
 # Map static resources from the /public folder to the /assets URL path
 GET     /assets/*file               controllers.Assets.versioned(path="/public", file: Asset)
 
+# Request to email
+GET     /sale/:saleId/transactionReceipt/:tranId/email              controllers.ApplicationJava.send(saleId: Int, tranId: Int)
 
 # Catch all other requests and show a 404
 GET     /*path                      controllers.PageController.notFound404(path: String)
