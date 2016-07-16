@@ -2,18 +2,17 @@ package models;
 
 import com.avaje.ebean.Ebean;
 import com.avaje.ebean.Model;
-import play.data.validation.Constraints;
-
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.Table;
 import java.security.SecureRandom;
 import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 import java.util.Random;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Id;
+import javax.persistence.Table;
+import play.data.validation.Constraints;
 
 /**
  * Represents a Transaction
@@ -33,7 +32,7 @@ public class Transaction extends Model {
 
     /**
      * Find transaction by its Id
-     * @param idStr Id of transaction
+     * @param id Id of transaction
      * @return Transaction if it exists
      */
     public static Transaction findById(String idStr) {

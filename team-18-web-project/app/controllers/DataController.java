@@ -3,10 +3,17 @@ package controllers;
 import com.avaje.ebean.Ebean;
 import com.avaje.ebean.Expr;
 import com.google.zxing.BarcodeFormat;
-import com.google.zxing.WriterException;
 import com.google.zxing.client.j2se.MatrixToImageWriter;
 import com.google.zxing.common.BitMatrix;
 import com.google.zxing.qrcode.QRCodeWriter;
+import com.google.zxing.WriterException;
+import java.awt.image.BufferedImage;
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.InputStream;
+import java.io.IOException;
+import java.util.List;
+import javax.imageio.ImageIO;
 import models.LineItem;
 import models.Sale;
 import models.SaleItem;
@@ -18,15 +25,8 @@ import play.mvc.Security;
 import views.html.loggedinNotFound;
 import views.html.notFound;
 
-import javax.imageio.ImageIO;
-import java.awt.image.BufferedImage;
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.util.List;
-
 import static play.libs.Json.toJson;
+
 /**
  * Created by nathancheek on 6/25/16.
  */

@@ -2,14 +2,13 @@ package models;
 
 import com.avaje.ebean.Ebean;
 import com.avaje.ebean.Model;
-
-import javax.persistence.Column;
+import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 import javax.persistence.Entity;
+import javax.persistence.Column;
 import javax.persistence.Id;
 import javax.persistence.Table;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
 
 /**
  * Stores roles relating a specific user to a specific sale
@@ -100,7 +99,7 @@ public class Role extends Model {
 
     /**
      * Set the Name of the Role
-     * @param name of the Role
+     * @param Name of the Role
      */
     public void setName(String name) {
         this.name = name;
