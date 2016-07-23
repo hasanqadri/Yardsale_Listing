@@ -3,10 +3,14 @@ package models;
 import com.avaje.ebean.Ebean;
 import com.avaje.ebean.Model;
 import java.util.List;
+import java.util.ArrayList;
+import java.util.Map;
+import java.util.TreeMap;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Table;
 import play.data.validation.Constraints;
+
 
 /**
  * Represents a Line Item in a transaction
@@ -75,6 +79,45 @@ public class LineItem extends Model {
         this.userCreatedId = userCreatedId;
         this.save();
     }
+
+    /**
+     * sorts line items into a map associated with a seller
+     * @return List of all open sales
+     */
+    public static  Map<User,List<LineItem>> getLineItemsBySeller(Sale s) {
+
+
+        List<Transaction> transactions = Transaction.findCompletedBySaleId(s.id);
+        Map<User,List<LineItem>> itemsByUser = new TreeMap<User, List<LineItem>>();
+        Map<User,Float> totals = new TreeMap<User, Float>();
+
+        //loops through transactions in a sale
+        for (Transaction t: transactions) {
+
+            //loops through all line items within a transaction and adds the
+            //line item to the sellers key
+            for (LineItem li: LineItem.findByTransactionId(t.id)) {
+
+                if (itemsByUser.containsKey(User.findById(li.userCreatedId))) {
+
+                    itemsByUser.get(User.findById(li.userCreatedId)).add(li);
+                    totals.put(User.findById(li.userCreatedId),
+                            totals.get(User.findById(li.userCreatedId))+li.getQuantity()*li.getUnitPrice());
+                } else {
+
+                    List<LineItem> userSoldItems = new ArrayList<LineItem>(1);
+                    userSoldItems.add(li);
+                    itemsByUser.put(User.findById(li.userCreatedId), userSoldItems);
+                    totals.put(User.findById(li.userCreatedId),li.getQuantity()*li.getUnitPrice());
+                }
+            }
+        }
+        //List<Map<User,List<LineItem>>> itemsAndTotals = new ArrayList<Map<User,List<LineItem>>>();
+        //itemsAndTotals.add(itemsByUser);
+        //itemsAndTotals.addAll(totals);
+        return itemsByUser;
+    }
+
 
     /**
      * Get a formatted price of item*quantity
