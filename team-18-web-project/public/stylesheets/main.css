@@ -185,3 +185,54 @@ form .input-bottom {
     height: 200px;
     object-fit: cover;
 }
+
+.subnav {
+    position: relative;
+    display: inline-block;
+    margin: 0;
+    padding: 0 9px 0 15px;
+    overflow: hidden;
+    border-bottom: 1px solid #e7e7e7;
+    border-top: 1px solid #e7e7e7;
+    border-top: 1px solid rgba(0,0,0,.17);
+    border-bottom: 1px solid rgba(0,0,0,.1);
+    white-space: nowrap;
+    height: 36px;
+    background: #232f3e;
+}
+.subnav-a {
+    position: relative;
+    float: left;
+    height: 31px;
+    line-height: 35px;
+    color: #FFFFFF;
+    font-size: 12px;
+    padding: 0 11px;
+}
+
+.subnav-content {
+    -webkit-box-sizing: border-box;
+}
+
+.title {
+
+    font-family: 'Corben', Georgia, Times, serif;
+
+}
+
+.tanBackground {
+
+    background: #F8E5CB;
+}
+
+h1, h2, h3, h4, h5, h6 {
+    font-family: 'Corben', Georgia, Times, serif;
+}
+
+p, div {
+    font-family: 'Nobile', Helvetica, Arial, sans-serif;
+}
+
+.itemsList {
+    columns: 3;
+}

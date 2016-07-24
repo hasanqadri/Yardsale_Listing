@@ -11,6 +11,7 @@ create table lineItems (
   unit_price                float,
   name                      varchar(255),
   user_created_id           integer,
+  sale_id                   integer,
   constraint pk_lineItems primary key (id))
 ;
 

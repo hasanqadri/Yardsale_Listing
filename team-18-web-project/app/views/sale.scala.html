@@ -2,22 +2,28 @@
 @(user: User, sale: Sale, items: List[SaleItem])
 
 @loggedinmain("Sale") {
+
+    <link href="http://fonts.googleapis.com/css?family=Corben:bold" rel="stylesheet" type="text/css">
+    <link href="http://fonts.googleapis.com/css?family=Nobile" rel="stylesheet" type="text/css">
 <div class="container content">
     <div class="view sale" id="view-sale">
         <div class="row">
-            <div class="col-sm-9">
-                @if(sale.status != 2 && user.canBeSeller(sale.id)) {<a href="/sale/@sale.id/addItem" class="btn btn-primary">ADD ITEM</a>}
-                @if(sale.status != 2 && user.canBeAdmin(sale.id)) {<a href="/sale/@sale.id/edit" class="btn btn-primary">EDIT SALE</a>}
-                @if(sale.status == 1 && user.canBeCashier(sale.id)) {<a href="/createTransaction/@sale.id" class="btn btn-primary">CREATE TRANSACTION</a>}
-                @if(sale.status != 2 && user.canBeClerk(sale.id)) {<a href="/sale/@sale.id/saleTag" class="btn btn-primary">PRINT TAGS</a>}
-                @if(user.canBeBookkeeper(sale.id)) {<a href="/sale/@sale.id/financialReport" class="btn btn-primary">FINANCIAL REPORT</a>}
+            <div class="col-sm-9 subnav">
+                <div class = "subnav">
+                @if(sale.status != 2 && user.canBeSeller(sale.id)) {<a href="/sale/@sale.id/addItem" class="subnav-a">
+                    <span class="subnav-content">ADD ITEM</span></a>}
+                @if(sale.status != 2 && user.canBeAdmin(sale.id)) {<a href="/sale/@sale.id/edit" class="subnav-a">EDIT SALE</a>}
+                @if(sale.status == 1 && user.canBeCashier(sale.id)) {<a href="/createTransaction/@sale.id" class="subnav-a">CREATE TRANSACTION</a>}
+                @if(sale.status != 2 && user.canBeClerk(sale.id)) {<a href="/sale/@sale.id/saleTag" class="subnav-a">PRINT TAGS</a>}
+                @if(user.canBeBookkeeper(sale.id)) {<a href="/sale/@sale.id/financialReport" class="subnav-a">FINANCIAL REPORT</a>}
                 @if(sale.status == 2 && user.canBeAdmin(sale.id)) {
                 <form method="post" class="hidden-form">
                     <button class="btn btn-warning" type="submit" name="unarchive" value="@sale.id">UNARCHIVE SALE</button>
                 </form>
                 }
+                </div>
             </div>
-            <div class="col-sm-3">
+            <div class="col-sm-3 subnav">
                 <div class="input-group">
                     <form class="form-search-field" action="/sale/@sale.id/searchItems" method="post">
                         <div class="input-group">
@@ -31,41 +37,45 @@
             </div>
         </div>
 
-        <ul class="saleList">
-            <h1 class="text-center" id="saleName">@sale.name</h1>
-            <div class="row">
-                <div class="col-sm-3" id="saleAddress">
-                    <h3 class="text-center">Address</h3>
-                    <h4 id="saleAddress1">@sale.street</h4>
-                    <h4 id="saleAddress2">@sale.city, @sale.state @sale.zip</h4>
-                </div>
-                <div class="col-sm-4">
-                    <h3 class="text-center">Description</h3>
-                    <h4 id="saleDescription">@sale.description</h4>
-                </div>
-                <div class="col-sm-2">
-                    <h3 class="text-center">Created By</h3>
-                    <h4 id="saleCreatedBy" class="text-center"><a href="/profile/@sale.userCreatedId">@sale.getCreatedBy</a></h4>
-                </div>
-                <div class="col-sm-3">
-                    <h3 class="text-center">Dates</h3>
-                    <h4 id="saleDates">@sale.formatStartDate - @sale.formatEndDate</h4>
+            <div class = "tanBackground row">
+                <h1 class="text-center title" id="saleName">@sale.name</h1>
+                <div class="row">
+                    <div class="col-sm-3" id="saleAddress">
+                        <h3 class="text-center">Address</h3>
+                        <h4 class = "text-center" id="saleAddress1">@sale.street</h4>
+                        <h4 class = "text-center" id="saleAddress2">@sale.city, @sale.state @sale.zip</h4>
+                    </div>
+                    <div class="col-sm-4">
+                        <h3 class="text-center">Description</h3>
+                        <h4 class = "text-center" id="saleDescription">@sale.description</h4>
+                    </div>
+                    <div class="col-sm-2">
+                        <h3 class="text-center">Created By</h3>
+                        <h4 class = "text-center" id="saleCreatedBy" class="text-center">@sale.getCreatedBy</h4>
+                    </div>
+                    <div class="col-sm-3">
+                        <h3 class="text-center">Dates</h3>
+                        <h4 class = "text-center" id="saleDates">@sale.formatStartDate - @sale.formatEndDate</h4>
+                    </div>
                 </div>
             </div>
             <h2 class="text-center">Items for Sale</h2>
             <div class="row">
                 <div class="col-sm-2"></div>
-                <div class="col-sm-8 items">
-                @for(index <- 0 until items.size){
-                    <h2><a href="/sale/@sale.id/item/@items(index).id">@items(index).name</a></h2>
-                    <h3>@items(index).description</h3>
-                    <h3>$@items(index).formatPrice</h3>
-                    <h3>Quantity: @items(index).quantity</h3>
-                    @if(index+1 != items.size){<hr>}
-                }
+                <div class="col-sm-8">
+
+                            @for(index <- 0 until items.size){
+                                <h2><a href="/sale/@sale.id/item/@items(index).id">@items(index).name</a></h2>
+                                <h4>@items(index).description</h4>
+                                <h5>$@items(index).formatPrice (@items(index).quantity in stock)</h5>
+
+                                @if(index+1 != items.size){<hr>}
+                            }
+
+
                 </div>
             </div>
-        </ul>
+
     </div>
 </div>
 <script>
