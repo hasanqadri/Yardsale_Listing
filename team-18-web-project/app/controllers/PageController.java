@@ -33,6 +33,7 @@ import views.html.mobileScanRedirect;
 import views.html.mysales;
 import views.html.notFound;
 import views.html.profile;
+import views.html.profileEdit;
 import views.html.register;
 import views.html.sale;
 import views.html.sales;
@@ -312,15 +313,37 @@ public class PageController extends Controller {
 
     /**
      * Display profile page for user
+     * @param userId Id of User to display
      * @return HTTP response to profile page request
      */
     @Authenticated(Secured.class)
-    public Result profile() {
+    public Result profile(int userId) {
+        User u = User.findByUsername(session("username"));
+        User user = User.findById(userId);
+        if (u == null) {
+            return redirect("/logout");
+        }
+        // Display edit profile page if viewing own profile or is a superadmin
+        if (u.id == user.id || u.isSuperAdmin()) {
+            return ok(profileEdit.render(user, ""));
+        }
+        if (user != null) {
+            return ok(profile.render(user));
+        }
+        return notFound404();
+    }
+
+    /**
+     * Redirect to profile page for current user
+     * @return HTTP redirect to profile page
+     */
+    @Authenticated(Secured.class)
+    public Result profileRedirect() {
         User u = User.findByUsername(session("username"));
         if (u == null) {
             return redirect("/logout");
         }
-        return ok(profile.render(u, ""));
+        return redirect("/profile/" + u.id);
     }
 
     /**

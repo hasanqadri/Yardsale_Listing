@@ -5,10 +5,14 @@ import play.data.DynamicForm;
 import play.data.Form;
 import play.mvc.Controller;
 import play.mvc.Http.MultipartFormData;
+import play.mvc.Http.MultipartFormData.FilePart;
 import play.mvc.Result;
 import play.mvc.Security.Authenticated;
 import views.html.*;
 
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
 import java.sql.Timestamp;
 import java.text.DateFormat;
 import java.text.ParseException;
@@ -16,7 +20,8 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 /**
- * Created by nathancheek on 6/25/16.
+ * @author Nathan Cheek, Pablo Ortega, Hasan Qadri, Nick Yokley
+ * This controller handles requests that initiate state-changing actions
  */
 public class ActionController extends Controller {
     /**
@@ -387,31 +392,65 @@ public class ActionController extends Controller {
      * @return HTTP response to profile page update request
      */
     @Authenticated(Secured.class)
-    public Result profile() {
+    public Result profile(int userId) {
         String username = session("username");
-        User user = User.findByUsername(session("username"));
+        User u = User.findByUsername(session("username"));
+        User user = User.findById(userId);
+        if (user == null || u == null ||
+                !(u.id == user.id || u.isSuperAdmin())) {
+            return notFound404();
+        }
 
         DynamicForm f = Form.form().bindFromRequest();
-        User userCheckUsername = User.findByUsername(f.get("username"));
-        if (userCheckUsername != null && !f.get("username").equals(username)) {
-            return ok(profile.render(user, "Error: username already in use"));
-        }
-        User userCheckEmail = User.findByEmail(f.get("email"));
-        if (userCheckEmail != null && !f.get("email").equals(user.getEmail())) {
-            return ok(profile.render(user, "Error: email already in use"));
 
-        }
-        // Username and email not already in use, update user
-        user.setFirstName(f.get("firstName"));
-        user.setLastName(f.get("lastName"));
-        user.setEmail(f.get("email"));
-        user.setUsername(f.get("username"));
-        user.setPassword(f.get("password"));
-        user.save();
-        //Set new cookie in case username was changed
-        session("username", f.get("username"));
+        if (f.get("firstName") != null && f.get("lastName") != null &&
+                f.get("email") != null && f.get("username") != null) {
+            User userCheckUsername = User.findByUsername(f.get("username"));
+            if (userCheckUsername != null && !f.get("username").
+                    equals(username)) {
+                return ok(profileEdit.render(user,
+                        "Error: username already in use"));
+            }
+            User userCheckEmail = User.findByEmail(f.get("email"));
+            if (userCheckEmail != null &&
+                    !f.get("email").equals(user.getEmail())) {
+                return ok(profileEdit.render(user,
+                        "Error: email already in use"));
 
-        return ok(profile.render(user, ""));
+            }
+            // Username and email not already in use, update user
+            user.setFirstName(f.get("firstName"));
+            user.setLastName(f.get("lastName"));
+            user.setEmail(f.get("email"));
+            user.setUsername(f.get("username"));
+            user.setPassword(f.get("password"));
+            user.save();
+            // Set new cookie in case username was changed,
+            // but only if editing own profile
+            if (u.id != user.id) {
+                session("username", f.get("username"));
+            }
+            return ok(profileEdit.render(user, ""));
+        }
+        if (f.get("currentPassword") != null && f.get("newPassword") != null &&
+                f.get("confirmNewPassword") != null) {
+            if (!f.get("newPassword").equals(f.get("confirmNewPassword"))) {
+                return ok(profileEdit.render(user,
+                        "Error: Passwords do not match"));
+            }
+            if (f.get("newPassword").length() < 5) {
+                return ok(profileEdit.render(user,
+                        "Error: Choose a longer password"));
+            }
+            if (user.getPassword().equals(
+                    User.hashPassword(f.get("currentPassword")))) {
+                        user.setPassword(f.get("newPassword"));
+                        user.save();
+                        return ok(profileEdit.render(user, "Password Updated"));
+            }
+            return ok(profileEdit.render(user, "Error: Wrong password"));
+        }
+        return notFound404();
     }
 
     /**
@@ -430,6 +469,9 @@ public class ActionController extends Controller {
         User userCheckEmail = User.findByEmail(f.get("email"));
         if (userCheckEmail != null) {
             return ok(register.render("Error: email already in use"));
+        }
+        if (f.get("password").length() < 5) {
+            return ok(register.render("Error: Choose a longer password"));
         }
         //If username or email not already in use, create user
         User user = new User(f.get("firstName"), f.get("lastName"),
@@ -641,21 +683,86 @@ public class ActionController extends Controller {
     }
 
     /**
-     * Upload a profile picture (not working yet)
+     * Upload an item picture
+     * @return HTTP response to upload item picture request
+     */
+    @Authenticated(Secured.class)
+    public Result uploadItemPicture(int saleId, int itemId) {
+        MultipartFormData body = request().body().asMultipartFormData();
+        FilePart picture = body.getFile("picture");
+        System.out.println(picture.getFilename());
+        if (picture == null || (!picture.getFilename().endsWith(".png") &&
+                !picture.getFilename().endsWith(".jpg") &&
+                !picture.getFilename().endsWith(".jpeg"))) {
+            return redirect("/sale/" + saleId + "/item/" + itemId);
+        }
+        User u = User.findByUsername(session("username"));
+        SaleItem i = SaleItem.findById(itemId);
+        // User exists and can be seller and Item exists
+        if (u != null && u.canBeSeller(saleId) && i != null) {
+            // Spent hours before realizing fix is to cast to File
+            File pic = (File) picture.getFile();
+            if (pic.length() > 1000000) { // Picture too large
+                return redirect("/sale/" + saleId + "/item/" + itemId);
+            }
+            byte[] array;
+            try {
+                array = Files.readAllBytes(pic.toPath());
+            } catch (IOException e) {
+                return redirect("/sale/" + saleId + "/item/" + itemId);
+            }
+            if (i.pictureId != 0) {
+                Picture pTest = Picture.findById(i.pictureId);
+                if (pTest != null) {
+                    pTest.delete();
+                }
+            }
+            Picture p = new Picture(array);
+            i.setPictureId(p.id);
+            i.save();
+        }
+        return redirect("/sale/" + saleId + "/item/" + itemId);
+    }
+
+    /**
+     * Upload a profile picture
      * @return HTTP response to upload profile picture request
      */
     @Authenticated(Secured.class)
     public Result uploadProfilePicture() {
         MultipartFormData body = request().body().asMultipartFormData();
-        /*FilePart picture = body.getFile("picture");
-        if (picture != null) {
-            picture.getFile();
-            return ok("Picture uploaded");
-        } else {
-            redirect("/profile");
-        }*/
+        FilePart picture = body.getFile("picture");
+        System.out.println(picture.getFilename());
+        if (picture == null || (!picture.getFilename().endsWith(".png") &&
+                !picture.getFilename().endsWith(".jpg") &&
+                !picture.getFilename().endsWith(".jpeg"))) {
+            return redirect("/profile");
+        }
         User u = User.findByUsername(session("username"));
-        return ok("in progress");
+        if (u != null) { // User exists
+            // Spent hours before realizing fix is to cast to File
+            File pic = (File) picture.getFile();
+            if (pic.length() > 1000000) { // Picture too large
+                return redirect("/profile");
+            }
+            byte[] array;
+            try {
+                array = Files.readAllBytes(pic.toPath());
+            } catch (IOException e) {
+                return redirect("/profile");
+            }
+            if (u.profilePictureId != 0) {
+                Picture pTest = Picture.findById(u.profilePictureId);
+                if (pTest != null) {
+                    pTest.delete();
+                }
+            }
+            Picture p = new Picture(array);
+            u.setProfilePictureId(p.id);
+            u.save();
+        }
+        return redirect("/profile");
+
     }
 
     /**

@@ -16,7 +16,7 @@ import java.util.List;
 public class SaleItem extends Model {
     /**
      * Find SaleItem by its Id
-     * @param  id Id of SaleItem
+     * @param id Id of SaleItem
      * @return SaleItem if it exists
      */
     public static SaleItem findById(int id) {
@@ -163,6 +163,14 @@ public class SaleItem extends Model {
      */
     public void setName(String name) {
         this.name = name;
+    }
+
+    /**
+     * Set the PictureId of the SaleItem
+     * @param pictureId PictureId of the SaleItem
+     */
+    public void setPictureId(int pictureId) {
+        this.pictureId = pictureId;
     }
 
     /**

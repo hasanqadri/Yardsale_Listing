@@ -8,6 +8,7 @@ import com.google.zxing.client.j2se.MatrixToImageWriter;
 import com.google.zxing.common.BitMatrix;
 import com.google.zxing.qrcode.QRCodeWriter;
 import models.LineItem;
+import models.Picture;
 import models.Sale;
 import models.SaleItem;
 import play.data.DynamicForm;
@@ -28,7 +29,8 @@ import java.util.List;
 
 import static play.libs.Json.toJson;
 /**
- * Created by nathancheek on 6/25/16.
+ * @author Nathan Cheek, Pablo Ortega, Hasan Qadri, Nick Yokley
+ * This controller handles requests for data
  */
 public class DataController extends Controller {
 
@@ -39,10 +41,12 @@ public class DataController extends Controller {
      */
     @Security.Authenticated(Secured.class)
     public Result getImage(int id) {
-        // This method is currently being used for testing random stuff
-        //Sale sale2 = Sale.find.where().eq("id", 1).findUnique();
-        return notFound404();
-
+        Picture p = Picture.findById(id);
+        if (p == null) {
+            return notFound404();
+        }
+        InputStream is = new ByteArrayInputStream(p.image);
+        return ok(is).as("image/jpeg");
     }
 
     /**
