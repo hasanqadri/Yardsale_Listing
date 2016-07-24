@@ -22,6 +22,7 @@ import views.html.editSale;
 import views.html.features;
 import views.html.financialReport;
 import views.html.financialReportBySeller;
+import views.html.financialReportSingleSeller;
 import views.html.help;
 import views.html.home;
 import views.html.item;
@@ -171,19 +172,32 @@ public class PageController extends Controller {
      * Display financial report page in grouped by seller format
      * @return HTTP response to financial report page request
      */
-
     @Authenticated(Secured.class)
     public Result financialReportBySeller(int saleId) {
         Sale s = Sale.findById(saleId);
         User u = User.findByUsername(session("username"));
 
+        // If sale exists and user exists and has bookkeeper permissions
         if (s != null && u != null && u.canBeBookkeeper(s.id)) {
-            // If user has bookkeeper permissions, show page
             Map<User,List<LineItem>> items = LineItem.getLineItemsBySeller(s);
-           //Map<User,List<LineItem>> totals = LineItem.findAllLineItems(s).get(1);
-
-
             return ok(financialReportBySeller.render(items, saleId));
+        }
+        return notFound404();
+    }
+
+    /**
+     * Display financial report page for a single seller
+     * @return HTTP response to financial report page request
+     */
+    @Authenticated(Secured.class)
+    public Result financialReportSingleSeller(int saleId) {
+        Sale s = Sale.findById(saleId);
+        User u = User.findByUsername(session("username"));
+
+        // If sale exists and user exists and has seller permissions
+        if (s != null && u != null && u.canBeSeller(s.id)) {
+            return ok(financialReportSingleSeller.render(
+                    LineItem.findBySaleIdUserCreatedId(s.id, u.id), s.id));
         }
         return notFound404();
     }

@@ -29,6 +29,16 @@ public class LineItem extends Model {
     }
 
     /**
+     * Find all LineItems that are associated with a Sale
+     * @param  saleId Id of Sale
+     * @return LineItems associated with Sale
+     */
+    public static List<LineItem> findBySaleId(int saleId) {
+        return Ebean.find(LineItem.class).where().eq("saleId", saleId).
+                findList();
+    }
+
+    /**
      * Find all LineItems associated with a Transaction
      * @param transactionId Id of Transaction
      * @return LineItems associated with a Transaction
@@ -50,6 +60,40 @@ public class LineItem extends Model {
                 eq("transactionId", transactionId).findUnique();
     }
 
+    /**
+     * Find LineItems associated with a Sale and a Seller
+     * @param saleId Id of Sale
+     * @param userCreatedId Id ofSaleItem Seller
+     * @return list of LineItems associated with Sale and Seller
+     */
+    public static List<LineItem> findBySaleIdUserCreatedId(int saleId,
+            int userCreatedId) {
+        return Ebean.find(LineItem.class).where().eq("saleId", saleId).
+                eq("userCreatedId", userCreatedId).findList();
+    }
+
+    /**
+     * sorts line items into a map associated with a seller
+     * @return List of all open sales
+     */
+    public static  Map<User,List<LineItem>> getLineItemsBySeller(Sale s) {
+        Map<User,List<LineItem>> itemsByUser = new TreeMap<User, List<LineItem>>();
+        Map<User,Float> totals = new TreeMap<User, Float>();
+
+        // Loop through all line items within a sale and add the
+        // LineItem to the seller's key
+        for (LineItem li: LineItem.findBySaleId(s.id)) {
+            if (itemsByUser.containsKey(User.findById(li.userCreatedId))) {
+                itemsByUser.get(User.findById(li.userCreatedId)).add(li);
+            } else {
+                List<LineItem> userSoldItems = new ArrayList<LineItem>(1);
+                userSoldItems.add(li);
+                itemsByUser.put(User.findById(li.userCreatedId), userSoldItems);
+            }
+        }
+        return itemsByUser;
+    }
+
     @Id
     public int id;
     @Constraints.Required
@@ -59,10 +103,13 @@ public class LineItem extends Model {
     public float unitPrice; // Store unit price in case of SaleItem modification
     public String name; // Store item name in case of SaleItem modification
     public int userCreatedId; // Store user id in case of SaleItem deletion
+    public int saleId; // Id of sale this belongs to
 
     /**
      * Create an instance of LineItem
      * @param saleItemId Id of SaleItem
+     * @param saleId Id of Sale
+     * @param sellerId Id of SaleItem seller
      * @param transactionId Id of Transaction
      * @param quantity Quantity of SaleItem
      * @param unitPrice Unit price of SaleItem
@@ -70,54 +117,16 @@ public class LineItem extends Model {
      * @param userCreatedId Id of User who added the SaleItem to Sale
      */
     public LineItem(int saleItemId, int transactionId, int quantity,
-            float unitPrice, String name, int userCreatedId) {
+            float unitPrice, String name, int userCreatedId, int saleId) {
         this.saleItemId = saleItemId;
         this.transactionId = transactionId;
         this.quantity = quantity;
         this.unitPrice = unitPrice;
         this.name = name;
         this.userCreatedId = userCreatedId;
+        this.saleId = saleId;
         this.save();
     }
-
-    /**
-     * sorts line items into a map associated with a seller
-     * @return List of all open sales
-     */
-    public static  Map<User,List<LineItem>> getLineItemsBySeller(Sale s) {
-
-
-        List<Transaction> transactions = Transaction.findCompletedBySaleId(s.id);
-        Map<User,List<LineItem>> itemsByUser = new TreeMap<User, List<LineItem>>();
-        Map<User,Float> totals = new TreeMap<User, Float>();
-
-        //loops through transactions in a sale
-        for (Transaction t: transactions) {
-
-            //loops through all line items within a transaction and adds the
-            //line item to the sellers key
-            for (LineItem li: LineItem.findByTransactionId(t.id)) {
-
-                if (itemsByUser.containsKey(User.findById(li.userCreatedId))) {
-
-                    itemsByUser.get(User.findById(li.userCreatedId)).add(li);
-                    totals.put(User.findById(li.userCreatedId),
-                            totals.get(User.findById(li.userCreatedId))+li.getQuantity()*li.getUnitPrice());
-                } else {
-
-                    List<LineItem> userSoldItems = new ArrayList<LineItem>(1);
-                    userSoldItems.add(li);
-                    itemsByUser.put(User.findById(li.userCreatedId), userSoldItems);
-                    totals.put(User.findById(li.userCreatedId),li.getQuantity()*li.getUnitPrice());
-                }
-            }
-        }
-        //List<Map<User,List<LineItem>>> itemsAndTotals = new ArrayList<Map<User,List<LineItem>>>();
-        //itemsAndTotals.add(itemsByUser);
-        //itemsAndTotals.addAll(totals);
-        return itemsByUser;
-    }
-
 
     /**
      * Get a formatted price of item*quantity
@@ -183,6 +192,14 @@ public class LineItem extends Model {
      */
     public int getQuantity() {
         return quantity;
+    }
+
+    /**
+     * Get the saleId of this LineItem
+     * @return saleId of this LineItem
+     */
+    public int getSaleId() {
+        return saleId;
     }
 
     /**
