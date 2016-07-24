@@ -392,18 +392,24 @@ public class ActionController extends Controller {
      * @return HTTP response to profile page update request
      */
     @Authenticated(Secured.class)
-    public Result profile() {
+    public Result profile(int userId) {
         String username = session("username");
-        User user = User.findByUsername(session("username"));
+        User u = User.findByUsername(session("username"));
+        User user = User.findById(userId);
+        if (user == null || u == null ||
+                !(u.id == user.id || u.isSuperAdmin())) {
+            return notFound404();
+        }
 
         DynamicForm f = Form.form().bindFromRequest();
         User userCheckUsername = User.findByUsername(f.get("username"));
         if (userCheckUsername != null && !f.get("username").equals(username)) {
-            return ok(profile.render(user, "Error: username already in use"));
+            return ok(profileEdit.render(user,
+                    "Error: username already in use"));
         }
         User userCheckEmail = User.findByEmail(f.get("email"));
         if (userCheckEmail != null && !f.get("email").equals(user.getEmail())) {
-            return ok(profile.render(user, "Error: email already in use"));
+            return ok(profileEdit.render(user, "Error: email already in use"));
 
         }
         // Username and email not already in use, update user
@@ -413,10 +419,13 @@ public class ActionController extends Controller {
         user.setUsername(f.get("username"));
         user.setPassword(f.get("password"));
         user.save();
-        //Set new cookie in case username was changed
-        session("username", f.get("username"));
+        // Set new cookie in case username was changed,
+        // but only if editing own profile
+        if (u.id != user.id) {
+            session("username", f.get("username"));
+        }
 
-        return ok(profile.render(user, ""));
+        return ok(profileEdit.render(user, ""));
     }
 
     /**

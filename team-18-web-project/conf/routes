@@ -11,7 +11,8 @@ GET     /help                       controllers.PageController.help
 GET     /login                      controllers.PageController.login
 GET     /logout                     controllers.PageController.logout
 GET     /mysales                    controllers.PageController.mysales
-GET     /profile                    controllers.PageController.profile
+GET     /profile                    controllers.PageController.profileRedirect
+GET     /profile/:id                controllers.PageController.profile(id: Int)
 GET     /register                   controllers.PageController.register
 GET     /sales                      controllers.PageController.sales
 GET     /users                      controllers.PageController.users
@@ -20,7 +21,7 @@ GET     /users                      controllers.PageController.users
 # Action page requests
 POST    /createSale                 controllers.ActionController.createSale
 POST    /login                      controllers.ActionController.login
-POST    /profile                    controllers.ActionController.profile
+POST    /profile/:id                controllers.ActionController.profile(id: Int)
 POST    /register                   controllers.ActionController.register
 POST    /searchSales                controllers.ActionController.searchSales
 POST    /uploadProfilePicture       controllers.ActionController.uploadProfilePicture
