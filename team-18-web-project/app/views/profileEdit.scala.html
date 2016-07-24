@@ -54,10 +54,12 @@
             </form>
             <br>
             <form class="form-updatepassword" id="updatepassword-form" method="post">
-                <label for="inputUsername" class="sr-only">Current Password</label>
+                <label for="inputPassword" class="sr-only">Current Password</label>
                 <input type="password" id="inputUsername" name="currentPassword" class="form-control input-top" placeholder="Current Password" required>
-                <label for="inputPassword" class="sr-only">New Password</label>
-                <input type="password" id="inputPassword" name="newPassword" class="form-control input-bottom" placeholder="New Password" required>
+                <label for="inputNewPassword" class="sr-only">New Password</label>
+                <input type="password" id="inputNewPassword" name="newPassword" class="form-control input-middle" placeholder="New Password" required>
+                <label for="inputConfirmNewPassword" class="sr-only">Confirm New Password</label>
+                <input type="password" id="inputConfirmNewPassword" name="confirmNewPassword" class="form-control input-bottom" placeholder="Confirm New Password" required>
                 <div class="btn-toolbar">
                     <a href="#" class="btn btn-primary pull-left" onclick="changeToView();">CANCEL</a>
                     <button class="btn btn-success pull-right" type="submit">UPDATE PASSWORD</button>

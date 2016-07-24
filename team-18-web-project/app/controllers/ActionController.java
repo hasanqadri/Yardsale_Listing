@@ -432,7 +432,16 @@ public class ActionController extends Controller {
             }
             return ok(profileEdit.render(user, ""));
         }
-        if (f.get("currentPassword") != null && f.get("newPassword") != null) {
+        if (f.get("currentPassword") != null && f.get("newPassword") != null &&
+                f.get("confirmNewPassword") != null) {
+            if (!f.get("newPassword").equals(f.get("confirmNewPassword"))) {
+                return ok(profileEdit.render(user,
+                        "Error: Passwords do not match"));
+            }
+            if (f.get("newPassword").length() < 5) {
+                return ok(profileEdit.render(user,
+                        "Error: Choose a longer password"));
+            }
             if (user.getPassword().equals(
                     User.hashPassword(f.get("currentPassword")))) {
                         user.setPassword(f.get("newPassword"));
@@ -460,6 +469,9 @@ public class ActionController extends Controller {
         User userCheckEmail = User.findByEmail(f.get("email"));
         if (userCheckEmail != null) {
             return ok(register.render("Error: email already in use"));
+        }
+        if (f.get("password").length() < 5) {
+            return ok(register.render("Error: Choose a longer password"));
         }
         //If username or email not already in use, create user
         User user = new User(f.get("firstName"), f.get("lastName"),
