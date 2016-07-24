@@ -61,6 +61,8 @@
     <h4>Financial Report</h4>
     <ul>
       <li>A copy of relevant item data is stored with the transaction so that modifying or deleting an item does not affect the financial report</li>
+      <li>Sellers can view a financial report split up by sellers</li>
+      <li>Sellers can view a financial report that displays only their items that were sold</li>
     </ul>
 
     <h3>Security</h3>
@@ -68,6 +70,7 @@
       <li>Cookies are implemented using Java Play's session feature</li>
       <li>Authorization checks are done on page requests to verify the user has permission to perform an action or view a page</li>
       <li>Passwords are hashed using Whirlpool hashing algorithm</li>
+      <li>Website is served over https connection with grade A+ on <a href="https://www.ssllabs.com/ssltest/analyze.html?d=sales.cheek.us&hideResults=on&latest">ssllabs.com</a></li>
     </ul>
 
     <h3>Overall Design</h3>
@@ -84,6 +87,9 @@
       <li>Website utilizes MySQL database</li>
       <li>Website and Database are bundled into Centos 7 Linux virtual machine</li>
       <li>Help page guides new users through using the website</li>
+      <li>Image uploads are integrated into the native application without using an external API</li>
+      <li>An instance of the virtual machine can work without being connected to the Internet, meaning a sale could be run on an isolated network where there is no Internet access</li>
+      <li>IPv6 access is configured on the hosted version of the site</li>
     </ul>
 
 </div>

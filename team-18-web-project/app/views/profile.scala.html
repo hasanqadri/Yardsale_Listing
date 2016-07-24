@@ -1,86 +1,20 @@
-@* Displays profile page *@
-@(user: User, error: String)
+@* Displays profile page with no edit capability *@
+@(user: User)
 
 @loggedinmain("Profile") {
 <div class="container content">
     <div class="view profile" id="view-profile">
         <div class="col-sm-6">
-            <img class="profile-image" src="http://placehold.it/200x200" />
+            @if(user.profilePictureId == 0) {
+                <img class="profile-image" src="/assets/images/Profile.png" />
+            } else {
+                <img class="profile-image" src="/image/@user.profilePictureId" />
+            }
             <h1>@user.getName</h1>
             <p class="lead">@user.username</p>
             <p class="lead">@user.email</p>
 
         </div>
-        <div class="col-sm-6">
-
-            <a href="#" class="btn btn-primary pull-right" onclick="changeToEdit();">Edit profile</a>
-        </div>
-
-    </div>
-    <div class="edit profile" id="edit-profile">
-        <div class="col-sm-4">
-            <img class="profile-image" src="http://placehold.it/200x200" />
-            <h1>@user.getName</h1>
-            <p class="lead">@user.username</p>
-            <p class="lead">@user.email</p>
-
-        </div>
-        <div class="col-sm-4">
-            @if(error) {<h3 class="text-center">@error</h3>}
-            <h3>Edit Profile</h3>
-            <form class="form-editprofile" id="edit-form" action="/profile" method="post">
-                <label for="inputName" class="sr-only">Name</label>
-                <input type="text" id="inputFirstName" name="firstName" class="form-control input-top" value="@user.firstName" required autofocus>
-                <label for="inputName" class="sr-only">Name</label>
-                <input type="text" id="inputLastName" name="lastName" class="form-control input-middle" value="@user.lastName" required>
-                <label for="inputEmail" class="sr-only">Email</label>
-                <input type="email" id="inputEmail" name="email" class="form-control input-middle" value="@user.email" required>
-                <label for="inputUsername" class="sr-only">Username</label>
-                <input type="text" id="inputUsername" name="username" class="form-control input-middle" value="@user.username" required>
-                <label for="inputPassword" class="sr-only">Password</label>
-                <input type="password" id="inputPassword" name="password" class="form-control input-bottom" value="@user.password" required>
-                <div class="btn-toolbar">
-                    <a href="#" class="btn btn-primary pull-left" onclick="changeToView();">CANCEL</a>
-                    <button class="btn btn-success pull-right" type="submit">SAVE CHANGES</button>
-                </div>
-            </form>
-            <h3>Upload Profile Picture</h3>
-            <form action="/uploadProfilePicture" method="post">
-                <div class="input-group">
-                    <label class="input-group-btn">
-                    <span class="btn btn-default">
-                        Select File <input type="file" name="picture" style="display: none;">
-                    </span>
-                    </label>
-                    <input type="text" class="form-control" id="filename" value="" readonly>
-                </div>
-                <br>
-                <div class="btn-toolbar">
-                    <a href="#" class="btn btn-primary pull-left" onclick="changeToView();">CANCEL</a>
-                    <button class="btn btn-success pull-right" type="submit">UPLOAD</button>
-                </div>
-            </form>
-        </div>
-
-
     </div>
 </div>
-<script>
-    var changeToEdit = function() {
-        $("#view-profile").css("display", "none");
-        $("#edit-profile").css("display", "block");
-    };
-    var changeToView = function() {
-        $("#edit-profile").css("display", "none");
-        $("#view-profile").css("display", "block");
-    };
-
-    $(document).ready( function() {
-        $("input:file").change(function (){
-            var fileName = $(this).val().replace("C:\\fakepath\\", "");
-            $("#filename").val(fileName);
-        });
-    });
-
-</script>
 }
