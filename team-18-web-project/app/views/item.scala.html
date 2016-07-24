@@ -6,7 +6,11 @@
     <div class="view profile" id="view-profile">
       <div class="col-sm-6">
         <a href="/sale/@item.saleId"><h4>&#8592; Return to Sale</h4></a>
-        <img class="profile-image" src="http://placehold.it/200x200" />
+        @if(item.pictureId == 0) {
+            <img class="profile-image" src="/assets/images/Item.png" />
+        } else {
+            <img class="profile-image" src="/image/@item.pictureId" />
+        }
         <h1>@item.name</h1>
         <p class="lead">@item.description</p>
         <p class="lead">Price: $@item.formatPrice</p>
@@ -24,7 +28,11 @@
     <div class="edit profile" id="edit-profile">
       <div class="col-sm-4">
         <a href="/sale/@item.saleId"><h4>&#8592; Return to Sale</h4></a>
-        <img class="profile-image" src="http://placehold.it/200x200" />
+        @if(item.pictureId == 0) {
+            <img class="profile-image" src="/assets/images/Item.png" />
+        } else {
+            <img class="profile-image" src="/image/@item.pictureId" />
+        }
         <h1>@item.name </h1>
         <p class="lead">@item.description</p>
         <p class="lead">Price: $@item.formatPrice</p>
@@ -45,8 +53,26 @@
             <button class="btn btn-success pull-right" type="submit">SAVE CHANGES</button>
           </div>
         </form>
+        <br>
+        <br>
         <form method="post" class="hidden-form">
             <button class="btn btn-danger" type="submit" name="delete" value="@item.id">DELETE ITEM</button>
+        </form>
+        <h3>Upload Item Picture</h3>
+        <form enctype="multipart/form-data" action="/sale/@sale.id/item/@item.id/uploadItemPicture" method="post">
+            <div class="input-group">
+                <label class="input-group-btn">
+                <span class="btn btn-default">
+                    Select File <input type="file" name="picture" style="display: none;">
+                </span>
+                </label>
+                <input type="text" class="form-control" id="filename" value="" readonly>
+            </div>
+            <br>
+            <div class="btn-toolbar">
+                <a href="#" class="btn btn-primary pull-left" onclick="changeToView();">CANCEL</a>
+                <button class="btn btn-success pull-right" type="submit">UPLOAD</button>
+            </div>
         </form>
       </div>
     </div>

@@ -5,7 +5,11 @@
 <div class="container content">
     <div class="view profile" id="view-profile">
         <div class="col-sm-6">
-            <img class="profile-image" src="http://placehold.it/200x200" />
+            @if(user.profilePictureId == 0) {
+                <img class="profile-image" src="/assets/images/Profile.png" />
+            } else {
+                <img class="profile-image" src="/image/@user.profilePictureId" />
+            }
             <h1>@user.getName</h1>
             <p class="lead">@user.username</p>
             <p class="lead">@user.email</p>
@@ -19,7 +23,11 @@
     </div>
     <div class="edit profile" id="edit-profile">
         <div class="col-sm-4">
-            <img class="profile-image" src="http://placehold.it/200x200" />
+            @if(user.profilePictureId == 0) {
+                <img class="profile-image" src="/assets/images/Profile.png" />
+            } else {
+                <img class="profile-image" src="/image/@user.profilePictureId" />
+            }
             <h1>@user.getName</h1>
             <p class="lead">@user.username</p>
             <p class="lead">@user.email</p>
@@ -45,7 +53,7 @@
                 </div>
             </form>
             <h3>Upload Profile Picture</h3>
-            <form action="/uploadProfilePicture" method="post">
+            <form enctype="multipart/form-data" action="/uploadProfilePicture" method="post">
                 <div class="input-group">
                     <label class="input-group-btn">
                     <span class="btn btn-default">

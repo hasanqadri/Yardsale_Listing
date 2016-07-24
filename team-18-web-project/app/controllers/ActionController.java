@@ -5,10 +5,14 @@ import play.data.DynamicForm;
 import play.data.Form;
 import play.mvc.Controller;
 import play.mvc.Http.MultipartFormData;
+import play.mvc.Http.MultipartFormData.FilePart;
 import play.mvc.Result;
 import play.mvc.Security.Authenticated;
 import views.html.*;
 
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
 import java.sql.Timestamp;
 import java.text.DateFormat;
 import java.text.ParseException;
@@ -641,21 +645,86 @@ public class ActionController extends Controller {
     }
 
     /**
-     * Upload a profile picture (not working yet)
+     * Upload an item picture
+     * @return HTTP response to upload item picture request
+     */
+    @Authenticated(Secured.class)
+    public Result uploadItemPicture(int saleId, int itemId) {
+        MultipartFormData body = request().body().asMultipartFormData();
+        FilePart picture = body.getFile("picture");
+        System.out.println(picture.getFilename());
+        if (picture == null || (!picture.getFilename().endsWith(".png") &&
+                !picture.getFilename().endsWith(".jpg") &&
+                !picture.getFilename().endsWith(".jpeg"))) {
+            return redirect("/sale/" + saleId + "/item/" + itemId);
+        }
+        User u = User.findByUsername(session("username"));
+        SaleItem i = SaleItem.findById(itemId);
+        // User exists and can be seller and Item exists
+        if (u != null && u.canBeSeller(saleId) && i != null) {
+            // Spent hours before realizing fix is to cast to File
+            File pic = (File) picture.getFile();
+            if (pic.length() > 1000000) { // Picture too large
+                return redirect("/sale/" + saleId + "/item/" + itemId);
+            }
+            byte[] array;
+            try {
+                array = Files.readAllBytes(pic.toPath());
+            } catch (IOException e) {
+                return redirect("/sale/" + saleId + "/item/" + itemId);
+            }
+            if (i.pictureId != 0) {
+                Picture pTest = Picture.findById(i.pictureId);
+                if (pTest != null) {
+                    pTest.delete();
+                }
+            }
+            Picture p = new Picture(array);
+            i.setPictureId(p.id);
+            i.save();
+        }
+        return redirect("/sale/" + saleId + "/item/" + itemId);
+    }
+
+    /**
+     * Upload a profile picture
      * @return HTTP response to upload profile picture request
      */
     @Authenticated(Secured.class)
     public Result uploadProfilePicture() {
         MultipartFormData body = request().body().asMultipartFormData();
-        /*FilePart picture = body.getFile("picture");
-        if (picture != null) {
-            picture.getFile();
-            return ok("Picture uploaded");
-        } else {
-            redirect("/profile");
-        }*/
+        FilePart picture = body.getFile("picture");
+        System.out.println(picture.getFilename());
+        if (picture == null || (!picture.getFilename().endsWith(".png") &&
+                !picture.getFilename().endsWith(".jpg") &&
+                !picture.getFilename().endsWith(".jpeg"))) {
+            return redirect("/profile");
+        }
         User u = User.findByUsername(session("username"));
-        return ok("in progress");
+        if (u != null) { // User exists
+            // Spent hours before realizing fix is to cast to File
+            File pic = (File) picture.getFile();
+            if (pic.length() > 1000000) { // Picture too large
+                return redirect("/profile");
+            }
+            byte[] array;
+            try {
+                array = Files.readAllBytes(pic.toPath());
+            } catch (IOException e) {
+                return redirect("/profile");
+            }
+            if (u.profilePictureId != 0) {
+                Picture pTest = Picture.findById(u.profilePictureId);
+                if (pTest != null) {
+                    pTest.delete();
+                }
+            }
+            Picture p = new Picture(array);
+            u.setProfilePictureId(p.id);
+            u.save();
+        }
+        return redirect("/profile");
+
     }
 
     /**

@@ -166,6 +166,14 @@ public class SaleItem extends Model {
     }
 
     /**
+     * Set the PictureId of the SaleItem
+     * @param pictureId PictureId of the SaleItem
+     */
+    public void setPictureId(int pictureId) {
+        this.pictureId = pictureId;
+    }
+
+    /**
      * Set the Unit Price of the SaleItem
      * @param price Unit Price of the SaleItem
      */
