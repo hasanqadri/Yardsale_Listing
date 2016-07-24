@@ -15,7 +15,10 @@
             <p class="lead">@user.email</p>
 
         </div>
-        <div class="col-sm-6">
+        <div class="col-sm-4">
+            @if(error) {<h3 class="text-center">@error</h3>}
+        </div>
+        <div class="col-sm-2">
 
             <a href="#" class="btn btn-primary pull-right" onclick="changeToEdit();">Edit profile</a>
         </div>
@@ -34,9 +37,8 @@
 
         </div>
         <div class="col-sm-4">
-            @if(error) {<h3 class="text-center">@error</h3>}
             <h3>Edit Profile</h3>
-            <form class="form-editprofile" id="edit-form" action="/profile" method="post">
+            <form class="form-editprofile" id="edit-form" method="post">
                 <label for="inputName" class="sr-only">Name</label>
                 <input type="text" id="inputFirstName" name="firstName" class="form-control input-top" value="@user.firstName" required autofocus>
                 <label for="inputName" class="sr-only">Name</label>
@@ -45,11 +47,20 @@
                 <input type="email" id="inputEmail" name="email" class="form-control input-middle" value="@user.email" required>
                 <label for="inputUsername" class="sr-only">Username</label>
                 <input type="text" id="inputUsername" name="username" class="form-control input-middle" value="@user.username" required>
-                <label for="inputPassword" class="sr-only">Password</label>
-                <input type="password" id="inputPassword" name="password" class="form-control input-bottom" value="@user.password" required>
                 <div class="btn-toolbar">
                     <a href="#" class="btn btn-primary pull-left" onclick="changeToView();">CANCEL</a>
                     <button class="btn btn-success pull-right" type="submit">SAVE CHANGES</button>
+                </div>
+            </form>
+            <br>
+            <form class="form-updatepassword" id="updatepassword-form" method="post">
+                <label for="inputUsername" class="sr-only">Current Password</label>
+                <input type="password" id="inputUsername" name="currentPassword" class="form-control input-top" placeholder="Current Password" required>
+                <label for="inputPassword" class="sr-only">New Password</label>
+                <input type="password" id="inputPassword" name="newPassword" class="form-control input-bottom" placeholder="New Password" required>
+                <div class="btn-toolbar">
+                    <a href="#" class="btn btn-primary pull-left" onclick="changeToView();">CANCEL</a>
+                    <button class="btn btn-success pull-right" type="submit">UPDATE PASSWORD</button>
                 </div>
             </form>
             <h3>Upload Profile Picture</h3>

@@ -402,30 +402,46 @@ public class ActionController extends Controller {
         }
 
         DynamicForm f = Form.form().bindFromRequest();
-        User userCheckUsername = User.findByUsername(f.get("username"));
-        if (userCheckUsername != null && !f.get("username").equals(username)) {
-            return ok(profileEdit.render(user,
-                    "Error: username already in use"));
-        }
-        User userCheckEmail = User.findByEmail(f.get("email"));
-        if (userCheckEmail != null && !f.get("email").equals(user.getEmail())) {
-            return ok(profileEdit.render(user, "Error: email already in use"));
 
-        }
-        // Username and email not already in use, update user
-        user.setFirstName(f.get("firstName"));
-        user.setLastName(f.get("lastName"));
-        user.setEmail(f.get("email"));
-        user.setUsername(f.get("username"));
-        user.setPassword(f.get("password"));
-        user.save();
-        // Set new cookie in case username was changed,
-        // but only if editing own profile
-        if (u.id != user.id) {
-            session("username", f.get("username"));
-        }
+        if (f.get("firstName") != null && f.get("lastName") != null &&
+                f.get("email") != null && f.get("username") != null) {
+            User userCheckUsername = User.findByUsername(f.get("username"));
+            if (userCheckUsername != null && !f.get("username").
+                    equals(username)) {
+                return ok(profileEdit.render(user,
+                        "Error: username already in use"));
+            }
+            User userCheckEmail = User.findByEmail(f.get("email"));
+            if (userCheckEmail != null &&
+                    !f.get("email").equals(user.getEmail())) {
+                return ok(profileEdit.render(user,
+                        "Error: email already in use"));
 
-        return ok(profileEdit.render(user, ""));
+            }
+            // Username and email not already in use, update user
+            user.setFirstName(f.get("firstName"));
+            user.setLastName(f.get("lastName"));
+            user.setEmail(f.get("email"));
+            user.setUsername(f.get("username"));
+            user.setPassword(f.get("password"));
+            user.save();
+            // Set new cookie in case username was changed,
+            // but only if editing own profile
+            if (u.id != user.id) {
+                session("username", f.get("username"));
+            }
+            return ok(profileEdit.render(user, ""));
+        }
+        if (f.get("currentPassword") != null && f.get("newPassword") != null) {
+            if (user.getPassword().equals(
+                    User.hashPassword(f.get("currentPassword")))) {
+                        user.setPassword(f.get("newPassword"));
+                        user.save();
+                        return ok(profileEdit.render(user, "Password Updated"));
+            }
+            return ok(profileEdit.render(user, "Error: Wrong password"));
+        }
+        return notFound404();
     }
 
     /**
