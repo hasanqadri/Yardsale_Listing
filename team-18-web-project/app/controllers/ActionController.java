@@ -20,7 +20,8 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 /**
- * Created by nathancheek on 6/25/16.
+ * @author Nathan Cheek, Pablo Ortega, Hasan Qadri, Nick Yokley
+ * This controller handles requests that initiate state-changing actions
  */
 public class ActionController extends Controller {
     /**

@@ -29,7 +29,8 @@ import java.util.List;
 
 import static play.libs.Json.toJson;
 /**
- * Created by nathancheek on 6/25/16.
+ * @author Nathan Cheek, Pablo Ortega, Hasan Qadri, Nick Yokley
+ * This controller handles requests for data
  */
 public class DataController extends Controller {
 

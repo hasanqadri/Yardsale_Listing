@@ -16,7 +16,7 @@ import java.util.List;
 public class SaleItem extends Model {
     /**
      * Find SaleItem by its Id
-     * @param  id Id of SaleItem
+     * @param id Id of SaleItem
      * @return SaleItem if it exists
      */
     public static SaleItem findById(int id) {
