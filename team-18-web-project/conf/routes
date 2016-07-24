@@ -43,6 +43,7 @@ GET     /sale/:id/addItem                       controllers.PageController.addIt
 POST    /sale/:id/addItem                       controllers.ActionController.addItem(id: Int)
 GET     /sale/:id/financialReport               controllers.PageController.financialReport(id: Int)
 GET     /sale/:id/financialReportBySeller       controllers.PageController.financialReportBySeller(id: Int)
+GET     /sale/:id/financialReportSingleSeller   controllers.PageController.financialReportSingleSeller(id: Int)
 GET     /sale/:saleId/item/:itemId              controllers.PageController.item(saleId: Int, itemId: Int)
 POST    /sale/:saleId/item/:itemId              controllers.ActionController.item(saleId: Int, itemId: Int)
 POST    /sale/:id/searchItems                   controllers.ActionController.searchItems(id: Int)

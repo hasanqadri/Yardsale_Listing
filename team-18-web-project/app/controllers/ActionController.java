@@ -364,7 +364,7 @@ public class ActionController extends Controller {
             li.save();
         } else { // Item not part of transaction, create new LineItem
             LineItem lin = new LineItem(itemId, t.id, 1, i.price, i.name,
-                    i.userCreatedId);
+                    i.userCreatedId, i.saleId);
         }
 
         return ok(mobileSuccess.render("Item added"));
@@ -557,7 +557,7 @@ public class ActionController extends Controller {
                     li.save();
                 } else { // Item not part of transaction, create new LineItem
                     LineItem lin = new LineItem(itemId, t.id, itemQuantity,
-                            i.price, i.name, i.userCreatedId);
+                            i.price, i.name, i.userCreatedId, s.id);
                 }
 
                 return ok(transaction.render(t, t.getLineItems(), ""));
