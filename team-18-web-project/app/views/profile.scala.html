@@ -2,6 +2,8 @@
 @(user: User)
 
 @loggedinmain("Profile") {
+<link href="//fonts.googleapis.com/css?family=Corben:bold" rel="stylesheet" type="text/css">
+<link href="//fonts.googleapis.com/css?family=Nobile" rel="stylesheet" type="text/css">
 <div class="container content">
     <div class="view profile" id="view-profile">
         <div class="col-sm-6">
@@ -10,7 +12,7 @@
             } else {
                 <img class="profile-image" src="/image/@user.profilePictureId" />
             }
-            <h1>@user.getName</h1>
+            <h1 class = "title">@user.getName</h1>
             <p class="lead">@user.username</p>
             <p class="lead">@user.email</p>
 
