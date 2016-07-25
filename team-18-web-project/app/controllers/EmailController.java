@@ -23,10 +23,8 @@ public class EmailController extends Controller {
         List<LineItem> list = LineItem.findByTransactionId(tranId);
         Transaction t = Transaction.findById(tranId);
         Sale s = Sale.findById(saleId);
-        double total = 0;
         String htmlReceipt = "";
         for (LineItem li : list) {
-            total = total + li.getUnitPrice();
             htmlReceipt = htmlReceipt + "<tr>\n" +
                     "<th>" + li.getSaleItemId() + "</th>\n" +
                     "<th>" + li.getName() + "</th>\n" +
@@ -45,14 +43,13 @@ public class EmailController extends Controller {
                 .setBodyText("A text message")
                 .setBodyHtml("<html><body><div class=\"container content\">\n" +
                         "Dear " + t.buyerName + "," +"\n" +
-                        "Thank You for the following purchase on: " + t.formatDate() + " from:\n" +
+                        "Thank You for the following purchase on: " + t.formatDate() + " from\n" +
                         "    <div class=\"row\">\n" +
                         "        <div class=\"col-sm-2\">\n" +
                         "            <h3 class=\"text-center\">" + s.name + "</h3>\n" +
                         "        </div>\n" +
                         "        <div class=\"col-sm-3\">\n" +
-                        "            <h3 class=\"text-center\">Your payment method was: </h3>\n" +
-                        "            <h4  class=\"text-center\" >" + t.paymentMethod + "</h4>\n" +
+                        "            <h4 class=\"text-center\">Your payment method was: " + t.paymentMethod + "</h3>\n" +
                         "        </div>\n" +
                         "        <div class=\"col-sm-3\">\n" +
                         "            <h3 class=\"text-center\">Items Purchased: </h3>\n" +
@@ -74,7 +71,7 @@ public class EmailController extends Controller {
                         "        </table>\n" +
                         "        <div class=\"col-sm-3\">\n" +
                         "            <h3 class=\"text-center\">The total amount paid was: </h3>\n" +
-                        "            <h4  class=\"text-center\" >" + total + "</h4>\n" +
+                        "            <h4  class=\"text-center\" >" + t.formatTotal + "</h4>\n" +
                         "        </div>\n" +
                         "    </div>\n" + "</html>");
         String id = mailer.send(email);
