@@ -1,5 +1,5 @@
 @* Displays Financial Report page for single user *@
-@(items: List[LineItem], sale: Sale, saleTransactions: List[Transaction])
+@(items: List[LineItem], sale: Sale)
 
 @loggedinmain("My Financial Report") {
 <div class="container content">
@@ -31,7 +31,7 @@
             }
             </tbody>
         </table>
-        @if(sale.donor == "1" && saleTransactions.size > 0){
+        @if(sale.donor == "1" && items.size > 0){
           <div class="text-center">
             <a href="/sale/@sale.id/financialReportDonor/email"><btn class="btn btn-primary">SEND DONOR ACKNOWLEDGEMENT EMAIL</btn></a>
           </div>

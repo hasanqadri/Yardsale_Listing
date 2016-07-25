@@ -54,7 +54,7 @@ public class EmailController extends Controller {
                         "        <div class=\"col-sm-3\">\n" +
                         "            <h3 class=\"text-center\">Items Purchased: </h3>\n" +
                         "        </div>\n" +
-                        "        <table class=\"table table-striped\">" +
+                        "        <table class=\"table table-striped\">\n" +
                         "        <thead>\n" +
                         "        <tr>\n" +
                         "        <th>Catalog ID</th>\n" +
@@ -82,24 +82,20 @@ public class EmailController extends Controller {
         Sale s = Sale.findById(saleId);
         int tranId = 0;
         float total = 0;
+        String lines = "";
 
-
-        List<Transaction> transactions =
-                Transaction.findCompletedBySaleId(saleId);
-        if (!transactions.isEmpty()) {
-            for (Transaction tr : transactions) {
-                tranId = tr.id;
-                List<LineItem> list = LineItem.findByTransactionId(tranId);
-                if (!list.isEmpty()) {
-                    for (LineItem l : list) {
-                        total = total + l.getUnitPrice();
-                    }
-                }
-            }
+        List<LineItem> lis = LineItem.findBySaleIdUserCreatedId(s.id, u.id);
+        for (LineItem li : lis) {
+            total += li.getTotalPrice();
+            lines +=
+                "<tr>\n" +
+                "<th>" + li.getTransactionId() + "</th>\n" +
+                "<th>" + li.getName() + "</th>\n" +
+                "<th>$" + li.formatUnitPrice() + "</th>\n" +
+                "<th>" + li.getQuantity() + "</th>\n" +
+                "<th>$" + li.formatTotalPrice() + "</th>\n" +
+                "</tr>\n";
         }
-        Transaction t = Transaction.findById(tranId);
-
-
 
         final Email email = new Email()
                 .setSubject("Yard sale Donation Acknowledgement")
@@ -110,11 +106,32 @@ public class EmailController extends Controller {
                         "\n" +
                         "<div class=\"row\"><div class=\"col-sm-2\">\n" +
                         "\n " + u.firstName + " " + u.lastName + " \n<br>" + s.street + " \n<br>" +
-                        s.city + ", " + s.state + ",<br> " + s.zip + "\n" +
+                        s.city + ", " + s.state + " " + s.zip + "\n" +
                         "\n<br><p>" +
-                        "Dear " + u.firstName + " " + u.lastName + " ," + "\n" +
-                        "\n<br  ><br>" +
-                        "Thank you so much for your very generous donation of " +  "$" + total + " to " + t.buyerName + " on " +  t.date + "\n" +
+                        "Dear " + u.firstName + " " + u.lastName + ",\n" +
+                        "<br><br>\n" +
+                        "Thank you so much for your very generous donation.\n" +
+                        "<br>\n" +
+                        "<div class=\"col-sm-3\">\n" +
+                        "<h3>Donated Items</h3>\n" +
+                        "</div>\n" +
+                        "<table class=\"table table-striped\">\n" +
+                        "<thead>\n" +
+                        "<tr>\n" +
+                        "<th>Transaction</th>\n" +
+                        "<th>Item</th>\n" +
+                        "<th>Unit Price</th>\n" +
+                        "<th>Quantity</th>\n" +
+                        "<th>Total</th>\n" +
+                        "</tr>\n" +
+                        "</thead>\n" +
+                        "<tbody>\n" +
+                        lines +
+                        "</tbody>\n" +
+                        "</table>\n" +
+                        "<div class=\"col-sm-3\">\n" +
+                        "<h3>Total: $" + String.format("%.2f", total) + "</h3>\n" +
+                        "</div>\n" +
                         "\n<br><br>" +
                         "Respectfully,\n" +
                         "\n<br>" +
@@ -126,7 +143,7 @@ public class EmailController extends Controller {
                         "<font align = 'center'> DONATION RECEIPT – Keep for your records\n </font>" + "<br>" +
                         "\n" +
                         "Organization:  \t" + "Yardsale Inc." + "\n" + "<br>" +
-                        "Cash Contribution:  \t" + total + "<br>" +
+                        "Cash Contribution:  \t$" + String.format("%.2f", total) + "<br>" +
                         "\n" +
                         "No goods or services were provided in exchange for your contribution.\n" + "<br>" +
                         "\n" +

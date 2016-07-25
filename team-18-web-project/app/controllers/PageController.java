@@ -166,8 +166,7 @@ public class PageController extends Controller {
         // If sale exists and user exists and has seller permissions
         if (s != null && u != null && u.canBeSeller(s.id)) {
             return ok(financialReportSingleSeller.render(
-                    LineItem.findBySaleIdUserCreatedId(s.id, u.id), s,
-                    Transaction.findCompletedBySaleId(saleId)));
+                    LineItem.findBySaleIdUserCreatedId(s.id, u.id), s));
         }
         return notFound404();
     }
