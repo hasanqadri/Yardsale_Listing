@@ -60,18 +60,18 @@ public class EmailController extends Controller {
                         "        <table class=\"table table-striped\">" +
                         "        <thead>\n" +
                         "        <tr>\n" +
-                        "        <th>Catalog ID</th>\n"
-                        "        <th>Item</th>\n"
-                        "        <th>Description</th>\n"
-                        "        <th>Quantity</th>\n"
-                        "        <th>Unit Price</th>\n"
-                        "        <th>Total</th>\n"
-                        "        </tr>\n"
-                        "        </thead>\n"
-                        "        <tbody>\n"
+                        "        <th>Catalog ID</th>\n" +
+                        "        <th>Item</th>\n" +
+                        "        <th>Description</th>\n" +
+                        "        <th>Quantity</th>\n" +
+                        "        <th>Unit Price</th>\n" +
+                        "        <th>Total</th>\n" +
+                        "        </tr>\n" +
+                        "        </thead>\n" +
+                        "        <tbody>\n" +
                         htmlReceipt +
-                        "        </tbody>\n"
-                        "        </table>\n"
+                        "        </tbody>\n" +
+                        "        </table>\n" +
                         "        <div class=\"col-sm-3\">\n" +
                         "            <h3 class=\"text-center\">The total amount paid was: </h3>\n" +
                         "            <h4  class=\"text-center\" >" + total + "</h4>\n" +
