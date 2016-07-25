@@ -299,3 +299,11 @@ button.subnav-cancel {
     background: #232f3e;
     border: none;
 }
+
+.negate-left-padding {
+  padding-left: 0 !important;
+}
+
+.negate-right-padding {
+  padding-right: 0 !important;
+}
