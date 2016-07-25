@@ -2,14 +2,15 @@ package models;
 
 import com.avaje.ebean.Ebean;
 import com.avaje.ebean.Model;
+import play.data.validation.Constraints;
+
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Id;
+import javax.persistence.Table;
 import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
 import java.util.List;
-import javax.persistence.Entity;
-import javax.persistence.Column;
-import javax.persistence.Id;
-import javax.persistence.Table;
-import play.data.validation.Constraints;
 
 /**
  * Represents a sale
@@ -46,6 +47,7 @@ public class Sale extends Model {
     public String city;
     public String state;
     public int zip;
+    public String donor;
     public Timestamp startDate;
     public Timestamp endDate;
     @Constraints.Required
@@ -71,7 +73,7 @@ public class Sale extends Model {
      */
     public Sale(String name, String description, String street, String city,
                 String state, int zip, Timestamp startDate, Timestamp endDate,
-                int userCreatedId) {
+                int userCreatedId, String donor) {
         this.name = name;
         this.description = description;
         this.street = street;
@@ -81,6 +83,7 @@ public class Sale extends Model {
         this.startDate = startDate;
         this.endDate = endDate;
         this.userCreatedId = userCreatedId;
+        this.donor = donor;
         this.save();
         Role r = new Role("admin", userCreatedId, this.id);
     }
@@ -240,6 +243,12 @@ public class Sale extends Model {
     public void setStatus(int status) {
         this.status = status;
     }
+
+    /**
+     * Set donor status
+     * @param bool
+     */
+    public void setDonor(String bool) {this.donor = bool;}
 
     /**
      * Set Street

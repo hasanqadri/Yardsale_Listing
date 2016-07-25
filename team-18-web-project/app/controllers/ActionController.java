@@ -19,6 +19,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
+
 /**
  * @author Nathan Cheek, Pablo Ortega, Hasan Qadri, Nick Yokley
  * This controller handles requests that initiate state-changing actions
@@ -105,6 +106,7 @@ public class ActionController extends Controller {
         User user = User.findByUsername(session("username"));
         DynamicForm f = Form.form().bindFromRequest();
         int zip;
+        String donor = "";
         Timestamp startDate;
         Timestamp endDate;
         try {
@@ -121,9 +123,12 @@ public class ActionController extends Controller {
             e.printStackTrace();
             return notFound404();
         }
+        if (f.get("donor") == null) {
+            donor = "2";
+        }
         Sale sale = new Sale(f.get("name"), f.get("description"),
                 f.get("street"), f.get("city"), f.get("state"), zip, startDate,
-                endDate, user.id);
+                endDate, user.id, donor);
         return redirect("/sale/" + sale.id);
     }
 
@@ -310,6 +315,7 @@ public class ActionController extends Controller {
      * @return Response to login request
      */
     public Result login() {
+        int attempts = 3;
         if (session("username") != null) { // Redirect if user already logged in
             return redirect("/");
         }
@@ -319,7 +325,7 @@ public class ActionController extends Controller {
             if (user.getPassword().equals(
                     User.hashPassword(f.get("password")))) {
                 // Correct password
-                if (user.loginAttempts == 3) {
+                if (user.loginAttempts == attempts) {
                     // Notify that user is locked out
                     return ok(login.render("Your account has been locked"));
                 } else { // Create session
@@ -331,7 +337,7 @@ public class ActionController extends Controller {
                     session("username", f.get("username"));
                     return redirect("/");
                 }
-            } else if (user.loginAttempts < 3) {
+            } else if (user.loginAttempts < attempts) {
                 // Incorrect password - increment lockout counter up to 3
                 user.setLoginAttempts(user.loginAttempts + 1);
                 user.save();
@@ -377,7 +383,7 @@ public class ActionController extends Controller {
 
     /**
      * Displays a 404 error page
-     * @return HTTP response to a nonexistant page
+     * @return HTTP response to a non existent page
      */
     public Result notFound404() {
         if (session("username") != null) {
@@ -769,10 +775,11 @@ public class ActionController extends Controller {
      * Unlocks a user account
      * @return Response to user account request
      */
+    @SuppressWarnings("ConstantConditions")
     @Authenticated(Secured.class)
     public Result users() {
         User u = User.findByUsername(session("username"));
-        if (u.isSuperAdmin()) { // Requestor is super admin
+        if (u.isSuperAdmin()) { // Requester is super admin
             DynamicForm f = Form.form().bindFromRequest();
             if (f.get("userId") != null) { // Username was sent in post request
                 User userReset = User.findById(f.get("userId"));
@@ -783,4 +790,16 @@ public class ActionController extends Controller {
         }
         return notFound404(); // Return 404 error if user is not a super admin
     }
+
+    public Result setCharity(int saleId) {
+        Sale s = Sale.findById(saleId);
+        if (s.donor == "1") {
+            s.setDonor("0");
+        } else {
+            s.setDonor("1");
+        }
+        return redirect("/loggedinmain");
+    }
+
+
 }

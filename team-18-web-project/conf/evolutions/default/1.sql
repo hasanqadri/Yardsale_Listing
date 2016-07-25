@@ -37,6 +37,7 @@ create table sales (
   city                      varchar(255),
   state                     varchar(255),
   zip                       integer,
+  donor                     varchar(255),
   start_date                datetime(6),
   end_date                  datetime(6),
   user_created_id           integer,

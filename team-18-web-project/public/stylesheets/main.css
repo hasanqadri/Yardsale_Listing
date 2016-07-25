@@ -200,6 +200,7 @@ form .input-bottom {
     height: 36px;
     background: #232f3e;
 }
+
 .subnav-a {
     position: relative;
     float: left;
@@ -215,13 +216,10 @@ form .input-bottom {
 }
 
 .title {
-
     font-family: 'Corben', Georgia, Times, serif;
-
 }
 
 .tanBackground {
-
     background: #F8E5CB;
 }
 
@@ -235,4 +233,14 @@ p, div {
 
 .itemsList {
     columns: 3;
+}
+
+#all{
+    width:100%;
+    float:left;
+    text-align:center;
+}
+
+div.sub, iframe {
+    margin: 0 auto;
 }

@@ -1,5 +1,6 @@
 @* Displays Transaction page *@
-@(transaction: Transaction, lineItems: List[LineItem], message: String)
+@import java.util
+@(transaction: Transaction, lineItems: util.List[LineItem], message: String)
 
 @loggedinmain("Transaction") {
 <div class="container content">

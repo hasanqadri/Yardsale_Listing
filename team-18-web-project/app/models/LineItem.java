@@ -2,14 +2,15 @@ package models;
 
 import com.avaje.ebean.Ebean;
 import com.avaje.ebean.Model;
-import java.util.List;
-import java.util.ArrayList;
-import java.util.Map;
-import java.util.TreeMap;
+import play.data.validation.Constraints;
+
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Table;
-import play.data.validation.Constraints;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+import java.util.TreeMap;
 
 
 /**
@@ -109,7 +110,6 @@ public class LineItem extends Model {
      * Create an instance of LineItem
      * @param saleItemId Id of SaleItem
      * @param saleId Id of Sale
-     * @param sellerId Id of SaleItem seller
      * @param transactionId Id of Transaction
      * @param quantity Quantity of SaleItem
      * @param unitPrice Unit price of SaleItem
