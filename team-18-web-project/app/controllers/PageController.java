@@ -9,6 +9,8 @@ import views.html.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
+import java.util.HashSet;
 
 /**
  * @author Nathan Cheek, Pablo Ortega, Hasan Qadri, Nick Yokley
@@ -122,6 +124,7 @@ public class PageController extends Controller {
     @Authenticated(Secured.class)
     public Result financialReport(int saleId) {
         Sale s = Sale.findById(saleId);
+        String donor = s.donor;
         User u = User.findByUsername(session("username"));
         if (s != null && u != null && u.canBeBookkeeper(s.id)) {
             // If user has bookkeeper permissions, show page
@@ -132,7 +135,7 @@ public class PageController extends Controller {
                 total += t.getTotal();
             }
             return ok(financialReport.render(transactions, saleId,
-                    String.format("%.2f", total)));
+                    String.format("%.2f", total), donor));
         }
         return notFound404();
     }
@@ -166,8 +169,7 @@ public class PageController extends Controller {
         // If sale exists and user exists and has seller permissions
         if (s != null && u != null && u.canBeSeller(s.id)) {
             return ok(financialReportSingleSeller.render(
-                    LineItem.findBySaleIdUserCreatedId(s.id, u.id), s,
-                    Transaction.findCompletedBySaleId(saleId)));
+                    LineItem.findBySaleIdUserCreatedId(s.id, u.id), s.id));
         }
         return notFound404();
     }
@@ -191,7 +193,7 @@ public class PageController extends Controller {
         Sale s = Sale.findById(saleId);
         SaleItem i = SaleItem.findById(itemId);
         if (u != null && s != null & i != null && (s.status == 1
-                || Role.findByIds(u.id, saleId) != null || u.isSuperAdmin())) {
+                || Role.findByIds(u.id, saleId) != null)) {
             return ok(item.render(u, s, i));
         }
         return notFound404();
@@ -252,10 +254,12 @@ public class PageController extends Controller {
     public Result mysales() {
         User u = User.findByUsername(session("username"));
         List<Role> roles = Role.findByUserId(u.id);
-        List<Sale> sales = new ArrayList();
+        Set<Sale> salesSet = new HashSet();
+
         for (Role r : roles) {
-            sales.add(Sale.findById(r.saleId));
+            salesSet.add(Sale.findById(r.saleId));
         }
+        List<Sale> sales = new ArrayList<Sale>(salesSet);
         return ok(mysales.render(sales));
     }
 
