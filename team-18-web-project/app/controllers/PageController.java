@@ -135,7 +135,7 @@ public class PageController extends Controller {
                 total += t.getTotal();
             }
             return ok(financialReport.render(transactions, saleId,
-                    String.format("%.2f", total), donor));
+                    String.format("%.2f", total)));
         }
         return notFound404();
     }
