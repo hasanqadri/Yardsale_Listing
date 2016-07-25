@@ -2,12 +2,9 @@
 @(message: String)
 
 @loggedinmain("Create Sale") {
-    <link href="//fonts.googleapis.com/css?family=Corben:bold" rel="stylesheet" type="text/css">
-    <link href="//fonts.googleapis.com/css?family=Nobile" rel="stylesheet" type="text/css">
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datetimepicker/4.17.37/css/bootstrap-datetimepicker.min.css" />
-<script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.10.6/moment.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datetimepicker/4.17.37/js/bootstrap-datetimepicker.min.js"></script>
-
+<link rel="stylesheet" href="@routes.Assets.versioned("stylesheets/bootstrap-datetimepicker.min.css")" />
+<script src="@routes.Assets.versioned("javascripts/moment.min.js")"></script>
+<script src="@routes.Assets.versioned("javascripts/bootstrap-datetimepicker.min.js")"></script>
 <div class="container content">
         @if(message) {<h3 class="text-center">@message</h3>}
         <div class="col-sm-4">

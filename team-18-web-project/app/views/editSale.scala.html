@@ -3,14 +3,14 @@
 @(sale: Sale, roles: util.List[Role])
 
 @loggedinmain("Edit Sale") {
-    <link href="//fonts.googleapis.com/css?family=Corben:bold" rel="stylesheet" type="text/css">
-    <link href="//fonts.googleapis.com/css?family=Nobile" rel="stylesheet" type="text/css">
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datetimepicker/4.17.37/css/bootstrap-datetimepicker.min.css" />
-<script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.10.6/moment.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datetimepicker/4.17.37/js/bootstrap-datetimepicker.min.js"></script>
+<link rel="stylesheet" href="@routes.Assets.versioned("stylesheets/bootstrap-datetimepicker.min.css")" />
+<script src="@routes.Assets.versioned("javascripts/moment.min.js")"></script>
+<script src="@routes.Assets.versioned("javascripts/bootstrap-datetimepicker.min.js")"></script>
 
 <div class="container content">
-    <h1 class="text-center tanBackground corners">Edit Sale</h1>
+    <div class="text-center tanBackground row corners">
+        <h1>Edit Sale</h1>
+    </div>
     <div class="col-sm-4">
         <a href="/sale/@sale.id"><h4>&#8592; Return to Sale</h4></a>
         <form class="form-editSale" id="editSale" method="post">

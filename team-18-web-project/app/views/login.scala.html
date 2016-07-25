@@ -2,8 +2,6 @@
 @(message: String)
 
 @main("Log In") {
-    <link href="//fonts.googleapis.com/css?family=Corben:bold" rel="stylesheet" type="text/css">
-    <link href="//fonts.googleapis.com/css?family=Nobile" rel="stylesheet" type="text/css">
 <div class="container content">
     @if(message) {<h3 class="text-center">@message</h3>}
     <form class="form-signin" id="sign-in" action="/login" method="post">
