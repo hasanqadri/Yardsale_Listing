@@ -522,7 +522,7 @@ public class ActionController extends Controller {
     public Result sale(int saleId) {
         User u = User.findByUsername(session("username"));
         Sale s = Sale.findById(saleId);
-        String pubUrl = "http://" + request().host() + "/publicSale/" + id;
+        String pubUrl = "http://" + request().host() + "/publicSale/" + saleId;
         DynamicForm f = Form.form().bindFromRequest();
         if (u != null && u.canBeAdmin(saleId) && s != null
                 && f.get("unarchive") != null) {
