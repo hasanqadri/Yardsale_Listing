@@ -22,6 +22,7 @@ public class EmailController extends Controller {
     public Result send(int saleId, int tranId) {
         List<LineItem> list = LineItem.findByTransactionId(tranId);
         Transaction t = Transaction.findById(tranId);
+        Sale s = Sale.findById(saleId);
         double total = 0;
         String htmlReceipt = "";
         for (LineItem li : list) {
@@ -41,13 +42,13 @@ public class EmailController extends Controller {
                 .setBodyText("A text message")
                 .setBodyHtml("<html><body><div class=\"container content\">\n" +
                         "Dear " + t.buyerName + "," +"\n" +
-                        "Thank You for the follwoing purchase on: " + t.formatDate() + ".\n" +
+                        "Thank You for the following purchase on: " + t.formatDate() + " from:\n" +
                         "    <div class=\"row\">\n" +
                         "        <div class=\"col-sm-2\">\n" +
-                        "            <h3 class=\"text-center\">From the Recent Yard Sale!</h3>\n" +
+                        "            <h3 class=\"text-center\">" + s.name + "</h3>\n" +
                         "        </div>\n" +
                         "        <div class=\"col-sm-3\">\n" +
-                        "            <h3 class=\"text-center\">You payment method was: </h3>\n" +
+                        "            <h3 class=\"text-center\">Your payment method was: </h3>\n" +
                         "            <h4  class=\"text-center\" >" + t.paymentMethod + "</h4>\n" +
                         "        </div>\n" +
                         htmlReceipt +
