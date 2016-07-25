@@ -3,8 +3,8 @@
 
 @loggedinmain("Sale") {
 
-    <link href="http://fonts.googleapis.com/css?family=Corben:bold" rel="stylesheet" type="text/css">
-    <link href="http://fonts.googleapis.com/css?family=Nobile" rel="stylesheet" type="text/css">
+    <link href="//fonts.googleapis.com/css?family=Corben:bold" rel="stylesheet" type="text/css">
+    <link href="//fonts.googleapis.com/css?family=Nobile" rel="stylesheet" type="text/css">
 <div class="container content">
     <div class="view sale" id="view-sale">
         <div class="row">
@@ -37,7 +37,6 @@
             </div>
         </div>
 
-
             <div class = "tanBackground row">
                 <h1 class="text-center title" id="saleName">@sale.name</h1>
                 <div class="row">
@@ -52,7 +51,7 @@
                     </div>
                     <div class="col-sm-2">
                         <h3 class="text-center">Created By</h3>
-                        <h4 class = "text-center" id="saleCreatedBy" class="text-center">@sale.getCreatedBy</h4>
+                        <h4 class = "text-center" id="saleCreatedBy" class="text-center"><a href="/profile/@sale.getUserCreatedId">@sale.getCreatedBy</a></h4>
                     </div>
                     <div class="col-sm-3">
                         <h3 class="text-center">Dates</h3>

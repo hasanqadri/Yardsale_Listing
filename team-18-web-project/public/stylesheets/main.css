@@ -179,6 +179,13 @@ form .input-bottom {
 .tag-qr {
   margin-top: 30px;
 }
+
+.profile-image {
+    width: 200px;
+    height: 200px;
+    object-fit: cover;
+}
+
 .subnav {
     position: relative;
     display: inline-block;
@@ -204,25 +211,28 @@ form .input-bottom {
 }
 
 .subnav-content {
--webkit-box-sizing: border-box;
+    -webkit-box-sizing: border-box;
 }
+
 .title {
 
     font-family: 'Corben', Georgia, Times, serif;
 
 }
+
 .tanBackground {
 
     background: #F8E5CB;
 }
+
 h1, h2, h3, h4, h5, h6 {
     font-family: 'Corben', Georgia, Times, serif;
 }
+
 p, div {
     font-family: 'Nobile', Helvetica, Arial, sans-serif;
 }
 
 .itemsList {
-
     columns: 3;
 }
