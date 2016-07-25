@@ -27,11 +27,14 @@ public class EmailController extends Controller {
         String htmlReceipt = "";
         for (LineItem li : list) {
             total = total + li.getUnitPrice();
-            htmlReceipt = htmlReceipt +                         "        <div class=\"col-sm-3\">\n" +
-                    "            <h3 class=\"text-center\">The Item: </h3>\n" +
-                    "            <h4  class=\"text-center\" >" + li.getName() + "</h4>\n" +
-                    "            <h4  class=\"text-center\" >" + li.getTotalPrice() + "</h4>\n" +
-                    "        </div>\n";
+            htmlReceipt = htmlReceipt + "<tr>\n" +
+                    "<th>" + li.getSaleItemId() + "</th>\n" +
+                    "<th>" + li.getName() + "</th>\n" +
+                    "<th>" + li.getDescription() + "</th>\n" +
+                    "<th>" + li.getQuantity() + "</th>\n" +
+                    "<th>" + li.formatUnitPrice() + "</th>\n" +
+                    "<th>" + li.formatTotalPrice() + "</th>\n" +
+                    "</tr>\n";
         }
         final Email email = new Email()
                 .setSubject("Your Yard Sale Receipt")
@@ -51,7 +54,24 @@ public class EmailController extends Controller {
                         "            <h3 class=\"text-center\">Your payment method was: </h3>\n" +
                         "            <h4  class=\"text-center\" >" + t.paymentMethod + "</h4>\n" +
                         "        </div>\n" +
+                        "        <div class=\"col-sm-3\">\n" +
+                        "            <h3 class=\"text-center\">Items Purchased: </h3>\n" +
+                        "        </div>\n" +
+                        "        <table class=\"table table-striped\">" +
+                        "        <thead>\n" +
+                        "        <tr>\n" +
+                        "        <th>Catalog ID</th>\n"
+                        "        <th>Item</th>\n"
+                        "        <th>Description</th>\n"
+                        "        <th>Quantity</th>\n"
+                        "        <th>Unit Price</th>\n"
+                        "        <th>Total</th>\n"
+                        "        </tr>\n"
+                        "        </thead>\n"
+                        "        <tbody>\n"
                         htmlReceipt +
+                        "        </tbody>\n"
+                        "        </table>\n"
                         "        <div class=\"col-sm-3\">\n" +
                         "            <h3 class=\"text-center\">The total amount paid was: </h3>\n" +
                         "            <h4  class=\"text-center\" >" + total + "</h4>\n" +
