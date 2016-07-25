@@ -30,8 +30,8 @@ public class EmailController extends Controller {
                     "<th>" + li.getName() + "</th>\n" +
                     "<th>" + li.getDescription() + "</th>\n" +
                     "<th>" + li.getQuantity() + "</th>\n" +
-                    "<th>" + li.formatUnitPrice() + "</th>\n" +
-                    "<th>" + li.formatTotalPrice() + "</th>\n" +
+                    "<th>$" + li.formatUnitPrice() + "</th>\n" +
+                    "<th>$" + li.formatTotalPrice() + "</th>\n" +
                     "</tr>\n";
         }
         final Email email = new Email()
@@ -70,8 +70,7 @@ public class EmailController extends Controller {
                         "        </tbody>\n" +
                         "        </table>\n" +
                         "        <div class=\"col-sm-3\">\n" +
-                        "            <h3 class=\"text-center\">The total amount paid was: </h3>\n" +
-                        "            <h4  class=\"text-center\" >" + t.formatTotal() + "</h4>\n" +
+                        "            <h3  class=\"text-center\" >Total: $" + t.formatTotal() + "</h3>\n" +
                         "        </div>\n" +
                         "    </div>\n" + "</html>");
         String id = mailer.send(email);
