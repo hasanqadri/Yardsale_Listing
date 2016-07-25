@@ -522,12 +522,13 @@ public class ActionController extends Controller {
     public Result sale(int saleId) {
         User u = User.findByUsername(session("username"));
         Sale s = Sale.findById(saleId);
+        String pubUrl = "http://" + request().host() + "/publicSale/" + id;
         DynamicForm f = Form.form().bindFromRequest();
         if (u != null && u.canBeAdmin(saleId) && s != null
                 && f.get("unarchive") != null) {
             s.setStatus(0); // Change sale to closed
             s.save();
-            return ok(sale.render(u, s, s.getItems()));
+            return ok(sale.render(u, s, s.getItems(), pubUrl));
         }
         return notFound404();
     }
