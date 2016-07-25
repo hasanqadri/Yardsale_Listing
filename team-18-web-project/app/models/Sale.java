@@ -245,10 +245,12 @@ public class Sale extends Model {
     }
 
     /**
-     * Set donor status
-     * @param bool
+     * Set charitable status
+     * @param donor Charitable status
      */
-    public void setDonor(String bool) {this.donor = bool;}
+    public void setDonor(String donor) {
+        this.donor = donor;
+    }
 
     /**
      * Set Street

@@ -6,49 +6,79 @@
 <script src="@routes.Assets.versioned("javascripts/moment.min.js")"></script>
 <script src="@routes.Assets.versioned("javascripts/bootstrap-datetimepicker.min.js")"></script>
 <div class="container content">
-        @if(message) {<h3 class="text-center">@message</h3>}
-        <div class="col-sm-4">
-        <form class="form-createSale" id="createSale" action="/createSale" method="post">
-            <label for="inputName" class="sr-only">Name</label>
-            <input type="text" maxlength="255" id="inputName" name="name" class="form-control input-top" placeholder="Bob's Yard Sale" required autofocus>
-            <label for="inputDescription" class="sr-only">Description</label>
-            <input type="text" maxlength="255" id="inputDescription" name="description" class="form-control input-top" placeholder="Description goes here">
-            <label for="inputStreet" class="sr-only">Address</label>
-            <input type="text" maxlength="255" id="inputStreet" name="street" class="form-control input-middle" placeholder="1234 4th Street" required>
-            <label for="inputCity" class="sr-only">City</label>
-            <input type="text" maxlength="255" id="inputCity" name="city" class="form-control input-middle" placeholder="Atlanta" required>
-            <label for="inputState" class="sr-only">State</label>
-            <input type="text" maxlength="2" name="state" class="form-control input-middle" placeholder="GA" required>
-
-            <label for="inputZip" class="sr-only">Zip Code</label>
-            <input type="number" min="0" max="99999" id="inputZip" name="zip" class="form-control input-bottom" placeholder="30332" required>
-            <div class="form-group">
-                <div class='input-group date' id='datetimepicker1'>
-                    <input type='text' id="startDate" name="startDate" class="form-control" placeholder="Start Date..." />
+  <div class="text-center tanBackground row corners">
+    <h1>Create a Sale</h1>
+  </div>
+  <br>
+  @if(message) {<h3 class="text-center">@message</h3>}
+  <div class="col-sm-3"></div>
+  <div class="col-sm-6">
+    <form class="form-createSale" id="createSale" action="/createSale" method="post">
+      <fieldset class="form-group row">
+        <label for="inputName" class="col-sm-3 form-control-label">Sale Name</label>
+        <div class="col-sm-9">
+          <input type="text" maxlength="255" id="inputName" name="name" class="form-control" placeholder="Bob's Yard Sale" required autofocus>
+        </div>
+      </fieldset>
+      <fieldset class="form-group row">
+        <label for="inputDescription" class="col-sm-3 form-control-label">Description</label>
+        <div class="col-sm-9">
+          <textarea maxlength="255" rows="3" id="inputDescription" name="description" class="form-control"></textarea>
+        </div>
+      </fieldset>
+      <fieldset class="form-group row">
+        <label for="inputStreet" class="col-sm-3 form-control-label">Address</label>
+        <div class="col-sm-9">
+          <input type="text" maxlength="255" id="inputStreet" name="street" class="form-control" placeholder="1234 Main Street" required>
+        </div>
+      </fieldset>
+      <fieldset class="form-group row">
+        <label for="inputCity" class="col-sm-3 form-control-label">City</label>
+        <div class="col-sm-9">
+          <input type="text" maxlength="255" id="inputCity" name="city" class="form-control" placeholder="Atlanta" required>
+        </div>
+      </fieldset>
+      <div class="row">
+        <fieldset class="form-group col-sm-6">
+          <label for="inputState" class="col-sm-6 form-control-label negate-left-padding">State</label>
+          <div class="col-sm-6">
+            <input type="text" maxlength="2" name="state" class="form-control" placeholder="GA" required>
+          </div>
+        </fieldset>
+        <fieldset class="form-group col-sm-6">
+          <label for="inputZip" class="col-sm-6 form-control-label">Zip Code</label>
+          <div class="col-sm-6 negate-right-padding">
+            <input type="number" min="10000" max="99999" id="inputZip" name="zip" class="form-control" placeholder="30332" required>
+          </div>
+        </fieldset>
+      </div>
+      <div class="row">
+        <h4 class="text-center">Sale Dates</h4>
+        <div class="form-group col-sm-6">
+          <div class='input-group date' id='datetimepicker1'>
+            <input type='text' id="startDate" name="startDate" class="form-control" placeholder="Start Date..." />
             <span class="input-group-addon">
-                <span class="glyphicon glyphicon-calendar"></span>
+              <span class="glyphicon glyphicon-calendar"></span>
             </span>
-                </div>
-            </div>
-            <div class="form-group">
-                <div class='input-group date' id='datetimepicker2'>
-                    <input type='text' id="endDate" name="endDate" class="form-control" placeholder="End Date..."/>
+          </div>
+        </div>
+        <div class="form-group col-sm-6">
+          <div class='input-group date' id='datetimepicker2'>
+            <input type='text' id="endDate" name="endDate" class="form-control" placeholder="End Date..." />
             <span class="input-group-addon">
-                <span class="glyphicon glyphicon-calendar"></span>
+              <span class="glyphicon glyphicon-calendar"></span>
             </span>
-                </div>
-            </div>
-            <label for="inputDonor" class="sr-only">Charity sale?</label>
-            Charity Sale?
-            <input type="checkbox" id="inputDonor" name="donor" class="form-control input-middle" value="1" checked="unchecked"  >
-
-            <div class="col-sm-4">
-                <div class="btn-toolbar pull-right">
-                    <button class="btn btn-success" type="submit">Create Sale</button>
-                </div>
-            </div>
-        </form>
-    </div>
+          </div>
+        </div>
+      </div>
+      <fieldset class="form-group row col-sm-12">
+        <label class="checkbox-inline"><input type="checkbox" id="inputDonor" name="donor" value="1">Is this sale for charity?</label>
+      </fieldset>
+      <div class="text-center">
+        <button class="btn btn-success" type="submit">Create Sale</button>
+      </div>
+    </form>
+  </div>
 </div>
 
 <script type="text/javascript">

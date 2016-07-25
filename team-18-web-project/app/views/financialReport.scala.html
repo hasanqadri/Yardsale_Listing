@@ -1,6 +1,6 @@
 @* Displays Financial Report page *@
 @import java.util
-@(transactions: util.List[Transaction], saleId: Int, total: String, donor: String)
+@(transactions: util.List[Transaction], saleId: Int, total: String)
 
 @loggedinmain("Financial Report") {
 <div class="container content">
@@ -35,7 +35,6 @@
     </div>
     <div class="col-md-3 text-center subnav corners">
         <a href="/sale/@saleId/financialReportBySeller" class="subnav-a goldHighlight">REPORT BY SELLER</a>
-        @if(donor.equals("1")){<a href ="/sale/@saleId/financialReportDonor/email"  class="subnav-a goldHighlight">DONOR ACKNOWLEDGEMENT</a>}
         <a href="/sale/@saleId/financialReportSingleSeller" class="subnav-a goldHighlight">MY SOLD ITEMS</a>
     </div>
 

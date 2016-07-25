@@ -122,7 +122,6 @@ public class PageController extends Controller {
     @Authenticated(Secured.class)
     public Result financialReport(int saleId) {
         Sale s = Sale.findById(saleId);
-        String donor = s.donor;
         User u = User.findByUsername(session("username"));
         if (s != null && u != null && u.canBeBookkeeper(s.id)) {
             // If user has bookkeeper permissions, show page
@@ -133,7 +132,7 @@ public class PageController extends Controller {
                 total += t.getTotal();
             }
             return ok(financialReport.render(transactions, saleId,
-                    String.format("%.2f", total), donor));
+                    String.format("%.2f", total)));
         }
         return notFound404();
     }
@@ -167,7 +166,8 @@ public class PageController extends Controller {
         // If sale exists and user exists and has seller permissions
         if (s != null && u != null && u.canBeSeller(s.id)) {
             return ok(financialReportSingleSeller.render(
-                    LineItem.findBySaleIdUserCreatedId(s.id, u.id), s.id));
+                    LineItem.findBySaleIdUserCreatedId(s.id, u.id), s,
+                    Transaction.findCompletedBySaleId(saleId)));
         }
         return notFound404();
     }

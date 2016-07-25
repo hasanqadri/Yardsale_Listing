@@ -71,6 +71,10 @@ public class EmailController extends Controller {
     public Result sendDonor(int saleId) {
         User u = User.findByUsername(session("username"));
         Sale s = Sale.findById(saleId);
+        if (u == null || s == null || !s.donor.equals("1")) {
+            return redirect("/sale/" + saleId);
+        }
+
         int tranId = 0;
         float total = 0;
 

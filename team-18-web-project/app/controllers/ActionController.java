@@ -123,8 +123,10 @@ public class ActionController extends Controller {
             e.printStackTrace();
             return notFound404();
         }
-        if (f.get("donor") == null) {
-            donor = "2";
+        if (f.get("donor") != null) {
+            donor = "1";
+        } else {
+            donor = "0";
         }
         Sale sale = new Sale(f.get("name"), f.get("description"),
                 f.get("street"), f.get("city"), f.get("state"), zip, startDate,
@@ -215,6 +217,11 @@ public class ActionController extends Controller {
             s.setStreet(f.get("street"));
             s.setCity(f.get("city"));
             s.setState(f.get("state"));
+            if (f.get("donor") != null) {
+                s.setDonor("1");
+            } else {
+              s.setDonor("0");
+            }
             int zip;
             Timestamp startDate;
             Timestamp endDate;
@@ -429,7 +436,6 @@ public class ActionController extends Controller {
             user.setLastName(f.get("lastName"));
             user.setEmail(f.get("email"));
             user.setUsername(f.get("username"));
-            user.setPassword(f.get("password"));
             user.save();
             // Set new cookie in case username was changed,
             // but only if editing own profile
