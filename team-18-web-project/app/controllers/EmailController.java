@@ -42,8 +42,8 @@ public class EmailController extends Controller {
                 //.addAttachment("data.txt", "data".getBytes(), "text/plain", "Simple data", EmailAttachment.INLINE)
                 .setBodyText("A text message")
                 .setBodyHtml("<html><body><div class=\"container content\">\n" +
-                        "Dear " + t.buyerName + "," +"\n" +
-                        "Thank You for the following purchase on: " + t.formatDate() + " from\n" +
+                        "<p>Dear " + t.buyerName + "," +"</p>\n" +
+                        "<p>Thank You for the following purchase on: " + t.formatDate() + " from</p>\n" +
                         "    <div class=\"row\">\n" +
                         "        <div class=\"col-sm-2\">\n" +
                         "            <h3 class=\"text-center\">" + s.name + "</h3>\n" +
