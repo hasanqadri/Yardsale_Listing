@@ -39,7 +39,6 @@ public class DataController extends Controller {
      * @param id Id of image to return
      * @return Image with given Id
      */
-    @Security.Authenticated(Secured.class)
     public Result getImage(int id) {
         Picture p = Picture.findById(id);
         if (p == null) {

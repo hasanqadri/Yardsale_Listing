@@ -55,6 +55,9 @@ GET     /sale/:saleId/saleTag                           controllers.PageControll
 GET     /sale/:id/edit                                  controllers.PageController.editSale(id: Int)
 POST    /sale/:id/edit                                  controllers.ActionController.editSale(id: Int)
 
+GET     /publicSale/:saleId                             controllers.PageController.publicSale(saleId: Int)
+GET     /publicSale/:saleId/publicItem/:itemId          controllers.PageController.publicItem(saleId: Int, itemId: Int)
+
 
 #Map requests to /transaction
 GET    /createTransaction/:saleId                                   controllers.ActionController.createTransaction(saleId: Int)

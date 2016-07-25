@@ -1,12 +1,37 @@
 @* Displays sale page *@
-@import java.util
-@(user: User, sale: Sale, items: util.List[SaleItem])
+@(user: User, sale: Sale, items: List[SaleItem], pubUrl: String)
 
 @loggedinmain("Sale") {
+<script>window.twttr = (function(d, s, id) {
+  var js, fjs = d.getElementsByTagName(s)[0],
+    t = window.twttr || {};
+  if (d.getElementById(id)) return t;
+  js = d.createElement(s);
+  js.id = id;
+  js.src = "https://platform.twitter.com/widgets.js";
+  fjs.parentNode.insertBefore(js, fjs);
+
+  t._e = [];
+  t.ready = function(f) {
+    t._e.push(f);
+  };
+
+  return t;
+}(document, "script", "twitter-wjs"));</script>
+
+<div id="fb-root"></div>
+<script>(function(d, s, id) {
+  var js, fjs = d.getElementsByTagName(s)[0];
+  if (d.getElementById(id)) return;
+  js = d.createElement(s); js.id = id;
+  js.src = "//connect.facebook.net/en_US/sdk.js#xfbml=1&version=v2.7";
+  fjs.parentNode.insertBefore(js, fjs);
+}(document, 'script', 'facebook-jssdk'));</script>
+
 <div class="container content">
     <div class="view sale" id="view-sale">
         <div class="row">
-            <div class="col-sm-9 subnav">
+            <div class="col-sm-7 subnav">
                 <div class = "subnav">
                 @if(sale.status != 2 && user.canBeSeller(sale.id)) {<a href="/sale/@sale.id/addItem" class="subnav-a goldHighlight">
                     <span class="subnav-content">ADD ITEM</span></a>}
@@ -20,6 +45,14 @@
                 </form>
                 }
                 </div>
+            </div>
+            <div class="col-sm-2 subnav">
+              <div class="social-button pull-left">
+                <div class="fb-share-button" data-href="@pubUrl" data-layout="button_count" data-size="small" data-mobile-iframe="true"></div>
+              </div>
+              <div class="social-button pull-right">
+                <a class="twitter-share-button" href="https://twitter.com/intent/tweet?text=Check%20out%20this%20sale&url=@pubUrl">Tweet</a>
+              </div>
             </div>
             <div class="col-sm-3 subnav">
                 <div class="input-group">
@@ -77,8 +110,4 @@
 
     </div>
 </div>
-<script>
-
-
-</script>
 }

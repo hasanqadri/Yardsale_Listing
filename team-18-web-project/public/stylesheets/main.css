@@ -307,3 +307,8 @@ button.subnav-cancel {
 .negate-right-padding {
   padding-right: 0 !important;
 }
+
+.social-button {
+  margin-top: 7px;
+  max-width: 50%;
+}

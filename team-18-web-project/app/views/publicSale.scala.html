@@ -1,0 +1,53 @@
+@* Displays sale page *@
+@(sale: Sale, items: List[SaleItem])
+
+@main("Sale") {
+<div class="container content">
+    <div class="view sale" id="view-sale">
+            <div class = "tanBackground row bottomCorners">
+                <h1 class="text-center title" id="saleName">@sale.name</h1>
+                <div class="row">
+                    <div class="col-sm-3" id="saleAddress">
+                        <h3 class="text-center">Address</h3>
+                        <h4 class = "text-center" id="saleAddress1">@sale.street</h4>
+                        <h4 class = "text-center" id="saleAddress2">@sale.city, @sale.state @sale.zip</h4>
+                    </div>
+                    <div class="col-sm-4">
+                        <h3 class="text-center">Description</h3>
+                        <h4 class = "text-center" id="saleDescription">@sale.description</h4>
+                    </div>
+                    <div class="col-sm-2">
+                        <h3 class="text-center">Created By</h3>
+                        <h4 class = "text-center" id="saleCreatedBy" class="text-center">@sale.getCreatedBy</h4>
+                    </div>
+                    <div class="col-sm-3">
+                        <h3 class="text-center">Dates</h3>
+                        <h4 class = "text-center" id="saleDates">@sale.formatStartDate - @sale.formatEndDate</h4>
+                    </div>
+                </div>
+            </div>
+            <h2 class="text-center">Items for Sale</h2>
+            <hr>
+            <div class="row">
+                <div class="col-sm-2"></div>
+                <div class="col-sm-8">
+                            <div class="row">
+                            @for(index <- 0 until items.size){
+                                <div class="col-sm-4">
+                                <h2><a href="/publicSale/@sale.id/publicItem/@items(index).id">@items(index).name</a></h2>
+                                <h4>@items(index).description</h4>
+                                <h5>$@items(index).formatPrice (@items(index).quantity in stock)</h5>
+                                </div>
+                                @if(index != items.size - 1 && index % 3 == 2){</div><hr><div class="row">}
+                            }
+                            </div>
+                </div>
+            </div>
+
+    </div>
+</div>
+<script>
+
+
+</script>
+}

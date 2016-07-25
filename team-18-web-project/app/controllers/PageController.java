@@ -320,6 +320,31 @@ public class PageController extends Controller {
     }
 
     /**
+     * Show public item page
+     * @return HTTP response to item page request
+     */
+    public Result publicItem(int saleId, int itemId) {
+        Sale s = Sale.findById(saleId);
+        SaleItem si = SaleItem.findById(itemId);
+        if (s != null && s.status == 1 && si != null) {
+            return ok(publicItem.render(s, si));
+        }
+        return notFound404();
+    }
+
+    /**
+     * Show public sale page
+     * @return HTTP response to public sale page request
+     */
+    public Result publicSale(int saleId) {
+        Sale s = Sale.findById(saleId);
+        if (s != null && s.status == 1 ) {
+            return ok(publicSale.render(s, s.getItems()));
+        }
+        return notFound404();
+    }
+
+    /**
      * Display registration page
      * @return HTTP response to registration page request
      */
@@ -339,12 +364,13 @@ public class PageController extends Controller {
     public Result sale(int id) {
         Sale s = Sale.findById(id);
         User u = User.findByUsername(session("username"));
+        String pubUrl = "http://" + request().host() + "/publicSale/" + id;
         if (s != null && u != null) { // Check if sale and user exist
             // If sale is open to public, or user has a role on the sale
             // or user is Super Admin
             if (s.status == 1 || (Role.findByIds(u.id, s.id) != null)
                     || u.superAdmin == 1) {
-                return ok(sale.render(u, s, s.getItems()));
+                return ok(sale.render(u, s, s.getItems(), pubUrl));
             }
         }
         return notFound404();

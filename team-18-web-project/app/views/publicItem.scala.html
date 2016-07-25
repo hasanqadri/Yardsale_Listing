@@ -1,0 +1,21 @@
+@* Displays Item page *@
+@(sale: Sale, item: SaleItem)
+
+@main("Item") {
+  <div class="container content">
+    <div class="view profile" id="view-profile">
+      <div class="col-sm-10">
+        <a href="/publicSale/@item.saleId"><h4>&#8592; Return to Sale</h4></a>
+        @if(item.pictureId == 0) {
+            <img class="profile-image" src="/assets/images/Item.png" />
+        } else {
+            <img class="profile-image" src="/image/@item.pictureId" />
+        }
+        <h1>@item.name</h1>
+        <p class="lead">@item.description</p>
+        <p class="lead">Price: $@item.formatPrice</p>
+        <p class="lead">Quantity: @item.quantity</p>
+      </div>
+    </div>
+  </div>
+}
