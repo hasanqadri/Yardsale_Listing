@@ -3,9 +3,6 @@
 @(user: User, sale: Sale, items: util.List[SaleItem])
 
 @loggedinmain("Sale") {
-
-<link href="//fonts.googleapis.com/css?family=Corben:bold" rel="stylesheet" type="text/css">
-<link href="//fonts.googleapis.com/css?family=Nobile" rel="stylesheet" type="text/css">
 <div class="container content">
     <div class="view sale" id="view-sale">
         <div class="row">
@@ -65,18 +62,16 @@
             <div class="row">
                 <div class="col-sm-2"></div>
                 <div class="col-sm-8">
-
+                            <div class="row">
                             @for(index <- 0 until items.size){
                                 <div class="col-sm-4">
                                 <h2><a href="/sale/@sale.id/item/@items(index).id">@items(index).name</a></h2>
                                 <h4>@items(index).description</h4>
                                 <h5>$@items(index).formatPrice (@items(index).quantity in stock)</h5>
-
-                                <hr>
                                 </div>
+                                @if(index != items.size - 1 && index % 3 == 2){</div><hr><div class="row">}
                             }
-
-
+                            </div>
                 </div>
             </div>
 

@@ -1,12 +1,10 @@
 @* Displays Financial Report page for single user *@
-@(items: List[LineItem], saleId: Int)
+@(items: List[LineItem], sale: Sale, saleTransactions: List[Transaction])
 
 @loggedinmain("My Financial Report") {
-    <link href="//fonts.googleapis.com/css?family=Corben:bold" rel="stylesheet" type="text/css">
-    <link href="//fonts.googleapis.com/css?family=Nobile" rel="stylesheet" type="text/css">
 <div class="container content">
     <div class="col-md-3">
-        <a href="/sale/@saleId" class="hidden-print"><h4>&#8592; Return to Sale</h4></a>
+        <a href="/sale/@sale.id" class="hidden-print"><h4>&#8592; Return to Sale</h4></a>
     </div>
     <div class="col-md-6">
         <h2 class="text-center">My Financial Report</h2>
@@ -33,9 +31,14 @@
             }
             </tbody>
         </table>
+        @if(sale.donor == "1" && saleTransactions.size > 0){
+          <div class="text-center">
+            <a href="/sale/@sale.id/financialReportDonor/email"><btn class="btn btn-primary">SEND DONOR ACKNOWLEDGEMENT EMAIL</btn></a>
+          </div>
+        }
     </div>
     <div class="col-md-3 subnav corners">
-        <a href="/sale/@saleId/financialReport" class="subnav-a goldHighlight">FINANCIAL REPORT BY TRANSACTION</a>
+        <a href="/sale/@sale.id/financialReport" class="subnav-a goldHighlight">FINANCIAL REPORT BY TRANSACTION</a>
     </div>
 </div>
 }

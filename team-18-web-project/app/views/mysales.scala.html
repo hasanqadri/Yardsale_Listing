@@ -3,8 +3,6 @@
 @(sales: util.List[Sale])
 
 @loggedinmain("My Sales") {
-    <link href="//fonts.googleapis.com/css?family=Corben:bold" rel="stylesheet" type="text/css">
-    <link href="//fonts.googleapis.com/css?family=Nobile" rel="stylesheet" type="text/css">
 <div class="container content">
     <div class="view profile" id="view-profile">
 
@@ -17,12 +15,15 @@
         </div>
 
         <div class="saleList">
-            <h1 class="text-center">My Sales</h1>
+            <div class = "tanBackground row bottomCorners">
+                <h1 class="text-center title">My Sales</h1>
+            </div>
             <div class="col-sm-2"></div>
             <div class="col-sm-8 sales">
+                <div class="row">
                 @for(index <- 0 until sales.size){
                     <div class="col-sm-4">
-                    <h2><a href="/sale/@sales(index).id">@sales(index).name</a></h2>
+                    <h3><a href="/sale/@sales(index).id">@sales(index).name</a></h3>
                     <h5>@sales(index).street</h5>
                     <h5>@sales(index).city, @sales(index).state @sales(index).zip</h5>
                     <h5>@sales(index).formatStartDate - @sales(index).formatEndDate</h5>
@@ -35,10 +36,10 @@
                     @if(sales(index).status == 2) {
                         <h4>Sale is Archived</h4>
                     }
-
-                    <hr>
                     </div>
+                    @if(index != sales.size - 1 && index % 3 == 2){</div><hr><div class="row">}
                 }
+                </div>
                 @if(sales.size == 0) {
                     <h3 id="noResults" class="text-center">You Have No Sales</h3>
                 }

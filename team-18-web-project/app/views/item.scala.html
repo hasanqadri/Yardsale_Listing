@@ -2,8 +2,6 @@
 @(user: User, sale: Sale, item: SaleItem)
 
 @loggedinmain("Item") {
-    <link href="//fonts.googleapis.com/css?family=Corben:bold" rel="stylesheet" type="text/css">
-    <link href="//fonts.googleapis.com/css?family=Nobile" rel="stylesheet" type="text/css">
   <div class="container content">
     <div class="view profile" id="view-profile">
       <div class="col-sm-10">
@@ -18,13 +16,12 @@
         <p class="lead">Price: $@item.formatPrice</p>
         <p class="lead">Quantity: @item.quantity</p>
       </div>
+      @if(user.canBeSeller(sale.id) && sale.status != 2) {
       <div class="col-sm-2 subnav corners">
-        @if(user.canBeSeller(sale.id) && sale.status != 2) {
         <a href="/sale/@item.saleId/item/@item.id/itemTag" class="subnav-a goldHighlight pull-right">Print Tag</a>
         <a href="#" class="subnav-a goldHighlight pull-right" onclick="changeToEdit();">Edit Item</a>
-        }
       </div>
-
+      }
     </div>
     @if(user.canBeSeller(sale.id) && sale.status != 2) {
     <div class="edit profile" id="edit-profile">
