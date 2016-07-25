@@ -124,9 +124,9 @@ public class Transaction extends Model {
      * Get the total of all the line items in the transaction
      * @return Total transaction cost
      */
-    public float getTotal() {
+    public double getTotal() {
 
-        float total = 0;
+        double total = 0;
 
         List<LineItem> lineItems = getLineItems();
         for (LineItem li: lineItems) {

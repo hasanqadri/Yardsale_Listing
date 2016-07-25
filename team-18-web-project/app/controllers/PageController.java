@@ -1,46 +1,14 @@
 package controllers;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-
-import models.Role;
-import models.Sale;
-import models.SaleItem;
-import models.LineItem;
-import models.User;
-import models.Transaction;
+import models.*;
 import play.mvc.Controller;
 import play.mvc.Result;
 import play.mvc.Security.Authenticated;
-import views.html.about;
-import views.html.addItem;
-import views.html.admin;
-import views.html.confirmTransaction;
-import views.html.createSale;
-import views.html.editSale;
-import views.html.features;
-import views.html.financialReport;
-import views.html.financialReportBySeller;
-import views.html.financialReportSingleSeller;
-import views.html.help;
-import views.html.home;
-import views.html.item;
-import views.html.itemTag;
-import views.html.loggedinNotFound;
-import views.html.login;
-import views.html.mobileScanRedirect;
-import views.html.mysales;
-import views.html.notFound;
-import views.html.profile;
-import views.html.profileEdit;
-import views.html.register;
-import views.html.sale;
-import views.html.sales;
-import views.html.saleTag;
-import views.html.transaction;
-import views.html.transactionReceipt;
-import views.html.users;
+import views.html.*;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
 
 /**
  * @author Nathan Cheek, Pablo Ortega, Hasan Qadri, Nick Yokley
@@ -154,6 +122,7 @@ public class PageController extends Controller {
     @Authenticated(Secured.class)
     public Result financialReport(int saleId) {
         Sale s = Sale.findById(saleId);
+        String donor = s.donor;
         User u = User.findByUsername(session("username"));
         if (s != null && u != null && u.canBeBookkeeper(s.id)) {
             // If user has bookkeeper permissions, show page
@@ -164,7 +133,7 @@ public class PageController extends Controller {
                 total += t.getTotal();
             }
             return ok(financialReport.render(transactions, saleId,
-                    String.format("%.2f", total)));
+                    String.format("%.2f", total), donor));
         }
         return notFound404();
     }
@@ -292,7 +261,7 @@ public class PageController extends Controller {
 
     /**
      * Displays a 404 error page
-     * @return HTTP response to a nonexistant page
+     * @return HTTP response to a non existent page
      */
     public Result notFound404() {
         if (session("username") != null) {
@@ -305,7 +274,7 @@ public class PageController extends Controller {
     /**
      * Displays a 404 error page
      * @param path URI of the page that doesn't exist
-     * @return HTTP response to a nonexistant page
+     * @return HTTP response to a non existent page
      */
     public Result notFound404(String path) {
         return notFound404();
@@ -435,6 +404,7 @@ public class PageController extends Controller {
         }
         return notFound404();
     }
+
 
     /**
      * Displays a list of all users

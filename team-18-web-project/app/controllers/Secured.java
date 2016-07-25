@@ -6,9 +6,9 @@ import play.mvc.Result;
 
 /**
  * Checks if user is logged in
- * Created by nathancheek on 6/24/16.
+ * Created by Nathan Cheek on 6/24/16.
  */
-public class Secured extends Authenticator {
+class Secured extends Authenticator {
     @Override
     /**
      * Get Username of User

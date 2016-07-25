@@ -79,8 +79,8 @@ GET     /qr                         controllers.DataController.getQrCode(value: 
 GET     /assets/*file               controllers.Assets.versioned(path="/public", file: Asset)
 
 # Request to email
-GET     /sale/:saleId/transactionReceipt/:tranId/email              controllers.ApplicationJava.send(saleId: Int, tranId: Int)
-
+GET     /sale/:saleId/transactionReceipt/:tranId/email              controllers.EmailController.send(saleId: Int, tranId: Int)
+GET     /sale/:saleId/financialReportDonor/email                    controllers.EmailController.sendDonor(saleId: Int)
 # Catch all other requests and show a 404
 GET     /*path                      controllers.PageController.notFound404(path: String)
 POST    /*path                      controllers.PageController.notFound404(path: String)

@@ -2,13 +2,14 @@ package models;
 
 import com.avaje.ebean.Ebean;
 import com.avaje.ebean.Model;
-import java.sql.Blob;
+import play.data.validation.Constraints;
+
 import javax.persistence.Entity;
-import javax.persistence.Column;
 import javax.persistence.Id;
 import javax.persistence.Lob;
 import javax.persistence.Table;
-import play.data.validation.Constraints;
+
+//import java.sql.Blob;
 
 /**
  * Represents a Picture - Work in progress

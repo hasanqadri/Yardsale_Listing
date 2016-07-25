@@ -2,70 +2,70 @@
 @(transaction: Transaction, lineItems: List[LineItem], saleId: Int, tranId: Int, message : String)
 
 @loggedinmain("Receipt") {
-<div class="container content">
+    <div class="container content">
 
-    <div class="row">
-        <div class="col-sm-3" id="saleAddress">
-            <h3 class="text-center">Buyer</h3>
-            <h4 class="text-center" id="buyerName">@transaction.buyerName</h4>
+        <div class="row">
+            <div class="col-sm-3" id="saleAddress">
+                <h3 class="text-center">Buyer</h3>
+                <h4 class="text-center" id="buyerName">@transaction.buyerName</h4>
+            </div>
+            <div class="col-sm-2">
+                <h3 class="text-center">Address</h3>
+                <h4 class="text-center" id="buyerAddress">@transaction.buyerAddress</h4>
+            </div>
+            <div class="col-sm-2">
+                <h3 class="text-center">Buyer Email</h3>
+                <h4  class="text-center" id="buyerEmail" class="text-center">@transaction.buyerEmail</h4>
+            </div>
+            <div class="col-sm-2">
+                <h3 class="text-center">Date</h3>
+                <h4 class="text-center">@transaction.formatDate</h4>
+            </div>
+            <div class="col-sm-3">
+                <h3 class="text-center">Payment Method</h3>
+                <h4  class="text-center" id="buyerEmail" class="text-center">@transaction.paymentMethod</h4>
+            </div>
         </div>
-        <div class="col-sm-2">
-            <h3 class="text-center">Address</h3>
-            <h4 class="text-center" id="buyerAddress">@transaction.buyerAddress</h4>
-        </div>
-        <div class="col-sm-2">
-            <h3 class="text-center">Buyer Email</h3>
-            <h4  class="text-center" id="buyerEmail" class="text-center">@transaction.buyerEmail</h4>
-        </div>
-        <div class="col-sm-2">
-            <h3 class="text-center">Date</h3>
-            <h4 class="text-center">@transaction.formatDate</h4>
-        </div>
-        <div class="col-sm-3">
-            <h3 class="text-center">Payment Method</h3>
-            <h4  class="text-center" id="buyerEmail" class="text-center">@transaction.paymentMethod</h4>
-        </div>
-    </div>
-    <div class="row">
-        <div class="col-sm-12">
-            <h2 class="text-center">Items Purchased</h2>
-            <div class="lineItems">
-                <table class="table table-striped">
-                    <thead>
-                    <tr>
-                        <th>Catalog ID</th>
-                        <th>Item</th>
-                        <th>Description</th>
-                        <th>Quantity</th>
-                        <th>Unit Price</th>
-                        <th>Total</th>
-                    </tr>
-                    </thead>
-                    <tbody>
-                    @for(index <- 0 until lineItems.size){
-                    <tr>
-                        <td>@lineItems(index).getSaleItemId</td>
-                        <td>@lineItems(index).getName</td>
-                        <td>@lineItems(index).getDescription</td>
-                        <td>@lineItems(index).getQuantity</td>
-                        <td>$@lineItems(index).formatUnitPrice</td>
-                        <td>$@lineItems(index).formatTotalPrice</td>
-                    </tr>
+        <div class="row">
+            <div class="col-sm-12">
+                <h2 class="text-center">Items Purchased</h2>
+                <div class="lineItems">
+                    <table class="table table-striped">
+                        <thead>
+                            <tr>
+                                <th>Catalog ID</th>
+                                <th>Item</th>
+                                <th>Description</th>
+                                <th>Quantity</th>
+                                <th>Unit Price</th>
+                                <th>Total</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                        @for(index <- 0 until lineItems.size){
+                            <tr>
+                                <td>@lineItems(index).getSaleItemId</td>
+                                <td>@lineItems(index).getName</td>
+                                <td>@lineItems(index).getDescription</td>
+                                <td>@lineItems(index).getQuantity</td>
+                                <td>$@lineItems(index).formatUnitPrice</td>
+                                <td>$@lineItems(index).formatTotalPrice</td>
+                            </tr>
 
+                        }
+                        </tbody>
+                    </table>
+                    @if(lineItems.size == 0){
+                        <h3 id="noResults" class="text-center">Empty transaction.</h3>
                     }
-                    </tbody>
-                </table>
-                @if(lineItems.size == 0){
-                <h3 id="noResults" class="text-center">Empty transaction.</h3>
-                }
-                <h4 class="pull-right">Total: $@transaction.formatTotal</h4>
-            </div>
-            <div class="text-center hidden-print new-transaction">
-                <a href="/createTransaction/@saleId" class="btn btn-lg btn-success">CREATE NEW TRANSACTION</a>
-                <a href ="/sale/@saleId/transactionReceipt/@tranId/email"  class="btn btn-lg btn-success" method="GET" >SEND TO EMAIL</a><br>
-                <a href = "https://www.google.com/settings/security/lesssecureapps" > Turn off secure apps for google before emailing</a>
+                    <h4 class="pull-right">Total: $@transaction.formatTotal</h4>
+                </div>
+                <div class="text-center hidden-print new-transaction">
+                    <a href="/createTransaction/@saleId" class="btn btn-lg btn-success">CREATE NEW TRANSACTION</a>
+                    <a href ="/sale/@saleId/transactionReceipt/@tranId/email"  class="btn btn-lg btn-success" method="GET" >SEND TO EMAIL</a><br>
+                    <a href = "https://www.google.com/settings/security/lesssecureapps" > Turn off secure apps for google before emailing</a>
+                </div>
             </div>
         </div>
     </div>
-</div>
 }

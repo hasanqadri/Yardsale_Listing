@@ -216,7 +216,7 @@ public class DataController extends Controller {
 
     /**
      * Displays a 404 error page
-     * @return HTTP response to a nonexistant page
+     * @return HTTP response to a non existent page
      */
     public Result notFound404() {
         if (session("username") != null) {

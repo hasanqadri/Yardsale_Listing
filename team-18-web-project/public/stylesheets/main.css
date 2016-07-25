@@ -185,3 +185,12 @@ form .input-bottom {
     height: 200px;
     object-fit: cover;
 }
+
+#all{
+    width:100%;
+    float:left;
+    text-align:center;
+}
+div.sub, iframe {
+    margin: 0 auto;
+}

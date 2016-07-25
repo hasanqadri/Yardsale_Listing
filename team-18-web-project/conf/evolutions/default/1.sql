@@ -11,6 +11,7 @@ create table lineItems (
   unit_price                float,
   name                      varchar(255),
   user_created_id           integer,
+  sale_id                   integer,
   constraint pk_lineItems primary key (id))
 ;
 
@@ -36,6 +37,7 @@ create table sales (
   city                      varchar(255),
   state                     varchar(255),
   zip                       integer,
+  donor                     varchar(255),
   start_date                datetime(6),
   end_date                  datetime(6),
   user_created_id           integer,
