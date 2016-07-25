@@ -5,65 +5,82 @@
 # Normal page requests
 GET     /                           controllers.PageController.home
 GET     /about                      controllers.PageController.about
-GET     /admin                      controllers.PageController.admin
 GET     /createSale                 controllers.PageController.createSale
+GET     /features                   controllers.PageController.features
+GET     /help                       controllers.PageController.help
 GET     /login                      controllers.PageController.login
 GET     /logout                     controllers.PageController.logout
-GET     /NewContact                 controllers.PageController.newContact
-GET     /profile                    controllers.PageController.profile
+GET     /mysales                    controllers.PageController.mysales
+GET     /profile                    controllers.PageController.profileRedirect
+GET     /profile/:id                controllers.PageController.profile(id: Int)
 GET     /register                   controllers.PageController.register
 GET     /sales                      controllers.PageController.sales
 GET     /users                      controllers.PageController.users
 
 
 # Action page requests
-POST    /admin                      controllers.ActionController.admin
 POST    /createSale                 controllers.ActionController.createSale
 POST    /login                      controllers.ActionController.login
-POST    /NewContact                 controllers.ActionController.postContact
-POST    /profile                    controllers.ActionController.profile
+POST    /profile/:id                controllers.ActionController.profile(id: Int)
 POST    /register                   controllers.ActionController.register
 POST    /searchSales                controllers.ActionController.searchSales
 POST    /uploadProfilePicture       controllers.ActionController.uploadProfilePicture
+POST    /users                      controllers.ActionController.users
 
 
 # Background / JSON requests
-POST    /getSale                    controllers.DataController.getSale
 GET     /getSales                   controllers.DataController.getSales
 POST    /getSearchItems             controllers.DataController.getSearchItems
 POST    /getSearchSales             controllers.DataController.getSearchSales
 POST    /getItem                    controllers.DataController.getItem
 POST    /getItems                   controllers.DataController.getItems
+POST    /getLineItem                controllers.DataController.getLineItem
+POST    /getLineItems               controllers.DataController.getLineItems
 
 
 # Map requests to /sale
-GET     /sale/:id                               controllers.PageController.sale(id: Int)
-GET     /sale/:id/addItem                       controllers.PageController.addItem(id: Int)
-POST    /sale/:id/addItem                       controllers.ActionController.addItem(id: Int)
-GET     /sale/:saleId/item/:itemId              controllers.PageController.item(saleId: Int, itemId: Int)
-POST    /sale/:saleId/item/:itemId              controllers.ActionController.item(saleId: Int, itemId: Int)
-POST    /sale/:id/searchItems                   controllers.ActionController.searchItems(id: Int)
-GET     /sale/:saleId/item/:itemId/itemTag      controllers.PageController.itemTag(saleId: Int, itemId: Int)
-GET     /sale/:saleId/saleTag                   controllers.PageController.saleTag(saleId: Int)
-GET     /sale/:id/edit                          controllers.PageController.editSale(id: Int)
-POST    /sale/:id/edit                          controllers.ActionController.editSale(id: Int)
+GET     /sale/:id                                       controllers.PageController.sale(id: Int)
+POST    /sale/:id                                       controllers.ActionController.sale(id: Int)
+GET     /sale/:id/addItem                               controllers.PageController.addItem(id: Int)
+POST    /sale/:id/addItem                               controllers.ActionController.addItem(id: Int)
+GET     /sale/:id/financialReport                       controllers.PageController.financialReport(id: Int)
+GET     /sale/:id/financialReportBySeller               controllers.PageController.financialReportBySeller(id: Int)
+GET     /sale/:id/financialReportSingleSeller           controllers.PageController.financialReportSingleSeller(id: Int)
+GET     /sale/:saleId/item/:itemId                      controllers.PageController.item(saleId: Int, itemId: Int)
+POST    /sale/:saleId/item/:itemId                      controllers.ActionController.item(saleId: Int, itemId: Int)
+POST    /sale/:saleId/item/:itemId/uploadItemPicture    controllers.ActionController.uploadItemPicture(saleId: Int, itemId: Int)
+POST    /sale/:id/searchItems                           controllers.ActionController.searchItems(id: Int)
+GET     /sale/:saleId/item/:itemId/itemTag              controllers.PageController.itemTag(saleId: Int, itemId: Int)
+GET     /sale/:saleId/saleTag                           controllers.PageController.saleTag(saleId: Int)
+GET     /sale/:id/edit                                  controllers.PageController.editSale(id: Int)
+POST    /sale/:id/edit                                  controllers.ActionController.editSale(id: Int)
 
 
 #Map requests to /transaction
-GET    /createTransaction/:saleId               controllers.ActionController.createTransaction(saleId: Int)
-GET    /sale/:saleId/transaction/:tranId        controllers.PageController.transaction(saleId: Int, tranId: Int)
-POST   /sale/:saleId/transaction/:tranId       controllers.ActionController.transaction(saleId: Int, tranId: Int)
-POST   /sale/:saleId/transaction/:transactionId/:saleItemID/addLineItem  controllers.ActionController.addLineItem(saleId: Int, transactionId: Int, saleItemID: Int)
+GET    /createTransaction/:saleId                                   controllers.ActionController.createTransaction(saleId: Int)
+GET    /sale/:saleId/transaction/:tranId                            controllers.PageController.transaction(saleId: Int, tranId: Int)
+POST   /sale/:saleId/transaction/:tranId                            controllers.ActionController.transaction(saleId: Int, tranId: Int)
+POST   /sale/:saleID/transaction/:tranId/searchItemStock            controllers.ActionController.searchItemStock(saleID: Int, tranId: Int)
+GET    /sale/:saleId/confirmTransaction/:tranId                     controllers.PageController.confirmTransaction(saleId: Int, tranId: Int)
+POST   /sale/:saleId/confirmTransaction/:tranId                     controllers.ActionController.confirmTransaction(saleId: Int, tranId: Int)
+GET    /sale/:saleId/transactionReceipt/:tranId                     controllers.PageController.transactionReceipt(saleId: Int, tranId: Int)
+GET    /sale/:saleId/registerMobileTransaction/:tranId/:tranNonce   controllers.ActionController.registerMobileTransaction(saleId: Int, tranId: Int, tranNonce: Int)
+GET    /mobileScan/:itemId                                          controllers.ActionController.mobileScan(itemId: Int)
+GET    /mobileScanRedirect/:itemId                                  controllers.PageController.mobileScanRedirect(itemId: Int)
 
 
 # Map requests to /image
 GET     /image/:id                  controllers.DataController.getImage(id: Int)
 
+# Map requests to /barcode
+GET     /qr                         controllers.DataController.getQrCode(value: String ?="")
 
 # Map static resources from the /public folder to the /assets URL path
 GET     /assets/*file               controllers.Assets.versioned(path="/public", file: Asset)
 
-
+# Request to email
+GET     /sale/:saleId/transactionReceipt/:tranId/email              controllers.EmailController.send(saleId: Int, tranId: Int)
+GET     /sale/:saleId/financialReportDonor/email                    controllers.EmailController.sendDonor(saleId: Int)
 # Catch all other requests and show a 404
 GET     /*path                      controllers.PageController.notFound404(path: String)
 POST    /*path                      controllers.PageController.notFound404(path: String)

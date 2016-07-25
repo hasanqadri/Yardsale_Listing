@@ -1,4 +1,7 @@
-@(sale: Sale, roles: List[Role])
+@* Displays Edit Sale page *@
+@import java.util
+@(sale: Sale, roles: util.List[Role])
+
 @loggedinmain("Edit Sale") {
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datetimepicker/4.17.37/css/bootstrap-datetimepicker.min.css" />
 <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.10.6/moment.min.js"></script>
@@ -80,6 +83,7 @@
                 <label for="addRoleName">Role</label>
                 <select name="addRoleName" id="addRoleName" class="form-control" required>
                     <option value="admin">Admin</option>
+                    <option value="bookkeeper">Bookkeeper</option>
                     <option value="cashier">Cashier</option>
                     <option value="clerk">Clerk</option>
                     <option value="seller">Seller</option>
@@ -87,6 +91,21 @@
                 <button type="submit" class="btn btn-primary">Add User</button>
             </div>
 
+        </form>
+        @if(sale.status == 1) {
+          <h3>Sale is open.</h3>
+          <form method="post" class="hidden-form">
+              <button class="btn btn-primary" type="submit" name="close" value="@sale.id">CLOSE SALE</button>
+          </form>
+
+        } else {
+          <h3>Sale is closed.</h3>
+          <form method="post" class="hidden-form">
+              <button class="btn btn-primary" type="submit" name="open" value="@sale.id">OPEN SALE</button>
+          </form>
+        }
+        <form method="post" class="hidden-form">
+            <button class="btn btn-primary" type="submit" name="archive" value="@sale.id">ARCHIVE SALE</button>
         </form>
     </div>
 </div>

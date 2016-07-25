@@ -1,0 +1,96 @@
+@* Displays features page *@
+
+@loggedinmain("Features") {
+<div class="container content">
+    <h1 class="text-center">Features List</h1>
+    <h4 class="text-center">This is an accumulated list of the features we put thought into designing and implementing</h4>
+
+    <h3>User Management</h3>
+
+    <h4>User Signup Flow</h4>
+    <ul>
+      <li>Two well-placed registration forms make it easier and more likely for users to sign up</li>
+      <ul>
+        <li>A registration form on the bottom of the front page</li>
+        <li>A registration form accessible from a "REGISTER" button in the navbar</li>
+      </ul>
+      <li>Additionally, Sign In form has a link nearby to Sign Up and vice versa</li>
+    </ul>
+
+    <h4>Account Lockout</h4>
+    <ul>
+      <li>Users are locked out after 3 unsuccessful attempts</li>
+      <li>Super Admins see a special version of the USERS page which allows them to unlock accounts</li>
+    </ul>
+
+    <h4>User Roles</h4>
+    <ul>
+      <li>Super Admin - Can perform all actions on the site regardless of sale</li>
+      <li>Admin - Can perform all actions on that sale</li>
+      <li>Seller - Can update the catalog, view financial records, create transactions, and view and print tags of that sale</li>
+      <li>Bookkeeper - Can view financial records of that sale</li>
+      <li>Cashier - Can create transactions of that sale</li>
+      <li>Clerk - Can view and print tags of that sale</li>
+      <li>Guest - Can view all open sales</li>
+    </ul>
+
+    <h4>Managing Users in a Sale</h4>
+    <ul>
+      <li>Admins can assign users a role on a sale</li>
+      <li>Users are by default guests unless they are added by an Admin</li>
+      <li>Admins can revoke roles assigned to users</li>
+    </ul>
+
+    <h3>Inventory Management</h3>
+    <h4>Tag printing</h4>
+    <ul>
+      <li>Print a tag for an individual item</li>
+      <li>Print all tags for a sale</li>
+      <li>CSS creates proper page breaks when printing tags</li>
+    </ul>
+
+    <h3>Transaction/Financial Management</h3>
+    <h4>QR Code Checkout System</h4>
+    <ul>
+      <li>A mobile device can be used to scan items in a transaction</li>
+      <li>Fully tested with all of the top iOS QR apps, leading to the recommendation of <strong>Scanbot</strong></li>
+      <li>This works without requiring typing any passwords on the device</li>
+      <li>The mobile device authenticates itself by scanning a QR code on the transaction page</li>
+    </ul>
+
+    <h4>Financial Report</h4>
+    <ul>
+      <li>A copy of relevant item data is stored with the transaction so that modifying or deleting an item does not affect the financial report</li>
+      <li>Sellers can view a financial report split up by sellers</li>
+      <li>Sellers can view a financial report that displays only their items that were sold</li>
+    </ul>
+
+    <h3>Security</h3>
+    <ul>
+      <li>Cookies are implemented using Java Play's session feature</li>
+      <li>Authorization checks are done on page requests to verify the user has permission to perform an action or view a page</li>
+      <li>Passwords are hashed using Whirlpool hashing algorithm</li>
+      <li>Website is served over https connection with grade A+ on <a href="https://www.ssllabs.com/ssltest/analyze.html?d=sales.cheek.us&hideResults=on&latest">ssllabs.com</a></li>
+    </ul>
+
+    <h3>Overall Design</h3>
+    <ul>
+      <li>Utilized Bootstrap for buttons, navbar, tables, and general layout</li>
+      <li>Developed custom CSS code</li>
+      <li>Implemented asynchronous loading of page content with Javascript in several instances, such as search queries</li>
+      <li>Custom 404 Not Found error page</li>
+      <li>Custom message when sales list is empty or query returns no results</li>
+    </ul>
+
+    <h3>Other Features</h3>
+    <ul>
+      <li>Website utilizes MySQL database</li>
+      <li>Website and Database are bundled into Centos 7 Linux virtual machine</li>
+      <li>Help page guides new users through using the website</li>
+      <li>Image uploads are integrated into the native application without using an external API</li>
+      <li>An instance of the virtual machine can work without being connected to the Internet, meaning a sale could be run on an isolated network where there is no Internet access</li>
+      <li>IPv6 access is configured on the hosted version of the site</li>
+    </ul>
+
+</div>
+}

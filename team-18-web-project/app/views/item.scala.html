@@ -1,57 +1,98 @@
 @* Displays Item page *@
-@(item: SaleItem)
+@(user: User, sale: Sale, item: SaleItem)
 
 @loggedinmain("Item") {
   <div class="container content">
     <div class="view profile" id="view-profile">
       <div class="col-sm-6">
-        <img class="profile-image" src="http://placehold.it/200x200" />
+        <a href="/sale/@item.saleId"><h4>&#8592; Return to Sale</h4></a>
+        @if(item.pictureId == 0) {
+            <img class="profile-image" src="/assets/images/Item.png" />
+        } else {
+            <img class="profile-image" src="/image/@item.pictureId" />
+        }
         <h1>@item.name</h1>
         <p class="lead">@item.description</p>
-        <p class="lead">@item.formatPrice</p>
-        <a href="/sale/@item.saleId"><h4>&#8592; Return to Sale</h4></a>
+        <p class="lead">Price: $@item.formatPrice</p>
+        <p class="lead">Quantity: @item.quantity</p>
       </div>
       <div class="col-sm-6">
-        <a href="/sale/@item.saleId/item/@item.id/itemTag" class="btn btn-success pull-right">Print Tag</a><br><br>
-        <a href="#" class="btn btn-success pull-right" onclick="changeToEdit();">Edit Item</a>
+        @if(user.canBeSeller(sale.id) && sale.status != 2) {
+        <a href="/sale/@item.saleId/item/@item.id/itemTag" class="btn btn-primary pull-right">Print Tag</a><br><br>
+        <a href="#" class="btn btn-primary pull-right" onclick="changeToEdit();">Edit Item</a>
+        }
       </div>
 
     </div>
+    @if(user.canBeSeller(sale.id) && sale.status != 2) {
     <div class="edit profile" id="edit-profile">
       <div class="col-sm-4">
-        <img class="profile-image" src="http://placehold.it/200x200" />
+        <a href="/sale/@item.saleId"><h4>&#8592; Return to Sale</h4></a>
+        @if(item.pictureId == 0) {
+            <img class="profile-image" src="/assets/images/Item.png" />
+        } else {
+            <img class="profile-image" src="/image/@item.pictureId" />
+        }
         <h1>@item.name </h1>
         <p class="lead">@item.description</p>
-        <p class="lead">@item.formatPrice</p>
-        <a href="/sale/@item.saleId"><h4>&#8592; Return to Sale</h4></a>
-
+        <p class="lead">Price: $@item.formatPrice</p>
+        <p class="lead">Quantity: @item.quantity</p>
       </div>
       <div class="col-sm-4">
-        <form class="form-editprofile" id="edit-form" action="/sale/@item.saleId/item/@item.id" method="post">
+        <form class="form-editprofile" id="edit-form" method="post">
           <label for="inputName" class="sr-only">Name</label>
           <input type="text" maxlength="255" id="inputName" name="name" class="form-control input-top" value="@item.name" required autofocus>
           <label for="inputDescription" class="sr-only">Description</label>
           <input type="text" maxlength="255" id="inputDescription" name="description" class="form-control input-middle" value="@item.description" required>
           <label for="inputPrice" class="sr-only">Price</label>
-          <input type="number" max="9999999" step="0.01" id="inputPrice" name="price" class="form-control input-bottom" value="@item.formatPrice" required>
+          <input type="number" max="9999999" step="0.01" id="inputPrice" name="price" class="form-control input-middle" value="@item.formatPrice" required>
+          <label for="inputQuantity" class="sr-only">Quantity</label>
+          <input type="number" max="9999999" step="1" id="inputQuantity" name="quantity" class="form-control input-bottom" value="@item.quantity" required>
           <div class="btn-toolbar">
             <a href="#" class="btn btn-success pull-left" onclick="changeToView();">CANCEL</a>
             <button class="btn btn-success pull-right" type="submit">SAVE CHANGES</button>
           </div>
         </form>
+        <br>
+        <br>
+        <form method="post" class="hidden-form">
+            <button class="btn btn-danger" type="submit" name="delete" value="@item.id">DELETE ITEM</button>
+        </form>
+        <h3>Upload Item Picture</h3>
+        <form enctype="multipart/form-data" action="/sale/@sale.id/item/@item.id/uploadItemPicture" method="post">
+            <div class="input-group">
+                <label class="input-group-btn">
+                <span class="btn btn-default">
+                    Select File <input type="file" name="picture" style="display: none;">
+                </span>
+                </label>
+                <input type="text" class="form-control" id="filename" value="" readonly>
+            </div>
+            <br>
+            <div class="btn-toolbar">
+                <a href="#" class="btn btn-primary pull-left" onclick="changeToView();">CANCEL</a>
+                <button class="btn btn-success pull-right" type="submit">UPLOAD</button>
+            </div>
+        </form>
       </div>
-
     </div>
+    }
   </div>
   <script>
-          var changeToEdit = function() {
-            $("#view-profile").css("display", "none");
-            $("#edit-profile").css("display", "block");
-          }
-          var changeToView = function() {
-            $("#edit-profile").css("display", "none");
-            $("#view-profile").css("display", "block");
-          }
+    var changeToEdit = function() {
+        $("#view-profile").css("display", "none");
+        $("#edit-profile").css("display", "block");
+    };
+    var changeToView = function() {
+        $("#edit-profile").css("display", "none");
+        $("#view-profile").css("display", "block");
+    }
 
+    $(document).ready( function() {
+        $("input:file").change(function (){
+            var fileName = $(this).val().replace("C:\\fakepath\\", "");
+            $("#filename").val(fileName);
+        });
+    });
   </script>
 }

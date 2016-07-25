@@ -1,0 +1,43 @@
+@* Displays Financial Report page *@
+@(lineItems: Map[User, List[LineItem]], saleId: Int)
+
+@loggedinmain("Financial Reports By Seller") {
+<div class="container content">
+    <div class="col-md-3">
+        <a href="/sale/@saleId" class="hidden-print"><h4>&#8592; Return to Sale</h4></a>
+    </div>
+    <div class="col-md-6">
+        <h2 class="text-center">Financial Reports By Seller</h2>
+
+        @lineItems.map{ case(k,v) =>
+        <h4>Seller: @k.getName()</h4>
+        <table class="table table-striped">
+            <thead>
+            <tr>
+                <th>Transaction</th>
+                <th>Item</th>
+                <th>Unit Price</th>
+                <th>Quantity</th>
+                <th>Total</th>
+            </tr>
+            </thead>
+            <tbody>
+            @v.map {index =>
+            <tr>
+                <td>@index.transactionId</td>
+                <td>@index.name</td>
+                <td>$@index.formatUnitPrice</td>
+                <td>@index.quantity</td>
+                <td>$@index.formatTotalPrice</td>
+            </tr>
+            }
+            </tbody>
+        </table>
+        }
+
+    </div>
+    <div class="col-md-3">
+        <a href="/sale/@saleId/financialReport" class="btn btn-primary">FINANCIAL REPORT BY TRANSACTION</a>
+    </div>
+</div>
+}

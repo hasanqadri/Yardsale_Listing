@@ -1,16 +1,22 @@
 @* Displays sale page *@
-@(user: User, sale: Sale, items: List[SaleItem])
+@import java.util
+@(user: User, sale: Sale, items: util.List[SaleItem])
 
 @loggedinmain("Sale") {
 <div class="container content">
     <div class="view sale" id="view-sale">
         <div class="row">
             <div class="col-sm-9">
-                @if(user.canBeSeller(sale.id)) {<a href="/sale/@sale.id/addItem" class="btn btn-success">ADD ITEM</a>}
-                @if(user.canBeAdmin(sale.id)) {<a href="/sale/@sale.id/edit" class="btn btn-success">EDIT SALE</a>}
-                @if(user.canBeCashier(sale.id)) {<a href="/createTransaction/@sale.id" class="btn btn-success">CREATE TRANSACTION</a>}
-                <a href="/sale/@sale.id/saleTag" class="btn btn-success">PRINT TAGS</a>
-
+                @if(sale.status != 2 && user.canBeSeller(sale.id)) {<a href="/sale/@sale.id/addItem" class="btn btn-primary">ADD ITEM</a>}
+                @if(sale.status != 2 && user.canBeAdmin(sale.id)) {<a href="/sale/@sale.id/edit" class="btn btn-primary">EDIT SALE</a>}
+                @if(sale.status == 1 && user.canBeCashier(sale.id)) {<a href="/createTransaction/@sale.id" class="btn btn-primary">CREATE TRANSACTION</a>}
+                @if(sale.status != 2 && user.canBeClerk(sale.id)) {<a href="/sale/@sale.id/saleTag" class="btn btn-primary">PRINT TAGS</a>}
+                @if(user.canBeBookkeeper(sale.id)) {<a href="/sale/@sale.id/financialReport" class="btn btn-primary">FINANCIAL REPORT</a>}
+                @if(sale.status == 2 && user.canBeAdmin(sale.id)) {
+                <form method="post" class="hidden-form">
+                    <button class="btn btn-warning" type="submit" name="unarchive" value="@sale.id">UNARCHIVE SALE</button>
+                </form>
+                }
             </div>
             <div class="col-sm-3">
                 <div class="input-group">
@@ -40,7 +46,7 @@
                 </div>
                 <div class="col-sm-2">
                     <h3 class="text-center">Created By</h3>
-                    <h4 id="saleCreatedBy" class="text-center">@sale.createdBy</h4>
+                    <h4 id="saleCreatedBy" class="text-center"><a href="/profile/@sale.userCreatedId">@sale.getCreatedBy</a></h4>
                 </div>
                 <div class="col-sm-3">
                     <h3 class="text-center">Dates</h3>
@@ -55,6 +61,7 @@
                     <h2><a href="/sale/@sale.id/item/@items(index).id">@items(index).name</a></h2>
                     <h3>@items(index).description</h3>
                     <h3>$@items(index).formatPrice</h3>
+                    <h3>Quantity: @items(index).quantity</h3>
                     @if(index+1 != items.size){<hr>}
                 }
                 </div>
@@ -62,4 +69,8 @@
         </ul>
     </div>
 </div>
+<script>
+
+
+</script>
 }

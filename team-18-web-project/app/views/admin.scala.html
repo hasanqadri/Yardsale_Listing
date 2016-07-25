@@ -1,5 +1,6 @@
 @* Displays site admin settings *@
 @(users: List[User])
+
 @loggedinmain("Admin Console") {
 <div class="container content">
     <h3>Admin Console</h3>
@@ -15,7 +16,7 @@
         <tbody id="users">
             @for(index <- 0 until users.size){
             <tr>
-                <td>@users(index).getName</td>
+                <td><a href="/profile/@users(index).id">@users(index).getName</a></td>
                 <td>@users(index).username</td>
                 <td>@users(index).email</td>
                 @if(users(index).loginAttempts == 3) {

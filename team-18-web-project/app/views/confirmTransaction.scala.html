@@ -1,0 +1,26 @@
+@* Displays transaction confirmation page *@
+@(saleId: Int, tranId: Int, message : String)
+
+@loggedinmain("Confirm Transaction") {
+<div class="container content">
+    @if(message) {<h3 class="text-center">@message</h3>}
+    <div class="col-sm-4">
+        <a href="/sale/@saleId/transaction/@tranId"><h4>&#8592; Return to Transaction</h4></a>
+        <form class="form-confirmTransaction" id="confirmTransaction" action="/sale/@saleId/confirmTransaction/@tranId" method="post">
+            <label for="inputName" class="sr-only">Buyer Name</label>
+            <input type="text" maxlength="255" id="inputName" name="name" class="form-control input-top" placeholder="Buyer Bob" required autofocus>
+            <label for="inputAddress" class="sr-only">Buyer Address</label>
+            <input type="text" maxlength="255" id="inputAddress" name="address" class="form-control input-middle" placeholder="9000 3rd Street">
+            <label for="inputEmail" class="sr-only">Buyer Email</label>
+            <input type="text" maxlength="255" id="inputEmail" name="email" class="form-control input-middle" placeholder="bob&#64gmail.com">
+            <label for="inputPayment" class="sr-only">Payment Method</label>
+            <input type="text" maxlength="255" id="inputPayment" name="payment" class="form-control input-bottom" placeholder="Card or Cash" required>
+            <div class="btn-toolbar">
+                <button name="confirmTransaction" value="1" class="btn btn-success pull-left" type="submit">CONFIRM TRANSACTION</button>
+            </div>
+        </form>
+        <br>
+        <form action="/sale/@saleId/transaction/@tranId" method="post" class="hidden-form pull-left"><button class="btn btn-danger" type="submit" name="cancelTransactionId" value="@tranId">CANCEL TRANSACTION</button></form>
+    </div>
+</div>
+}

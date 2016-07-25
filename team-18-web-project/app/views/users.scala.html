@@ -1,5 +1,7 @@
 @* Displays list of users *@
-@(users: List[User])
+@import java.util
+@(users: util.List[User])
+
 @loggedinmain("Users") {
 <div class="container content">
     <h3>Current Users</h3>
@@ -14,7 +16,7 @@
         <tbody id="users">
             @for(index <- 0 until users.size){
             <tr>
-                <td>@users(index).getName</td>
+                <td><a href="/profile/@users(index).id">@users(index).getName</a></td>
                 <td>@users(index).username</td>
                 <td>@users(index).email</td>
             </tr>

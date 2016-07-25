@@ -2,15 +2,15 @@ package controllers;
 
 import com.avaje.ebean.Ebean;
 import com.avaje.ebean.Expr;
-import java.util.List;
+import com.google.zxing.BarcodeFormat;
+import com.google.zxing.WriterException;
+import com.google.zxing.client.j2se.MatrixToImageWriter;
+import com.google.zxing.common.BitMatrix;
+import com.google.zxing.qrcode.QRCodeWriter;
+import models.LineItem;
+import models.Picture;
 import models.Sale;
 import models.SaleItem;
-import models.User;
-import models.Transaction;
-import models.LineItem;
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
 import play.data.DynamicForm;
 import play.data.Form;
 import play.mvc.Controller;
@@ -19,10 +19,18 @@ import play.mvc.Security;
 import views.html.loggedinNotFound;
 import views.html.notFound;
 
-import static play.libs.Json.toJson;
+import javax.imageio.ImageIO;
+import java.awt.image.BufferedImage;
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.List;
 
+import static play.libs.Json.toJson;
 /**
- * Created by nathancheek on 6/25/16.
+ * @author Nathan Cheek, Pablo Ortega, Hasan Qadri, Nick Yokley
+ * This controller handles requests for data
  */
 public class DataController extends Controller {
 
@@ -32,13 +40,14 @@ public class DataController extends Controller {
      * @return Image with given Id
      */
     @Security.Authenticated(Secured.class)
-    public Result getImage(int id) { // This method is currently being used for testing random stuff
-        //Picture picture = User.find.where().eq("id", dynamicForm.get("username")).findUnique();
-        //Sale sale2 = Sale.find.where().eq("id", 1).findUnique();
-        return ok();
-
+    public Result getImage(int id) {
+        Picture p = Picture.findById(id);
+        if (p == null) {
+            return notFound404();
+        }
+        InputStream is = new ByteArrayInputStream(p.image);
+        return ok(is).as("image/jpeg");
     }
-
 
     /**
      * Lists all data about an item
@@ -53,7 +62,7 @@ public class DataController extends Controller {
         } catch (NumberFormatException e) { // Null or non int string
             return notFound404();
         }
-        SaleItem item  = Ebean.find(SaleItem.class).where().eq("id", id).findUnique();
+        SaleItem item  = SaleItem.findById(id);
         return ok(toJson(item));
     }
 
@@ -62,7 +71,7 @@ public class DataController extends Controller {
      * @return JSON response of item data stored in database
      */
     @Security.Authenticated(Secured.class)
-    public Result getLineItems() {
+    public Result getLineItem() {
         DynamicForm dynamicForm = Form.form().bindFromRequest();
         int id;
         try {
@@ -70,8 +79,25 @@ public class DataController extends Controller {
         } catch (NumberFormatException e) { // Null or non int string
             return notFound404();
         }
-        LineItem item  = Ebean.find(LineItem.class).where().eq("id", id).findUnique();
+        LineItem item  = LineItem.findById(id);
         return ok(toJson(item));
+    }
+
+    /**
+     * Lists all data about Line Items
+     * @return JSON response of item data stored in database
+     */
+    @Security.Authenticated(Secured.class)
+    public Result getLineItems() {
+        DynamicForm dynamicForm = Form.form().bindFromRequest();
+        int tranId;
+        try {
+            tranId = Integer.parseInt(dynamicForm.get("tranId"));
+        } catch (NumberFormatException e) { // Null or non int string
+            return notFound404();
+        }
+        List<LineItem> items  = LineItem.findByTransactionId(tranId);
+        return ok(toJson(items));
     }
 
     /**
@@ -87,51 +113,37 @@ public class DataController extends Controller {
         } catch (NumberFormatException e) { // Null or non int string
             return notFound404();
         }
-        List<SaleItem> items = Ebean.find(SaleItem.class).where().eq("saleId", saleId).orderBy("id desc").findList();
+        List<SaleItem> items = SaleItem.findBySaleId(saleId);
         return ok(toJson(items));
     }
 
     /**
-     * Lists data about a sale
-     * @return JSON response of sale data stored in database
+     * Get a QR Code image
+     * @param content url the QR code should point to
+     * @return QR Code
      */
-    @Security.Authenticated(Secured.class)
-    public Result getSale() {
-        DynamicForm f = Form.form().bindFromRequest();
-        int id;
+    public Result getQrCode(String content) {
+        content = "http://" + request().host() + content;
+        QRCodeWriter qr = new QRCodeWriter();
+        BitMatrix bm;
         try {
-            id = Integer.parseInt(f.get("id"));
-        } catch (NumberFormatException e) { // Null or non int string
+            bm = qr.encode(content, BarcodeFormat.QR_CODE, 150, 150);
+        } catch (WriterException e) {
             return notFound404();
         }
-        Sale sale = Ebean.find(Sale.class).where().eq("id", id).findUnique();
-        User user = null;
-        if (sale != null) {
-            user = Ebean.find(User.class).where().eq("id", sale.userCreatedId).findUnique();
-        } else { // Sale doesn't exist
-            return notFound404();
-        }
-        String createdBy = "";
-        if ( user != null) {
-            createdBy = user.getName();
-        }
-        JSONObject jo = null;
+        BufferedImage bi = MatrixToImageWriter.toBufferedImage(bm);
+        ByteArrayOutputStream os = new ByteArrayOutputStream();
+
         try {
-            jo = new JSONObject()
-                    .put("name", sale.name)
-                    .put("description", sale.description)
-                    .put("street", sale.street)
-                    .put("city", sale.city)
-                    .put("state", sale.state)
-                    .put("zip", sale.zip)
-                    .put("createdBy", createdBy)
-                    .put("startDate", sale.startDate)
-                    .put("endDate", sale.endDate);
-        } catch (JSONException e) {
-            e.printStackTrace();
+            ImageIO.write(bi, "png", os);
+        } catch (IOException e) {
             return notFound404();
         }
-        return ok(jo.toString()).as("application/json");
+
+        InputStream is = new ByteArrayInputStream(os.toByteArray());
+
+        //ByteArrayInputStream output = null;
+        return ok(is).as("image/png");
     }
 
     /**
@@ -140,27 +152,28 @@ public class DataController extends Controller {
      */
     @Security.Authenticated(Secured.class)
     public Result getSales() {
-        List<Sale> sales = Ebean.find(Sale.class).orderBy("id desc").findList();
+        List<Sale> sales = Sale.findAllOpen();
         return ok(toJson(sales));
     }
 
     /**
-     * Returns list of posts listed with the queried item name
+     * Returns Json array of items from a sale matching the query
      * @return items to json
      */
     @Security.Authenticated(Secured.class)
     public Result getSearchItems() {
         DynamicForm dynamicForm = Form.form().bindFromRequest();
-        int saleId;
-        try {
-            saleId = Integer.parseInt(dynamicForm.get("saleId"));
-        } catch (NumberFormatException e) { // Null or non int string
-            return notFound404();
-        }
-        String query = dynamicForm.get("query");
-        if (query != null) {
-            query = "%" + query + "%";
-            List<SaleItem> items = Ebean.find(SaleItem.class).where().eq("saleId", saleId).or(
+        if (dynamicForm.get("saleId") != null
+                && dynamicForm.get("query") != null) {
+            int saleId;
+            try {
+                saleId = Integer.parseInt(dynamicForm.get("saleId"));
+            } catch (NumberFormatException e) { // Null or non int string
+                return notFound404();
+            }
+            String query = "%" + dynamicForm.get("query") + "%";
+            List<SaleItem> items =
+                    Ebean.find(SaleItem.class).where().eq("saleId", saleId).or(
                     Expr.like("name", query),
                     Expr.like("description", query)
             ).findList();
@@ -169,9 +182,10 @@ public class DataController extends Controller {
         return notFound404();
     }
 
+
     /**
      * Returns list of posts listed at the queried location
-     * @return
+     * @return sales to json
      */
     @Security.Authenticated(Secured.class)
     public Result getSearchSales() {
@@ -202,7 +216,7 @@ public class DataController extends Controller {
 
     /**
      * Displays a 404 error page
-     * @return HTTP response to a nonexistant page
+     * @return HTTP response to a non existent page
      */
     public Result notFound404() {
         if (session("username") != null) {

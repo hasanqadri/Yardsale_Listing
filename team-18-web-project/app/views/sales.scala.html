@@ -1,12 +1,16 @@
+@* Displays sales page *@
+@import java.util
+@(sales: util.List[Sale])
+
 @loggedinmain("Sales") {
 <div class="container content">
     <div class="view profile" id="view-profile">
 
         <div class="row">
-            <div class="col-sm-4">
+            <div class="col-sm-9">
                 <a href="/createSale" class="btn btn-primary">CREATE SALE</a>
+                <a href="/mysales" class="btn btn-primary">VIEW MY SALES</a>
             </div>
-            <div class="col-sm-5"></div>
             <div class="col-sm-3">
                 <div class="input-group">
                     <form class="form-search-field" action="/searchSales" method="post">
@@ -22,26 +26,20 @@
         </div>
 
         <div class="saleList">
-            <h1 class="text-center">Available Yard Sales</h1>
+            <h1 class="text-center">All Open Sales</h1>
             <div class="col-sm-2"></div>
-            <div class="col-sm-8 sales"></div>
+            <div class="col-sm-8 sales">
+            @for(index <- 0 until sales.size){
+                <h2><a href="/sale/@sales(index).id">@sales(index).name</a></h2>
+                <h3>@sales(index).street</h3>
+                <h3>@sales(index).city, @sales(index).state @sales(index).zip</h3>
+                <h3>@sales(index).formatStartDate - @sales(index).formatEndDate</h3>
+            }
+            @if(sales.size == 0) {
+                <h3 id="noResults" class="text-center">No Open Sales</h3>
+            }
+            </div>
         </div>
     </div>
 </div>
-<!-- test -->
-<!-- script to add sale info from database -->
-<script>
-    $.getJSON("/getSales", function(data) {
-        for(var i in data) {
-            var text = data[i].name;
-            var startDate = new Date(data[i].startDate);
-            var endDate = new Date(data[i].endDate);
-            var output = "<h2><a href=\"/sale/" + data[i].id + "\">" + data[i].name + "</a></h2>" + "<h3>"
-                + data[i].street + "</h3>" + "<h3>" + data[i].city + ", " + data[i].state + " " + data[i].zip
-                + "</h3>" + "<h3>" + startDate.toDateString() + " - " + endDate.toDateString() + "</h3><hr>";
-            $(".sales").append(output)
-        }
-    });
-</script>
-
 }

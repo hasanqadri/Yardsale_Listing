@@ -8,7 +8,17 @@ create table lineItems (
   sale_item_id              integer,
   transaction_id            integer,
   quantity                  integer,
+  unit_price                float,
+  name                      varchar(255),
+  user_created_id           integer,
+  sale_id                   integer,
   constraint pk_lineItems primary key (id))
+;
+
+create table pictures (
+  id                        integer auto_increment not null,
+  image                     longblob,
+  constraint pk_pictures primary key (id))
 ;
 
 create table roles (
@@ -27,10 +37,11 @@ create table sales (
   city                      varchar(255),
   state                     varchar(255),
   zip                       integer,
+  donor                     varchar(255),
   start_date                datetime(6),
   end_date                  datetime(6),
   user_created_id           integer,
-  is_active                 integer default 0,
+  status                    integer default 0,
   constraint pk_sales primary key (id))
 ;
 
@@ -43,7 +54,6 @@ create table saleItems (
   sale_id                   integer,
   user_created_id           integer,
   quantity                  integer,
-  stock_number              integer,
   constraint pk_saleItems primary key (id))
 ;
 
@@ -51,8 +61,13 @@ create table transactions (
   id                        integer auto_increment not null,
   sale_id                   integer,
   cashier_id                integer,
-  sale_item_id              integer,
   buyer_name                varchar(255),
+  buyer_address             varchar(255),
+  buyer_email               varchar(255),
+  completed                 tinyint default 0,
+  payment_method            varchar(255),
+  random_nonce              integer,
+  date                      datetime(6),
   constraint pk_transactions primary key (id))
 ;
 
@@ -77,6 +92,8 @@ create table users (
 SET FOREIGN_KEY_CHECKS=0;
 
 drop table lineItems;
+
+drop table pictures;
 
 drop table roles;
 
