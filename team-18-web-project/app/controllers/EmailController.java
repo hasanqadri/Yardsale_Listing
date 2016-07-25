@@ -71,7 +71,7 @@ public class EmailController extends Controller {
                         "        </table>\n" +
                         "        <div class=\"col-sm-3\">\n" +
                         "            <h3 class=\"text-center\">The total amount paid was: </h3>\n" +
-                        "            <h4  class=\"text-center\" >" + t.formatTotal + "</h4>\n" +
+                        "            <h4  class=\"text-center\" >" + t.formatTotal() + "</h4>\n" +
                         "        </div>\n" +
                         "    </div>\n" + "</html>");
         String id = mailer.send(email);
