@@ -3,32 +3,32 @@
 
 @loggedinmain("Admin Console") {
 <div class="container content">
-    <div class="text-center tanBackground row corners">
-        <h1>Admin Console</h1>
-    </div>
-    <table class="table table-striped">
-        <thead>
-            <tr>
-                <th>Name</th>
-                <th>Username</th>
-                <th>Email</th>
-                <th>Status</th>
-            </tr>
-        </thead>
-        <tbody id="users">
-            @for(index <- 0 until users.size){
-            <tr>
-                <td><a href="/profile/@users(index).id">@users(index).getName</a></td>
-                <td>@users(index).username</td>
-                <td>@users(index).email</td>
-                @if(users(index).loginAttempts == 3) {
-                <td>Locked <form method="post" class="hidden-form"><button class="btn btn-sm btn-warning admin-reset" type="submit" name="userId" value="@users(index).id">Unlock</button></form></td>
-                } else {
-                <td>Unlocked</td>
-                }
-            </tr>
-            }
-        </tbody>
-    </table>
+  <div class="text-center tanBackground row corners">
+    <h1>Admin Console</h1>
+  </div>
+  <table class="table table-striped">
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Username</th>
+        <th>Email</th>
+        <th>Status</th>
+      </tr>
+    </thead>
+    <tbody id="users">
+      @for(index <- 0 until users.size){
+      <tr>
+        <td><a href="/profile/@users(index).id">@users(index).getName</a></td>
+        <td>@users(index).username</td>
+        <td>@users(index).email</td>
+        @if(users(index).loginAttempts == 3) {
+        <td>Locked <form method="post" class="hidden-form"><button class="btn btn-sm btn-warning admin-reset" type="submit" name="userId" value="@users(index).id">Unlock</button></form></td>
+        } else {
+        <td>Unlocked</td>
+        }
+      </tr>
+      }
+    </tbody>
+  </table>
 </div>
 }
