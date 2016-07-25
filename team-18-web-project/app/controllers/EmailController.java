@@ -1,10 +1,7 @@
 
 package controllers;
 
-import models.LineItem;
-import models.Sale;
-import models.Transaction;
-import models.User;
+import models.*;
 import play.api.libs.mailer.MailerClient;
 import play.libs.mailer.Email;
 import play.mvc.Controller;
@@ -26,41 +23,36 @@ public class EmailController extends Controller {
         List<LineItem> list = LineItem.findByTransactionId(tranId);
         Transaction t = Transaction.findById(tranId);
         double total = 0;
+        String htmlReceipt = "";
         for (LineItem li : list) {
             total = total + li.getUnitPrice();
+            htmlReceipt = htmlReceipt +                         "        <div class=\"col-sm-3\">\n" +
+                    "            <h3 class=\"text-center\">The Item: </h3>\n" +
+                    "            <h4  class=\"text-center\" >" + li.getName() + "</h4>\n" +
+                    "            <h4  class=\"text-center\" >" + li.getTotalPrice() + "</h4>\n" +
+                    "        </div>\n";
         }
         final Email email = new Email()
-                .setSubject("Yard sale receipt")
+                .setSubject("Your Yard Sale Receipt")
                 .setFrom("team18email@gmail.com")
                 .addTo(t.buyerEmail)
                 //.addAttachment("favicon.png", new File(Play.application().classloader().getResource("public/images/favicon.png").getPath(), cid))
                 //.addAttachment("data.txt", "data".getBytes(), "text/plain", "Simple data", EmailAttachment.INLINE)
                 .setBodyText("A text message")
                 .setBodyHtml("<html><body><div class=\"container content\">\n" +
-                        "\n" +
+                        "Dear " + t.buyerName + "," +"\n" +
+                        "Thank You for the follwoing purchase on: " + t.formatDate() + ".\n" +
                         "    <div class=\"row\">\n" +
                         "        <div class=\"col-sm-2\">\n" +
-                        "            <h3 class=\"text-center\">Date</h3>\n" +
-                        "            <h4 class=\"text-center\">" + t.formatDate() + "</h4>\n" +
-                        "        </div>\n" +
-                        "        <div class=\"col-sm-3\" >\n" +
-                        "            <h3 class=\"text-center\">Buyer</h3>\n" +
-                        "            <h4 class=\"text-center\">" + t.buyerName + "</h4>\n" +
-                        "        </div>\n" +
-                        "        <div class=\"col-sm-2\">\n" +
-                        "            <h3 class=\"text-center\">Address</h3>\n" +
-                        "            <h4 class=\"text-center\">"+ t.buyerAddress + "</h4>\n" +
-                        "        </div>\n" +
-                        "        <div class=\"col-sm-2\">\n" +
-                        "            <h3 class=\"text-center\">Buyer Email</h3>\n" +
-                        "            <h4  class=\"text-center\" >" + t.buyerEmail + "</h4>\n" +
+                        "            <h3 class=\"text-center\">From the Recent Yard Sale!</h3>\n" +
                         "        </div>\n" +
                         "        <div class=\"col-sm-3\">\n" +
-                        "            <h3 class=\"text-center\">Payment Method</h3>\n" +
+                        "            <h3 class=\"text-center\">You payment method was: </h3>\n" +
                         "            <h4  class=\"text-center\" >" + t.paymentMethod + "</h4>\n" +
                         "        </div>\n" +
+                        htmlReceipt +
                         "        <div class=\"col-sm-3\">\n" +
-                        "            <h3 class=\"text-center\">Total Price</h3>\n" +
+                        "            <h3 class=\"text-center\">The total amount paid was: </h3>\n" +
                         "            <h4  class=\"text-center\" >" + total + "</h4>\n" +
                         "        </div>\n" +
                         "    </div>\n" + "</html>");
