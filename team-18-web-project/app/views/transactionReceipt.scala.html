@@ -2,55 +2,58 @@
 @(transaction: Transaction, lineItems: List[LineItem], saleId: Int, tranId: Int, message : String)
 
 @loggedinmain("Receipt") {
-    <div class="container content">
+    <link href="//fonts.googleapis.com/css?family=Corben:bold" rel="stylesheet" type="text/css">
+    <link href="//fonts.googleapis.com/css?family=Nobile" rel="stylesheet" type="text/css">
+<div class="container content">
 
-        <div class="row">
-            <div class="col-sm-3" id="saleAddress">
-                <h3 class="text-center">Buyer</h3>
-                <h4 class="text-center" id="buyerName">@transaction.buyerName</h4>
-            </div>
-            <div class="col-sm-2">
-                <h3 class="text-center">Address</h3>
-                <h4 class="text-center" id="buyerAddress">@transaction.buyerAddress</h4>
-            </div>
-            <div class="col-sm-2">
-                <h3 class="text-center">Buyer Email</h3>
-                <h4  class="text-center" id="buyerEmail" class="text-center">@transaction.buyerEmail</h4>
-            </div>
-            <div class="col-sm-2">
-                <h3 class="text-center">Date</h3>
-                <h4 class="text-center">@transaction.formatDate</h4>
-            </div>
-            <div class="col-sm-3">
-                <h3 class="text-center">Payment Method</h3>
-                <h4  class="text-center" id="buyerEmail" class="text-center">@transaction.paymentMethod</h4>
-            </div>
+    <div class="row tanBackground corners">
+        <div class="col-sm-3" id="saleAddress">
+            <h3 class="text-center">Buyer</h3>
+            <h4 class="text-center" id="buyerName">@transaction.buyerName</h4>
         </div>
-        <div class="row">
-            <div class="col-sm-12">
-                <h2 class="text-center">Items Purchased</h2>
-                <div class="lineItems">
-                    <table class="table table-striped">
-                        <thead>
-                            <tr>
-                                <th>Catalog ID</th>
-                                <th>Item</th>
-                                <th>Description</th>
-                                <th>Quantity</th>
-                                <th>Unit Price</th>
-                                <th>Total</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                        @for(index <- 0 until lineItems.size){
-                            <tr>
-                                <td>@lineItems(index).getSaleItemId</td>
-                                <td>@lineItems(index).getName</td>
-                                <td>@lineItems(index).getDescription</td>
-                                <td>@lineItems(index).getQuantity</td>
-                                <td>$@lineItems(index).formatUnitPrice</td>
-                                <td>$@lineItems(index).formatTotalPrice</td>
-                            </tr>
+        <div class="col-sm-2">
+            <h3 class="text-center">Address</h3>
+            <h4 class="text-center" id="buyerAddress">@transaction.buyerAddress</h4>
+        </div>
+        <div class="col-sm-2">
+            <h3 class="text-center">Buyer Email</h3>
+            <h4  class="text-center" id="buyerEmail" class="text-center">@transaction.buyerEmail</h4>
+        </div>
+        <div class="col-sm-2">
+            <h3 class="text-center">Date</h3>
+            <h4 class="text-center">@transaction.formatDate</h4>
+        </div>
+        <div class="col-sm-3">
+            <h3 class="text-center">Payment Method</h3>
+            <h4  class="text-center" id="buyerEmail" class="text-center">@transaction.paymentMethod</h4>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-sm-12">
+            <h2 class="text-center">Items Purchased</h2>
+            <hr>
+            <div class="lineItems">
+                <table class="table table-striped">
+                    <thead>
+                    <tr>
+                        <th>Catalog ID</th>
+                        <th>Item</th>
+                        <th>Description</th>
+                        <th>Quantity</th>
+                        <th>Unit Price</th>
+                        <th>Total</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    @for(index <- 0 until lineItems.size){
+                    <tr>
+                        <td>@lineItems(index).getSaleItemId</td>
+                        <td>@lineItems(index).getName</td>
+                        <td>@lineItems(index).getDescription</td>
+                        <td>@lineItems(index).getQuantity</td>
+                        <td>$@lineItems(index).formatUnitPrice</td>
+                        <td>$@lineItems(index).formatTotalPrice</td>
+                    </tr>
 
                         }
                         </tbody>

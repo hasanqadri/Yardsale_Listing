@@ -3,6 +3,8 @@
 @(transactions: util.List[Transaction], saleId: Int, total: String, donor: String)
 
 @loggedinmain("Financial Report") {
+    <link href="//fonts.googleapis.com/css?family=Corben:bold" rel="stylesheet" type="text/css">
+    <link href="//fonts.googleapis.com/css?family=Nobile" rel="stylesheet" type="text/css">
 <div class="container content">
     <div class="col-md-3">
         <a href="/sale/@saleId" class="hidden-print"><h4>&#8592; Return to Sale</h4></a>
@@ -33,16 +35,10 @@
         </table>
         <h4 class="pull-right">Total: $@total</h4>
     </div>
-    <div class="col-md-3 text-center">
-        <a href="/sale/@saleId/financialReportBySeller" class="btn btn-primary">FINANCIAL REPORT BY SELLER</a>
-        <br>
-        <br>
-        @if(donor.equals("1")){<a href ="/sale/@saleId/financialReportDonor/email"  class="btn btn-primary" method="GET" >DONOR ACKNOWLEDGEMENT</a>}
-        <br>
-        <br>
-        <a href="/sale/@saleId/financialReportSingleSeller" class="btn btn-primary">MY SOLD ITEMS</a>
-        <br>
-
+    <div class="col-md-3 text-center subnav corners">
+        <a href="/sale/@saleId/financialReportBySeller" class="subnav-a goldHighlight">REPORT BY SELLER</a>
+        @if(donor.equals("1")){<a href ="/sale/@saleId/financialReportDonor/email"  class="subnav-a goldHighlight">DONOR ACKNOWLEDGEMENT</a>}
+        <a href="/sale/@saleId/financialReportSingleSeller" class="subnav-a goldHighlight">MY SOLD ITEMS</a>
     </div>
 
 </div>
