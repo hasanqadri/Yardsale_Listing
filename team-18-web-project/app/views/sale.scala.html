@@ -1,7 +1,7 @@
 @* Displays sale page *@
 @(user: User, sale: Sale, items: List[SaleItem], pubUrl: String)
 
-@loggedinmain("Sale") {
+@loggedinmain(sale.name) {
 <script>window.twttr = (function(d, s, id) {
   var js, fjs = d.getElementsByTagName(s)[0],
     t = window.twttr || {};

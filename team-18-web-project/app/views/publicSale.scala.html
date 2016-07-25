@@ -1,7 +1,7 @@
 @* Displays sale page *@
 @(sale: Sale, items: List[SaleItem])
 
-@main("Sale") {
+@main(sale.name) {
 <div class="container content">
     <div class="view sale" id="view-sale">
             <div class = "tanBackground row bottomCorners">
