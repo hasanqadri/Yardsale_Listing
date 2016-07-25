@@ -30,8 +30,8 @@ body{
 }
 
 .front-image {
-    width: 100%;
-    height: auto;
+    width: auto;
+    height: 400px;
     margin-bottom: 20px;
 }
 
@@ -129,10 +129,7 @@ form .input-bottom {
     font-size: 18px;
 }
 
-.saleList {
-    /*padding-top: 40px;*/
-}
-
+.
 .searchButton {
 
     max-width: 40px;
@@ -223,6 +220,7 @@ form .input-bottom {
 .tanBackground {
 
     background: #F8E5CB;
+
 }
 
 h1, h2, h3, h4, h5, h6 {
@@ -235,4 +233,34 @@ p, div {
 
 .itemsList {
     columns: 3;
+}
+
+a.goldHighlight:hover {
+    color: #EEE8AA;
+
+}
+.corners {
+
+    border-radius: 25px;
+}
+
+
+.bottomCorners {
+    border-radius: 0 0 30px 30px;
+}
+
+button.redHighlight:hover {
+
+    color: red;
+}
+button.subnav-cancel {
+    position: relative;
+    float: left;
+    height: 31px;
+    line-height: 35px;
+    color: #FFFFFF;
+    font-size: 12px;
+    padding: 0 11px;
+    background: #232f3e;
+    border: none;
 }

@@ -2,23 +2,29 @@
 @(items: List[SaleItem], saleId: Int)
 
 @loggedinmain("Printable Tags for Items") {
+  <link href="//fonts.googleapis.com/css?family=Corben:bold" rel="stylesheet" type="text/css">
+  <link href="//fonts.googleapis.com/css?family=Nobile" rel="stylesheet" type="text/css">
 <div class="container content">
-  <h2 class="text-center">Item Tags</h2>
+  <div class = "tanBackground corners">
+    <h2 class="text-center">Item Tags</h2>
+  </div>
   <h4 class="hidden-print"><a href="/sale/@saleId">&#8592; Return to Sale</a></h4>
   <div class="col-sm-2"></div>
-  <div class="col-sm-8 items saleItem">
+  <div class="col-sm-8 items">
     @for(index <- 0 until items.size) {
       @for(index2 <- 0 until items(index).quantity) {
-        <div class="row tag-row">
+        <div class="row tag-row saleItem corners">
           <div class="col-xs-8">
             <h2>Name: @items(index).name</h2>
             <h3>Stock Number: @items(index).id</h3>
             <h3>Description: @items(index).description</h3>
             <h3>Price: $@items(index).formatPrice</h3>
+
           </div>
           <div class="col-xs-4">
             <img class="tag-qr" src="/qr?value=/mobileScanRedirect/@items(index).id">
           </div>
+          <hr>
         </div>
       }
     }
