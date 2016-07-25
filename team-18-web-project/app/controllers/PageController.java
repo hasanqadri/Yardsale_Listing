@@ -338,8 +338,9 @@ public class PageController extends Controller {
      */
     public Result publicSale(int saleId) {
         Sale s = Sale.findById(saleId);
+        String pubUrl = "http://" + request().host() + "/publicSale/" + saleId;
         if (s != null && s.status == 1 ) {
-            return ok(publicSale.render(s, s.getItems()));
+            return ok(publicSale.render(s, s.getItems(), pubUrl));
         }
         return notFound404();
     }

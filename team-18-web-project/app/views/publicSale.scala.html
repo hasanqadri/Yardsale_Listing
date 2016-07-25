@@ -1,8 +1,19 @@
 @* Displays sale page *@
-@(sale: Sale, items: List[SaleItem])
+@(sale: Sale, items: List[SaleItem], pubUrl: String)
 
 @main(sale.name) {
 <div class="container content">
+    <div class="row">
+      <div class="col-sm-10 subnav"></div>
+      <div class="col-sm-2 subnav">
+        <div class="social-button pull-left">
+          <div class="fb-share-button" data-href="@pubUrl" data-layout="button_count" data-size="small" data-mobile-iframe="true"></div>
+        </div>
+        <div class="social-button pull-right">
+          <a class="twitter-share-button" href="https://twitter.com/intent/tweet?text=Check%20out%20this%20sale&url=@pubUrl">Tweet</a>
+        </div>
+      </div>
+    </div>
     <div class="view sale" id="view-sale">
             <div class = "tanBackground row bottomCorners">
                 <h1 class="text-center title" id="saleName">@sale.name</h1>
@@ -46,8 +57,29 @@
 
     </div>
 </div>
-<script>
+<script>window.twttr = (function(d, s, id) {
+  var js, fjs = d.getElementsByTagName(s)[0],
+    t = window.twttr || {};
+  if (d.getElementById(id)) return t;
+  js = d.createElement(s);
+  js.id = id;
+  js.src = "https://platform.twitter.com/widgets.js";
+  fjs.parentNode.insertBefore(js, fjs);
 
+  t._e = [];
+  t.ready = function(f) {
+    t._e.push(f);
+  };
 
-</script>
+  return t;
+}(document, "script", "twitter-wjs"));</script>
+
+<div id="fb-root"></div>
+<script>(function(d, s, id) {
+  var js, fjs = d.getElementsByTagName(s)[0];
+  if (d.getElementById(id)) return;
+  js = d.createElement(s); js.id = id;
+  js.src = "//connect.facebook.net/en_US/sdk.js#xfbml=1&version=v2.7";
+  fjs.parentNode.insertBefore(js, fjs);
+}(document, 'script', 'facebook-jssdk'));</script>
 }
