@@ -191,7 +191,7 @@ public class PageController extends Controller {
         Sale s = Sale.findById(saleId);
         SaleItem i = SaleItem.findById(itemId);
         if (u != null && s != null & i != null && (s.status == 1
-                || Role.findByIds(u.id, saleId) != null)) {
+                || Role.findByIds(u.id, saleId) != null || u.isSuperAdmin())) {
             return ok(item.render(u, s, i));
         }
         return notFound404();
