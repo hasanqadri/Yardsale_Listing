@@ -14,6 +14,7 @@ libraryDependencies ++= Seq(
   javaWs,
   evolutions,
   "org.mongodb" % "mongodb-driver-reactivestreams" % "1.2.0",
+  "org.postgresql" % "postgresql" % "9.4-1201-jdbc41",
   "mysql" % "mysql-connector-java" % "5.1.28",
   "org.avaje.ebeanorm" % "avaje-ebeanorm" % "4.6.2",
   "javax.json" % "javax.json-api" % "1.0",
