@@ -1,4 +1,4 @@
-name := """team-18-web-project"""
+name := "yardsale-finder"
 
 version := "1.0-SNAPSHOT"
 
