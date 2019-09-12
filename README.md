@@ -1,10 +1,4 @@
-web-project
-===========
+#Getting Started#
+To get started, download [Play Framework](https://playframework.com) and add activator to your path.
 
-Team project for CS2340 - Summer 2016 - Georgia Institute of Technology
-
-###Team###
-- Nathan Cheek
-- Pablo Ortega
-- Hasan Qadri
-- Nick Yokley
+Then, run <code>activator run</code> inside this directory to start the application.
