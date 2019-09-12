@@ -1,4 +1,4 @@
-name := "yardsale-finder"
+name := """yardsale-finder"""
 
 version := "1.0-SNAPSHOT"
 
